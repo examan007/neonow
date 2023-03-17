@@ -312,7 +312,7 @@ var makeSequence = function(thissequence) {
           setRunningStatus(node)
           findNode(node, 'element_details', function (element) { element.innerHTML = "" })
           xhttp.withCredentials = false;
-          xhttp.open("GET", "http://test.neolation.com/home",
+          xhttp.open("GET", "https://test.neolation.com/home",
            true, { rejectUnauthorized: false });
           xhttp.send();
         },
