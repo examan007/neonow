@@ -223,6 +223,7 @@ var makeSequence = function(thissequence) {
     function executeAJAX(amethod) {
 
       var xhttp = new XMLHttpRequest()
+      xhttp.withCredentials = false;
       xhttp.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
             function parseResponse(response) {
@@ -288,7 +289,6 @@ var makeSequence = function(thissequence) {
              setRunningStatus(node)
           }
           var xhttp = executeAJAX(processAJAX)
-          //xhttp.withCredentials = true;
           xhttp.open("GET", "https://illuminatinglaserandstyle.com/html/data/sequence.json",
            true, { rejectUnauthorized: false });
           xhttp.send();
