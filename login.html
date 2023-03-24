@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Login Window</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <style>
       /* Center the login window on the page */
       .login-window {
@@ -9,7 +10,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(233, 233, 233);
         padding: 20px;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -32,18 +33,47 @@
         border-radius: 5px;
         cursor: pointer;
       }
+      #newuserlink {
+        color: blue;
+        background-color: rgba(233, 233, 233);
+      }
     </style>
+    <script>
+      function getNewAccountForm() {
+          $("#Login").css("display", "none")
+          $("#Newuser").css("display", "block")
+      }
+    </script>
 </head>
 <body>
 <div class="login-window">
-  <h2>Login</h2>
-  <form action="" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <input type="submit" value="Login">
-  </form>
+  <section id="Login" >
+    <h2>Login</h2>
+    <form action="" method="post">
+      <label for="username">Email:</label>
+      <input type="text" id="username" name="username" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      <br>
+      <input type="submit" value="Login">
+      <br>
+    </form>
+    <a id="newuserlink" href="#newuser" onclick="getNewAccountForm()">Create new account.</a>
+  </section>
+  <section id="Newuser" style="display: none;">
+    <h2>New Account</h2>
+    <form action="" method="post">
+      <label for="username">Email:</label>
+      <input type="text" id="email" name="email" required>
+      <label for="password">Password:</label>
+      <input type="password" id="newpassword" name="newpassword" required>
+      <label for="password">Confirm:</label>
+      <input type="password" id="confirmpass" name="confirmpass" required>
+      <br>
+      <input type="submit" value="Create">
+      <br>
+    </form>
+  </section>
 </div>
 </body>
 </html>
