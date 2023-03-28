@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Window</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <style>
+      /* Center the login window on the page */
+      .login-window {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(240, 240, 240);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        width: 16em;
+      }
+      .login-window h2 {
+        margin-top: 0;
+      }
+      .login-window label {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        text-align: left;
+      }
+      .login-window input {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .login-window input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #newuserlink {
+        color: blue;
+        background-color: rgba(240, 240, 240);
+      }
+      .form-input {
+        display: inline-block;
+        margin-right: 10px;
+      }
+      #login {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: green; /* Change color as per your requirement */
+        color: #fff;
+        text-decoration: none;
+        border-radius: 0.25rem;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    </style>
+    <script>
+
+      function executeAJAX(amethod) {
+        var xhttp = new XMLHttpRequest()
+        xhttp.withCredentials = false;
+        xhttp.onreadystatechange = function() {
+           console.log("ready" + this.responseText)
+           if (this.readyState == 4 && this.status == 200) {
+              function parseResponse(response) {
+                   var ret = {}
+                   if(response) {
+                       try {
+                           ret = JSON.parse(response);
+                       } catch(e) {
+                           console.log("Respone is not json")
+                           ret = response
+                       }
+                   }
+                   return ret
+              }
+              amethod(parseResponse(this.responseText), this)
+            } else {
+               console.log(this)
+            }
+        }
+        return xhttp
+      }
+      var thisemail = ""
+      function postAPI(formData) {
+          fetch('https://test.neolation.com/api', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.error(error));
+      }
+      function getQueryValue(name) {
+        const searchstr = window.location.search
+        const searchParams = new URLSearchParams(searchstr);
+        const value = searchParams.get(name)
+        console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
+        $("#" + name).val(value)
+        return value
+      }
+      function sendAuthenticate () {
+        const xhr = new XMLHttpRequest();
+        const url = 'https://test.neolation.com/api';
+        xhr.open('POST', url);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+          console.log(xhr.response);
+          } else {
+          console.error(xhr.statusText);
+          }
+        };
+        const data = JSON.stringify({});
+        xhr.send(data);
+      }
+      function setEmail() {
+          const formData = new URLSearchParams("?" + $('#Login-form').serialize())
+          console.log("Login-form=[" + formData.toString() + "]");
+          thisemail = formData.get('username')
+          console.log("thisemail = " + thisemail)
+          const xhr = new XMLHttpRequest();
+          xhr.timeout = 5000;
+          const url = 'https://test.neolation.com/api';
+          xhr.open('POST', url);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onload = function() {
+            if (xhr.status === 200) {
+            console.log(xhr.response);
+            } else {
+            console.error(xhr.statusText);
+            }
+          };
+          const credential = formData.get('username') + ":" + formData.get('password')
+          console.log("credential=[" + credential + "]")
+          xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
+          const data = JSON.stringify({name: 'test'});
+          xhr.send(data);
+      }
+      function sendx() {
+          function processAJAX(response, xhttp) {
+             console.log("processAJAX")
+           var displaystr = ""
+            if (AccessToken === null) {
+                displaystr = ""
+            } else {
+                displaystr = AccessToken.substring(0, 32)
+            }
+          }
+          var xhttp = executeAJAX(processAJAX)
+          xhttp.open("POST", "https://test.neolation.com/api",
+           true, { rejectUnauthorized: false });
+          const credential = formData.get('username') + ":" + formData.get('password')
+          console.log("credential=[" + credential + "]")
+          xhttp.setRequestHeader("Authorization", "Basic " + btoa(credential))
+          xhttp.send()
+          console.log("AJAX returning; credential=[" + credential + "]")
+
+          //postAPI(formData)
+
+          localStorage.setItem('email', thisemail);
+      }
+      function getNextForm(section) {
+          $("#email").val(thisemail)
+          console.log($("#username").val())
+          $("#Login").css("display", "none")
+          $("#Newuser").css("display", "none")
+          $("#Verify").css("display", "none")
+          $("#" + section).css("display", "block")
+      }
+
+      function onload() {
+        console.log("load")
+        thisemail = localStorage.getItem('email');
+        urlemail = getQueryValue('username')
+        getQueryValue('password')
+
+        console.log("urlemail=[" + urlemail + "]")
+        if (thisemail !== urlemail) {
+          thisemail = urlemail;
+          localStorage.setItem('email', thisemail);
+        }
+
+        const hashValue = window.location.hash.slice(1)
+        if ( typeof(hashValue) === 'undefined' ) {
+            console.log("Start login (undefined)")
+        } else
+        if (hashValue.length <= 0) {
+            console.log("Start login")
+        } else {
+            console.log("hashvalue=[" + hashValue + "]")
+            getNextForm(hashValue)
+        }
+        console.log("thisemail = " + thisemail)
+        $("#email").val(thisemail)
+      }
+    </script>
+</head>
+<body onload="onload()">
+<div class="login-window">
+  <section id="Login" >
+    <form id="Login-form" action="#Newuser" method="post">
+      <span class="form-input"><label for="username">Email:</label>
+        <input type="text" id="username" name="username" required>
+      </span>
+      <span class="form-input">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+      </span>
+      <br>
+      <br>
+      <a id="button-login" class="btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Login</a>
+      <br>
+      <br>
+    </form>
+    <a id="newuserlink" href="#Newuser" onclick="getNextForm('Newuser')">Create new account.</a>
+  </section>
+  <section id="Newuser" style="display: none;">
+    <h2>New Account</h2>
+    <form action="#Verify" method="post">
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" required>
+      <label for="newpassword">Password:</label>
+      <input type="password" id="newpassword" name="newpassword" required>
+      <label for="confirmpass">Confirm:</label>
+      <input type="password" id="confirmpass" name="confirmpass" required>
+      <br>
+      <input type="submit" value="Create">
+      <br>
+    </form>
+  </section>
+  <section id="Verify" style="display: none;">
+    <h2>Verify User</h2>
+    <form action="" method="post">
+      <label for="verification">Code:</label>
+      <input type="text" id="verification" name="verification" required>
+      <br>
+      <input type="submit" value="Verfiy">
+      <br>
+    </form>
+  </section>
+  <section id="Authenticate" style="display: none;">
+    <h2>Authenticate</h2>
+    <form action="" method="post">
+      <label for="verification">Code:</label>
+      <input type="text" id="authentication" name="verification" required>
+      <br>
+      <input type="submit" value="Verfiy">
+      <br>
+    </form>
+  </section>
+  <section id="Changepass" style="display: none;">
+    <h2>Change Password</h2>
+    <form action="" method="post">
+      <label for="email">Email:</label>
+      <input type="text" id="changeemail" name="email" required>
+      <label for="newpassword">Password:</label>
+      <input type="password" id="changepassword" name="newpassword" required>
+      <label for="confirmpass">Confirm:</label>
+      <input type="password" id="confirmchange" name="confirmpass" required>
+      <br>
+      <input type="submit" value="Create">
+      <br>
+    </form>
+  </section>
+</div>
+</body>
+</html>

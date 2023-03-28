@@ -6,26 +6,14 @@
     <title>Neolation Now</title>
     <meta name="description" content="Lightweight solution for deploying single page apps with GitHub Pages.">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <!-- favicon -->
     <link rel="icon" type=”image/png” href="favicon/newneoz.png">
     <link rel="alternate icon" type="image/png" href="favicon/newneoz.png">
     <link rel="apple-touch-icon" href="favicon/newneoz.png">
     <link rel="manifest" href="favicon/site.webmanifest">
 
-    <!-- Start Single Page Apps for GitHub Pages -->
-    <script type="text/javascript">
-      (function(l) {
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&')
-          }).join('?');
-          window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
-          );
-        }
-      }(window.location))
-    </script>
-    <!-- End Single Page Apps for GitHub Pages -->
     <style>
       #status {
         z-index: 20;
@@ -62,12 +50,42 @@
         background-color: rgba(255, 255, 255, 0.5);
       }
     </style>
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
 
-  </head>
-  <body style="padding:0;border:0;margin:0;height:100vh">
+      function onload() {
+        var hashValue = window.location.hash.slice(1)
+        if ( typeof(hashValue) === 'undefined' ) {
+            console.log("Start login (undefined)")
+        } else
+        if (hashValue.length <= 0) {
+            console.log("Start login")
+        } else {
+            hashValue = "#" + hashValue
+            console.log("hashvalue=[" + hashValue + "]")
+        }
+        const query = window.location.search
+        const thishref = $('#login').attr('data')
+        console.log("query=[" + thishref + hashValue + query + "]")
+        $('#login').attr('data', thishref + hashValue + query)
+      }
+      function onload_t() {
+        const timeoutId = setTimeout(onload_wait, 3000);
+      }
+    </script>
+  <body style="padding:0;border:0;margin:0;height:100vh" onload="onload()">
     <div id="root"></div>
     <object id="setup"  type="text/html" data="setup.html"></object>
-    <object id="login"  type="text/html" data="login.html"></object>
+    <object id="login"  type="text/html" data="login-new.html"></object>
     <object id="status" type="text/html" data="https://test.neolation.com/home" ></object>
     <object id="my-object" type="text/html" data="https://test.neolation.com/home" ></object>
   </body>

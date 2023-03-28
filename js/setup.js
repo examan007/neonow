@@ -284,7 +284,7 @@ var makeSequence = function(thissequence) {
                findNode(node, 'element_content', addElement(0))
              } else {
                findNode(node, 'element_content', "Error, cannot get sequence")
-             }
+             }r
              completeResponse(node, response)
              setRunningStatus(node)
           }
