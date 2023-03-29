@@ -36,7 +36,7 @@
         margin: 0;
         width: 100%;
         height: 100%;
-        z-index=10;
+        z-index=10;r
         position:absolute
       }
       #login {
@@ -77,14 +77,34 @@
         const thishref = $('#login').attr('data')
         console.log("query=[" + thishref + hashValue + query + "]")
         $('#login').attr('data', thishref + hashValue + query)
+
+        // Add an event listener for the message event
+        window.addEventListener("message", receiveMessage, false);
+        console.log("Adding event listener")
+
+        function receiveMessage(event) {
+          // Check if the message is coming from the expected origin
+           console.log("origin=[" + JSON.stringify(event) + "]")
+           if (event.isTrusted === true) {
+              // Process the message data
+              var message = event.data;
+              console.log("Received message:", message);
+
+              $('#login').toggle()
+           }
+        }
       }
       function onload_t() {
         const timeoutId = setTimeout(onload_wait, 3000);
       }
+      function onclickLogin() {
+        console.log("Login!!!!!")
+      }
     </script>
   <body style="padding:0;border:0;margin:0;height:100vh" onload="onload()">
+
     <div id="root"></div>
-    <object id="setup"  type="text/html" data="setup.html"></object>
+    <object id="setup"  type="text/html" onclick="onclickLogin()" data="setup.html"></object>
     <object id="login"  type="text/html" data="login-new.html"></object>
     <object id="status" type="text/html" data="https://test.neolation.com/home" ></object>
     <object id="my-object" type="text/html" data="https://test.neolation.com/home" ></object>

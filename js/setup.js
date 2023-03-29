@@ -284,7 +284,7 @@ var makeSequence = function(thissequence) {
                findNode(node, 'element_content', addElement(0))
              } else {
                findNode(node, 'element_content', "Error, cannot get sequence")
-             }r
+             }
              completeResponse(node, response)
              setRunningStatus(node)
           }
@@ -321,7 +321,10 @@ var makeSequence = function(thissequence) {
           var node = getNode("sequence_" + name)
           if (node == null) {
             return
+
+
           }
+          console.log("$$$$HERE$$$$")
           var element = getElement('Login', 0)
           function processAJAX(response, xhttp) {
             //AccessToken = response.response['accessToken']

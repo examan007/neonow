@@ -208,14 +208,14 @@
         console.log("thisemail = " + thisemail)
         $("#email").val(thisemail)
       }
-      function exitlogin() {
+      function exitloginX() {
         console.log("exit login.")
         //window.location.replace("https://www.illuminatinglaserandstyle.com");
         // Reload a specific site
         window.location.href = "https://www.illuminatinglaserandstyle.com";
         window.parent.location.reload()
       }
-      function exitLoginx() {
+      function exitlogin() {
         // Get a reference to the parent window
         var parentWindow = window.parent;
 
@@ -226,6 +226,7 @@
 
         // Send the message to the parent window
         parentWindow.postMessage(message, "*");
+        console.log("message posted [" + JSON.stringify(message) + "]")
       }
     </script>
 </head>
