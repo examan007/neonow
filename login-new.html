@@ -213,7 +213,19 @@
         //window.location.replace("https://www.illuminatinglaserandstyle.com");
         // Reload a specific site
         window.location.href = "https://www.illuminatinglaserandstyle.com";
-        location.reload()
+        window.parent.location.reload()
+      }
+      function exitLoginx() {
+        // Get a reference to the parent window
+        var parentWindow = window.parent;
+
+        // Create a message object
+        var message = {
+          data: "Hello, parent window!"
+        };
+
+        // Send the message to the parent window
+        parentWindow.postMessage(message, "*");
       }
     </script>
 </head>
