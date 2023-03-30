@@ -66,6 +66,7 @@
       }
       .exitx {
         float: right;
+        color: white;
       }
     </style>
     <script>
@@ -233,8 +234,9 @@
 <body onload="onload()">
 <div class="login-window">
   <section id="Login" >
+    <span class="exitx" onclick="exitlogin()">X</span>
     <form id="Login-form" action="#Newuser" method="post">
-      <span class="form-input"><label for="username">Email:<span class="exitx" onclick="exitlogin()">X</span></label>
+      <span class="form-input"><label for="username">Email:</label>
         <input type="text" id="username" name="username" required>
       </span>
       <span class="form-input">
@@ -250,14 +252,20 @@
     <a id="newuserlink" href="#Newuser" onclick="getNextForm('Newuser')">Create new account.</a>
   </section>
   <section id="Newuser" style="display: none;">
-    <h2>New Account</h2>
+    <span class="exitx" onclick="exitlogin()">X</span>
     <form action="#Verify" method="post">
+\      <span class="form-input">
       <label for="email">Email:</label>
       <input type="text" id="email" name="email" required>
+      </span>
+      <span class="form-input">
       <label for="newpassword">Password:</label>
       <input type="password" id="newpassword" name="newpassword" required>
+      </span>
+      <span class="form-input">
       <label for="confirmpass">Confirm:</label>
       <input type="password" id="confirmpass" name="confirmpass" required>
+      </span>
       <br>
       <input type="submit" value="Create">
       <br>
