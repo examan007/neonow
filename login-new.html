@@ -16,7 +16,7 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         text-align: center;
         width: 16em;
-        background-image: url("https://illuminatinglaserandstyle.com/images/business-card-001.png");
+        background-image: url("https://illuminatinglaserandstyle.com/images/business-card-mdm.png");
       }
       .login-window h2 {
         margin-top: 0;
@@ -53,7 +53,7 @@
         display: inline-block;
         margin-right: 10px;
       }
-      #button-login {
+     .button-login {
         display: inline-block;
         padding: 0.5rem 1rem;
         background-color: rgba(45, 30, 100, 1);
@@ -234,8 +234,8 @@
 <body onload="onload()">
 <div class="login-window">
   <section id="Login" >
-    <span class="exitx" onclick="exitlogin()">X</span>
     <form id="Login-form" action="#Newuser" method="post">
+      <span class="exitx" onclick="exitlogin()">X</span>
       <span class="form-input"><label for="username">Email:</label>
         <input type="text" id="username" name="username" required>
       </span>
@@ -245,16 +245,16 @@
       </span>
       <br>
       <br>
-      <a id="button-login" class="btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Login</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Login</a>
       <br>
       <br>
     </form>
     <a id="newuserlink" href="#Newuser" onclick="getNextForm('Newuser')">Create new account.</a>
   </section>
   <section id="Newuser" style="display: none;">
-    <span class="exitx" onclick="exitlogin()">X</span>
     <form action="#Verify" method="post">
-\      <span class="form-input">
+      <span class="exitx" onclick="exitlogin()">X</span>
+      <span class="form-input">
       <label for="email">Email:</label>
       <input type="text" id="email" name="email" required>
       </span>
@@ -267,7 +267,8 @@
       <input type="password" id="confirmpass" name="confirmpass" required>
       </span>
       <br>
-      <input type="submit" value="Create">
+      <br>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Create</a>
       <br>
     </form>
   </section>
