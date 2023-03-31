@@ -179,6 +179,7 @@
           $("#email").val(thisemail)
           console.log($("#username").val())
           $("#Login").css("display", "none")
+          $("#Login-pass").css("display", "none")
           $("#Newuser").css("display", "none")
           $("#Verify").css("display", "none")
           $("#" + section).css("display", "block")
@@ -233,11 +234,24 @@
 </head>
 <body onload="onload()">
 <div class="login-window">
-  <section id="Login" >
+  <section id="Login">
     <form id="Login-form" action="#Newuser" method="post">
       <span class="exitx" onclick="exitlogin()">X</span>
       <span class="form-input"><label for="username">Email:</label>
         <input type="text" id="username" name="username" required>
+      </span>
+      <br>
+      <br>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Book Apointment</a>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section id="Login-pass" style="display: none;">
+    <form id="Login-form-pass" action="#Newuser" method="post">
+      <span class="exitx" onclick="exitlogin()">X</span>
+      <span class="form-input"><label for="username">Email:</label>
+        <input type="text" id="username-pass" name="username" required>
       </span>
       <span class="form-input">
         <label for="password">Password:</label>
