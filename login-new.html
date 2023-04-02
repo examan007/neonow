@@ -129,6 +129,15 @@
         const data = JSON.stringify({});
         xhr.send(data);
       }
+      function getNextForm(section) {
+          $("#email").val(thisemail)
+          console.log($("#username").val())
+          $("#Login").css("display", "none")
+          $("#Login-pass").css("display", "none")
+          $("#Newuser").css("display", "none")
+          $("#Verify").css("display", "none")
+          $("#" + section).css("display", "block")
+      }
       function setEmail() {
           const formRaw = $('#Login-form').serialize();
           const formData = new URLSearchParams("?" + $('#Login-form').serialize())
@@ -141,7 +150,9 @@
           xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
           xhr.onload = function() {
             if (xhr.status === 200) {
-            console.log(xhr.response);
+              console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
+              $('label[for="verification"]').text(xhr.response)
+              getNextForm('Verify')
             } else {
             console.error(xhr.statusText);
             }
@@ -176,16 +187,6 @@
 
           localStorage.setItem('email', thisemail);
       }
-      function getNextForm(section) {
-          $("#email").val(thisemail)
-          console.log($("#username").val())
-          $("#Login").css("display", "none")
-          $("#Login-pass").css("display", "none")
-          $("#Newuser").css("display", "none")
-          $("#Verify").css("display", "none")
-          $("#" + section).css("display", "block")
-      }
-
       function onload() {
         console.log("load")
         thisemail = localStorage.getItem('email');
@@ -236,19 +237,41 @@
 <body onload="onload()">
 <div class="login-window">
   <section id="Login">
-    <form id="Login-form" action="#Newuser" method="post">
-      <span class="exitx" onclick="exitlogin()">X</span>
-      <span class="form-input"><label for="username">Please enter email to verify and receive booking confirmation:</label>
+    <form id="Login-form" action="#Verify" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <label for="username">Please enter email to verify and receive booking confirmation:</label>
         <input type="text" id="username" name="username" required>
         <input type="hidden" id="xpassword" name="password" required>
-        <input type="hidden" id="hiddenval" name="hiddenvale" value="hidden" required>
-      </span>
+        <input type="hidden" id="hiddenval" name="hiddenvalue" value="hidden" required>
+        <input type="hidden" name="message" value=
+      "Please check ${username} for iLaS verification message and follow instructions to make a booking."
+        >
+     </span>
       <br>
       <br>
       <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Verify Email</a>
       <br>
       <br>
     </form>
+  </section>
+  <section id="Verify" style="display: none;">
+    <form id="Verfiy-form" action="#Booking" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <label for="verification">Code:</label>
+        <input type="text" id="verification" name="verification" required>
+      </span>
+    </form>
+    <br>
+    <br>
+    <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()" style="display: none;">Make Booking</a>
+    <br>
+    <br>
   </section>
   <section id="Login-pass" style="display: none;">
     <form id="Login-form-pass" action="#Newuser" method="post">
@@ -286,16 +309,6 @@
       <br>
       <br>
       <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Create</a>
-      <br>
-    </form>
-  </section>
-  <section id="Verify" style="display: none;">
-    <h2>Verify User</h2>
-    <form action="" method="post">
-      <label for="verification">Code:</label>
-      <input type="text" id="verification" name="verification" required>
-      <br>
-      <input type="submit" value="Verfiy">
       <br>
     </form>
   </section>
