@@ -130,15 +130,15 @@
         xhr.send(data);
       }
       function setEmail() {
+          const formRaw = $('#Login-form').serialize();
           const formData = new URLSearchParams("?" + $('#Login-form').serialize())
-          console.log("Login-form=[" + formData.toString() + "]");
           thisemail = formData.get('username')
           console.log("thisemail = " + thisemail)
           const xhr = new XMLHttpRequest();
           xhr.timeout = 5000;
-          const url = 'https://test.neolation.com/api';
+          const url = 'https://test.neolation.com/notify';
           xhr.open('POST', url);
-          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
           xhr.onload = function() {
             if (xhr.status === 200) {
             console.log(xhr.response);
@@ -146,10 +146,11 @@
             console.error(xhr.statusText);
             }
           };
+          const data = formRaw  //formData.toString();
           const credential = formData.get('username') + ":" + formData.get('password')
           console.log("credential=[" + credential + "]")
+          console.log("Login-form=[" + formRaw + "] [" + formData.toString() + "]");
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
-          const data = JSON.stringify({name: 'test'});
           xhr.send(data);
       }
       function sendx() {
@@ -237,12 +238,14 @@
   <section id="Login">
     <form id="Login-form" action="#Newuser" method="post">
       <span class="exitx" onclick="exitlogin()">X</span>
-      <span class="form-input"><label for="username">Email:</label>
+      <span class="form-input"><label for="username">Please enter email to verify and receive booking confirmation:</label>
         <input type="text" id="username" name="username" required>
+        <input type="hidden" id="xpassword" name="password" required>
+        <input type="hidden" id="hiddenval" name="hiddenvale" value="hidden" required>
       </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Book Apointment</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Verify Email</a>
       <br>
       <br>
     </form>
