@@ -3,6 +3,7 @@
 <head>
   <title>Login Window</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
   <style>
       /* Center the login window on the page */
       .login-window {
@@ -149,16 +150,37 @@
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
           xhr.send(data);
       }
+      function setCookieInParent (token) {
+        // Get a reference to the parent window
+        var parentWindow = window.parent;
+
+        // Create a message object
+        var message = token
+
+        // Send the message to the parent window
+        parentWindow.postMessage(message, "*");
+        console.log("message posted [" + JSON.stringify(message) + "]")
+      }
+
       function getAuthenticationCookie() {
           const xhr = new XMLHttpRequest();
           xhr.timeout = 5000;
           const url = 'https://test.neolation.com/auth';
           xhr.open('POST', url);
           xhr.setRequestHeader('Content-Type', 'application/json');
+          function showHeader() {
+            var headers = xhr.getAllResponseHeaders();
+            var headerLines = headers.trim().split('\n');
+            for (var i = 0; i < headerLines.length; i++) {
+              console.log(headerLines[i]);
+            }
+          }
           xhr.onload = function() {
             if (xhr.status === 200) {
               console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
-              $('label[for="verification"]').text(xhr.response)
+              $.cookie('NeoCookie', xhr.response, { expires: 1, path: xhr.path })
+              setCookieInParent(xhr.response)
+              showHeader()
               setEmail()
             } else {
               console.log("status=[" + xhr.status + "]")

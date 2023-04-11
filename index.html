@@ -7,6 +7,7 @@
     <meta name="description" content="Lightweight solution for deploying single page apps with GitHub Pages.">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <!-- favicon -->
     <link rel="icon" type=”image/png” href="favicon/newneoz.png">
@@ -88,8 +89,15 @@
               // Process the message data
               var message = event.data;
               console.log("Received message:", message);
-
-              $('#login').toggle()
+              try {
+                const token = JSON.parse(message).token
+                console.log("token=[" + token + "]")
+                document.cookie = "token=" + token + "; expires=Thu, 14 Dec 2023 12:00:00 UTC"
+                //$.cookie('NeoCookie', token, { expires: 365, path: '/', secure: true, httponly: true })
+                console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
+              } catch (e) {
+                $('#login').toggle()
+              }
            }
         }
       }
