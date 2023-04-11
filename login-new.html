@@ -114,21 +114,6 @@
         $("#" + name).val(value)
         return value
       }
-      function sendAuthenticate () {
-        const xhr = new XMLHttpRequest();
-        const url = 'https://test.neolation.com/api';
-        xhr.open('POST', url);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-          console.log(xhr.response);
-          } else {
-          console.error(xhr.statusText);
-          }
-        };
-        const data = JSON.stringify({});
-        xhr.send(data);
-      }
       function getNextForm(section) {
           $("#email").val(thisemail)
           console.log($("#username").val())
@@ -164,28 +149,26 @@
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
           xhr.send(data);
       }
-      function sendx() {
-          function processAJAX(response, xhttp) {
-             console.log("processAJAX")
-           var displaystr = ""
-            if (AccessToken === null) {
-                displaystr = ""
+      function getAuthenticationCookie() {
+          const xhr = new XMLHttpRequest();
+          xhr.timeout = 5000;
+          const url = 'https://test.neolation.com/auth';
+          xhr.open('POST', url);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onload = function() {
+            if (xhr.status === 200) {
+              console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
+              $('label[for="verification"]').text(xhr.response)
+              setEmail()
             } else {
-                displaystr = AccessToken.substring(0, 32)
+              console.log("status=[" + xhr.status + "]")
+              console.error(xhr.statusText);
             }
-          }
-          var xhttp = executeAJAX(processAJAX)
-          xhttp.open("POST", "https://test.neolation.com/api",
-           true, { rejectUnauthorized: false });
-          const credential = formData.get('username') + ":" + formData.get('password')
-          console.log("credential=[" + credential + "]")
-          xhttp.setRequestHeader("Authorization", "Basic " + btoa(credential))
-          xhttp.send()
-          console.log("AJAX returning; credential=[" + credential + "]")
-
-          //postAPI(formData)
-
-          localStorage.setItem('email', thisemail);
+          };
+          console.log("getAuthenticationCookie()")
+          const credential = 'james.hayes@neolation.com' + ":" + 'blockade'
+          xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
+          xhr.send()
       }
       function onload() {
         console.log("load")
@@ -252,7 +235,7 @@
      </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Verify Email</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()">Verify Email</a>
       <br>
       <br>
     </form>
@@ -266,12 +249,13 @@
         <label for="verification">Code:</label>
         <input type="text" id="verification" name="verification" required>
       </span>
+
+    <br>
+    <br>
+    <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()" style="display: none;">Make Booking</a>
+    <br>
+    <br>
     </form>
-    <br>
-    <br>
-    <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()" style="display: none;">Make Booking</a>
-    <br>
-    <br>
   </section>
   <section id="Login-pass" style="display: none;">
     <form id="Login-form-pass" action="#Newuser" method="post">
@@ -285,7 +269,7 @@
       </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Login</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()">Login</a>
       <br>
       <br>
     </form>
@@ -308,7 +292,7 @@
       </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="setEmail()">Create</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()">Create</a>
       <br>
     </form>
   </section>
