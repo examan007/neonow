@@ -178,7 +178,7 @@
           xhr.onload = function() {
             if (xhr.status === 200) {
               console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
-              $.cookie('neotoken', JSON.parse(xhr.response).token, { expires: 1, path: xhr.path })
+              $.cookie('neotoken', JSON.parse(xhr.response).token, { expires: 1 })
               //setCookieInParent(xhr.response)
               showHeader()
               setEmail()
