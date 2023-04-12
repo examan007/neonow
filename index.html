@@ -92,8 +92,7 @@
               try {
                 const token = JSON.parse(message).token
                 console.log("token=[" + token + "]")
-                document.cookie = "token=" + token + "; expires=Thu, 14 Dec 2023 12:00:00 UTC"
-                //$.cookie('NeoCookie', token, { expires: 365, path: '/', secure: true, httponly: true })
+                $.cookie('neotoken', token, { expires: 1 })
                 console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
               } catch (e) {
                 $('#login').toggle()
