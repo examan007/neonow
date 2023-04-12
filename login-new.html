@@ -192,8 +192,14 @@
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
           xhr.send()
       }
+      function testCookie() {
+        console.log("testCookie()")
+        allCookies = document.cookie
+        console.log("cookies: [" + allCookies + "]")
+      }
       function onload() {
         console.log("load")
+        testCookie()
         thisemail = localStorage.getItem('email');
         urlemail = getQueryValue('username')
         getQueryValue('password')

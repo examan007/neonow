@@ -100,8 +100,14 @@
            }
         }
       }
+      function testCookie() {
+        console.log("testCookie()")
+        allCookies = document.cookie
+        console.log("cookies: [" + allCookies + "]")
+      }
       function onload_t() {
         const timeoutId = setTimeout(onload_wait, 3000);
+        testCookie()
       }
       function onclickLogin() {
         console.log("Login!!!!!")
