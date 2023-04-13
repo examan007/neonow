@@ -1,6 +1,6 @@
       function neoOnload() {
         testCookie()
-        const hashValue = window.location.hash.slice(1).split("?")[0];
+        var hashValue = window.location.hash.slice(1).split("?")[0];
         if ( typeof(hashValue) === 'undefined' ) {
             console.log("Start login (undefined)")
         } else
