@@ -108,7 +108,7 @@
               setCookieInParent(xhr.response)
               $("#neotoken").val(JSON.parse(xhr.response).token)
               const serverurl = getQueryValue('serverurl')
-              if (typeof(serverurl) === "undefined") {
+              if (serverurl == null) {
                   $("#serverurl").val('https://illuminatinglaserandstyle.com/side.html#Booking')
               } else {
                   $("#serverurl").val(serverurl)
