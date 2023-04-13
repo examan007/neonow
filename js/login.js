@@ -195,8 +195,9 @@
                 console.log("Start login")
             } else {
                 console.log("hashvalue=[" + hashValue + "]")
-                getNextForm('login')
             }
+            getNextForm('Login')
+
             console.log("thisemail = " + thisemail)
             $("#email").val(thisemail)
         }
