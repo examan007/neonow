@@ -1,0 +1,64 @@
+      /* Center the login window on the page */
+      .login-window {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(240, 240, 240);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        width: 16em;
+        background-image: url("https://illuminatinglaserandstyle.com/images/business-card-mdm.png");
+      }
+      .login-window h2 {
+        margin-top: 0;
+      }
+      .login-window label {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        text-align: left;
+        color: white;
+        position: relative;
+      }
+      .login-window input {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        background-color: rgba(255, 255, 255, 0.25);
+        color: white;
+        width: 18em;
+      }
+      .login-window input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #newuserlink {
+        color: white;
+        background-color: rgba(255, 255, 255, 0);
+      }
+      .form-input {
+        display: inline-block;
+        margin-right: 10px;
+      }
+     .button-login {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: rgba(45, 30, 100, 1);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 0.25rem;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .exitx {
+        float: right;
+        color: white;
+      }

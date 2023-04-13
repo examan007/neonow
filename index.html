@@ -8,7 +8,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-
+    <script src="js/app.js"></script>
     <!-- favicon -->
     <link rel="icon" type=”image/png” href="favicon/newneoz.png">
     <link rel="alternate icon" type="image/png" href="favicon/newneoz.png">
@@ -66,57 +66,8 @@
         allCookies = document.cookie
         console.log("cookies: [" + allCookies + "]")
       }
-      function onload() {
-        testCookie()
-        var hashValue = window.location.hash.slice(1)
-        if ( typeof(hashValue) === 'undefined' ) {
-            console.log("Start login (undefined)")
-        } else
-        if (hashValue.length <= 0) {
-            console.log("Start login")
-        } else {
-            hashValue = "#" + hashValue
-            console.log("hashvalue=[" + hashValue + "]")
-        }
-        const query = window.location.search
-        const thishref = $('#login').attr('data')
-
-        console.log("query=[" + thishref + hashValue + query + "]")
-        $('#login').attr('data', thishref + hashValue + query)
-
-        // Add an event listener for the message event
-        window.addEventListener("message", receiveMessage, false);
-        console.log("Adding event listener")
-
-        function receiveMessage(event) {
-          // Check if the message is coming from the expected origin
-           console.log("origin=[" + JSON.stringify(event) + "]")
-           if (event.isTrusted === true) {
-              // Process the message data
-              var message = event.data;
-              console.log("Received message:", message);
-              try {
-                const token = JSON.parse(message).token
-                console.log("token=[" + token + "]")
-                $.cookie('neotoken', token, { expires: 1 })
-                console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
-              } catch (e) {
-                console.log(e.toString())
-                $('#login').css("display", "none")
-              }
-           }
-        }
-      }
-
-      function xonload() {
-        const timeoutId = setTimeout(onload_wait, 3000);
-        testCookie()
-      }
-      function onclickLogin() {
-        console.log("Login!!!!!")
-      }
     </script>
-  <body style="padding:0;border:0;margin:0;height:100vh" onload="onload()">
+  <body style="padding:0;border:0;margin:0;height:100vh" onload="neoOnload()">
 
     <div id="root"></div>
     <object id="setup"  type="text/html" data="setup.html"></object>
