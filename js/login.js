@@ -195,18 +195,12 @@
                 console.log("Start login")
             } else {
                 console.log("hashvalue=[" + hashValue + "]")
-                getNextForm(hashValue)
+                getNextForm('login')
             }
             console.log("thisemail = " + thisemail)
             $("#email").val(thisemail)
         }
         testCookie(function () { exitlogin() }, needAuth)
       }
-      function exitloginX() {
-        console.log("exit login.")
-        //window.location.replace("https://www.illuminatinglaserandstyle.com");
-        // Reload a specific site
-        window.location.href = "https://www.illuminatinglaserandstyle.com";
-        window.parent.location.reload()
-      }
+
 
