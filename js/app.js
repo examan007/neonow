@@ -15,7 +15,7 @@
           const server = window.location.host;
           const fileWithPath = window.location.pathname;
           const hashValue = window.location.hash;
-          return protocol + server + fileWithPath + hashValue
+          return protocol + "//" + server + fileWithPath + hashValue
         }
         const query = window.location.search
         const thishref = $('#login').attr('data')
