@@ -34,7 +34,7 @@
           .catch(error => console.error(error));
       }
       function getQueryValue(name) {
-        const searchstr = window.location.search
+        const searchstr = window.location.href.split("?")[1]
         const searchParams = new URLSearchParams(searchstr);
         const value = searchParams.get(name)
         console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
