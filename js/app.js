@@ -70,6 +70,7 @@
            const token = testCookie()
            try {
                if (token.length <= 0) {
+
                     return ""
                }
            } catch (e) {
@@ -78,6 +79,8 @@
            console("token=[" + token + "]")
            return "&" + token
         }
+        const token = testCookie();
+        console.log("token=[" + token + "]")
         const thishref = $('#login').attr('data')
         const newquery = thishref + "?name=value" + getSearchStr() +
          "&serverurl=" + getServerURL() + getNeoToken()
