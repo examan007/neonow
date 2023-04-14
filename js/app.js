@@ -81,11 +81,11 @@
         }
         const token = testCookie((token)=> {
             console.log("token=[" + token + "]")
-            const thishref = $('#login').attr('data')
-            const newquery = thishref + "?name=value" + getSearchStr() +
-             "&serverurl=" + getServerURL() + getNeoToken()
-            console.log("$$$ query=[" + newquery + "]")
-            $('#login').attr('data', newquery)
+            //const thishref = $('#login').attr('data')
+            //const newquery = thishref + "?name=value" + getSearchStr() +
+            // "&serverurl=" + getServerURL() + getNeoToken()
+            //console.log("$$$ query=[" + newquery + "]")
+            //$('#login').attr('data', newquery)
         });
 
         // Add an event listener for the message event
