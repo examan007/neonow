@@ -8,7 +8,7 @@
         }
         return value
       }
-      function testCookie() {
+      function testCookie(callback) {
           console.log("testCookie()")
           function parseCookie() {
             const cookies = document.cookie.split(';');
@@ -27,7 +27,7 @@
             $("#neotoken").val(neotoken)
           }
           console.log("cookie: [" + neotoken + "]")
-          return "" + neotoken
+          callback(noetoken)
       }
       function getHashValue () {
           const hashValue = window.location.href.split("?")[0].split("#")[1]
@@ -79,13 +79,14 @@
            console("token=[" + token + "]")
            return "&" + token
         }
-        const token = testCookie();
-        console.log("token=[" + token + "]")
-        const thishref = $('#login').attr('data')
-        const newquery = thishref + "?name=value" + getSearchStr() +
-         "&serverurl=" + getServerURL() + getNeoToken()
-        console.log("$$$ query=[" + newquery + "]")
-        $('#login').attr('data', newquery)
+        const token = testCookie(function (token) {
+            console.log("token=[" + token + "]")
+            const thishref = $('#login').attr('data')
+            const newquery = thishref + "?name=value" + getSearchStr() +
+             "&serverurl=" + getServerURL() + getNeoToken()
+            console.log("$$$ query=[" + newquery + "]")
+            $('#login').attr('data', newquery)
+        });
 
         // Add an event listener for the message event
         window.addEventListener("message", receiveMessage, false);
