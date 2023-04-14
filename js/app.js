@@ -60,12 +60,14 @@
         function getServerURL() {
           return protocol + "//" + server + fileWithPath + hashValue
         }
-        function getNeoToken(toker) {
+        function getNeoToken() {
            const token = testCookie()
            if (token == null) {
                 return ""
            }
-           if (getQueryValue('neotoken') == null) {
+           if (getQueryValue('neotoken') != null) {
+                return ""
+           } else {
                 return "&neotoken=" + token
            }
            return ""
