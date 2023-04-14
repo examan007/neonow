@@ -75,6 +75,7 @@
            } catch (e) {
                 return ""
            }
+           console("token=[" + token + "]")
            return "&" + token
         }
         const thishref = $('#login').attr('data')
