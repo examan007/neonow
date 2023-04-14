@@ -17,9 +17,8 @@
           const hashValue = window.location.hash;
           return protocol + "//" + server + fileWithPath + hashValue
         }
-        const query = window.location.search
         const thishref = $('#login').attr('data')
-        const newquery = thishref + hashValue + query + "&serverurl=" + getServerURL()
+        const newquery = thishref + hashValue + "?" + "serverurl=" + getServerURL()
         console.log("query=[" + newquery + "]")
         $('#login').attr('data', newquery)
 
