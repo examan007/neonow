@@ -59,9 +59,16 @@
         function getServerURL() {
           return protocol + "//" + server + fileWithPath + hashValue
         }
+        function getNeoToken () {
+            if (getQueryValue('neotoken') == null) {
+                return "&neotoken=" + token
+            } else {
+                return ""
+            }
+        }
         const thishref = $('#login').attr('data')
         const newquery = thishref + "?name=value&" + searchstr +
-         "&serverurl=" + getServerURL()
+         "&serverurl=" + getServerURL() + getNeoToken()
         console.log("$$$ query=[" + newquery + "]")
         $('#login').attr('data', newquery)
 
@@ -79,10 +86,10 @@
               try {
                 const token = JSON.parse(message).token
                 console.log("token=[" + token + "]")
-                $.cookie('neotoken', token, { expires: 1 })
-                console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
               } catch (e) {
                 console.log(e.toString())
+                $.cookie('neotoken', token, { expires: 1 })
+                console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
                 $('#login').css("display", "none")
               }
            }
