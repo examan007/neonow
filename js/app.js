@@ -24,9 +24,12 @@
             return string;
           }
         }
-        const searchstr = removeLeadingChar(window.location.search, "?")
+        val searchstr = removeLeadingChar(window.location.search, "?")
+        if (searchstr.length >= 0) {
+            searchstr = "&" + searchstr
+        }
         const thishref = $('#login').attr('data')
-        const newquery = thishref + hashValue + "?name=value&" + searchstr + "&serverurl=" + getServerURL()
+        const newquery = thishref + hashValue + "?name=value" + searchstr + "&serverurl=" + getServerURL()
         console.log("query=[" + newquery + "]")
         $('#login').attr('data', newquery)
 
