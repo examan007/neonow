@@ -79,7 +79,7 @@
            console("token=[" + token + "]")
            return "&" + token
         }
-        const token = testCookie(function (token) {
+        const token = testCookie((token)=> {
             console.log("token=[" + token + "]")
             const thishref = $('#login').attr('data')
             const newquery = thishref + "?name=value" + getSearchStr() +
