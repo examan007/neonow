@@ -21,6 +21,8 @@
           var neotoken = cookieMap.get('neotoken')
           if (typeof(neotoken) === 'undefined') {
             neotoken = getQueryValue('neotoken')
+          } else {
+            $("#neotoken").val(neotoken)
           }
           console.log("cookie: [" + neotoken + "]")
           return neotoken
