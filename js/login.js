@@ -145,6 +145,9 @@
             try {
                 if (token.length <= 0) {
                     console("token length error.")
+                } else
+                if (token === "undefined") {
+                    console("token undefined.")
                 } else {
                     right(token)
                     return
