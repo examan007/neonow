@@ -171,16 +171,6 @@
           localStorage.setItem('email', thisemail);
         }
         function needAuth(token) {
-            const hashValue = window.location.hash.slice(1).split("?")[0];
-            if ( typeof(hashValue) === 'undefined' ) {
-                console.log("Start login (undefined)")
-            } else
-            if (hashValue.length <= 0) {
-                console.log("Start login")
-            } else {
-                console.log("hashvalue=[" + hashValue + "]")
-            }
-
             console.log("thisemail = " + thisemail)
             $("#email").val(thisemail)
             $("#serverurl").val(getQueryValue('serverurl'))

@@ -25,32 +25,37 @@
           console.log("cookie: [" + neotoken + "]")
           return neotoken
       }
-      function neoOnload() {
-        console.log("href=[" + window.location.href + "]")
-        const token = testCookie()
-        const protocol = window.location.protocol;
-        const server = window.location.host;
-        const fileWithPath = window.location.pathname;
-        //const hashValue = window.location.hash.split("?")[0];
-        var hashValue = window.location.hash.slice(1).split("?")[0];
-        const searchstr = window.location.href.split("?")[1]
-        if ( typeof(hashValue) === 'undefined' ) {
-            console.log("Start login (undefined)")
-        } else
-        if (hashValue.length <= 0) {
-            console.log("Start login")
-        } else {
-            console.log("hashvalue=[" + hashValue + "]")
-        }
-        function getServerURL() {
-          return protocol + "//" + server + fileWithPath + hashValue
-        }
+      function getHashValue () {
+          const hashValue = window.location.href.split("?")[0].split("#")[1]
+          if ( typeof(hashValue) === 'undefined' ) {
+              console.log("Start login (undefined)")
+          } else
+          if (hashValue.length <= 0) {
+              console.log("Start login")
+          } else {
+              console.log("hashvalue=[" + hashValue + "]")
+              return "#" + hashValue
+          }
+          return ""
+      }
         function removeLeadingChar(string, char) {
           if (string.startsWith(char)) {
             return string.substring(1);
           } else {
             return string;
           }
+        }
+      function neoOnload() {
+        console.log("href=[" + window.location.href + "]")
+        const token = testCookie()
+        const protocol = window.location.protocol;
+        const server = window.location.host;
+        const fileWithPath = window.location.pathname;
+        const searchstr = window.location.href.split("?")[1]
+
+        var hashValue = getHashValue()
+        function getServerURL() {
+          return protocol + "//" + server + fileWithPath + hashValue
         }
         const thishref = $('#login').attr('data')
         const newquery = thishref + "?name=value&" + searchstr +
