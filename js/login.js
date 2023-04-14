@@ -101,28 +101,33 @@
               console.log(headerLines[i]);
             }
           }
-          xhr.onload = function() {
-            if (xhr.status === 200) {
-              console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
-              //$.cookie('neotoken', JSON.parse(xhr.response).token, { expires: 1 })
-              setCookieInParent(xhr.response)
-              $("#neotoken").val(JSON.parse(xhr.response).token)
-              const serverurl = getQueryValue('serverurl')
-              if (serverurl == null) {
-                  $("#serverurl").val('https://illuminatinglaserandstyle.com/side.html#Booking')
-              } else {
-                  $("#serverurl").val(serverurl)
-              }
-              showHeader()
-              setEmail()
-            } else {
-              console.log("status=[" + xhr.status + "]")
-              console.error(xhr.statusText);
-            }
-          };
-          const formRaw = $('#Login-form').serialize();
-          const formData = new URLSearchParams("?" + $('#Login-form').serialize())
-          thisemail = formData.get('username')
+          function onLoadAuth () {
+              const formRaw = $('#Login-form').serialize();
+              console.log("formRaw=[" + formRaw + "]")
+              const formData = new URLSearchParams("?" + $('#Login-form').serialize())
+              return {
+                thisemail: formData.get('username'),
+                onLoad: function () {
+                    if (xhr.status === 200) {
+                      console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
+                      setCookieInParent(xhr.response)
+                      $("#neotoken").val(JSON.parse(xhr.response).token)
+                      const serverurl = formData.get('serverurl')
+                      if (serverurl == null) {
+                          $("#serverurl").val('https://illuminatinglaserandstyle.com/side.html#Booking')
+                      } else {
+                          $("#serverurl").val(serverurl)
+                      }
+                      showHeader()
+                      setEmail()
+                    } else {
+                      console.log("status=[" + xhr.status + "]")
+                      console.error(xhr.statusText);
+                    }
+                  }
+                }
+          }
+          xhr.onload = onLoadAuth().onLoad
           console.log("getAuthenticationCookie() with [" + thisemail + "]")
           const credential = thisemail + ":" + 'blockade'
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
