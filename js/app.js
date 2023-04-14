@@ -30,6 +30,7 @@
               }
           } catch (e) {
             console.log(e.toString())
+            callback(null)
           }
           return $("#neotoken").val()
       }
