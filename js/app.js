@@ -1,21 +1,39 @@
+      function testCookie() {
+          console.log("testCookie()")
+          function parseCookie() {
+            const cookies = document.cookie.split(';');
+            const cookieMap = new Map();
+            for (const cookie of cookies) {
+              const [name, value] = cookie.split('=').map(str => str.trim());
+              cookieMap.set(name, value);
+            }
+            return cookieMap;
+          }
+          const cookieMap = parseCookie();
+          var neotoken = cookieMap.get('neotoken')
+          if (typeof(neotoken) === 'undefined') {
+            neotoken = getQueryValue('neotoken')
+          }
+          console.log("cookie: [" + neotoken + "]")
+          return neotoken
+      }
       function neoOnload() {
-        testCookie()
-        var hashValue = window.location.hash.slice(1).split("?")[0];
+        const token = testCookie()
+        const protocol = window.location.protocol;
+        const server = window.location.host;
+        const fileWithPath = window.location.pathname;
+        const hashValue = window.location.hash;
+        //var hashValue = window.location.hash.slice(1).split("?")[0];
         if ( typeof(hashValue) === 'undefined' ) {
             console.log("Start login (undefined)")
         } else
         if (hashValue.length <= 0) {
             console.log("Start login")
         } else {
-            hashValue = "#" + hashValue
             console.log("hashvalue=[" + hashValue + "]")
         }
         function getServerURL() {
-          const protocol = window.location.protocol;
-          const server = window.location.host;
-          const fileWithPath = window.location.pathname;
-          const hashValue = window.location.hash;
-          return protocol + "//" + server + fileWithPath + hashValue
+          return protocol + "//" + server + fileWithPath + "#" + hashValue
         }
         function removeLeadingChar(string, char) {
           if (string.startsWith(char)) {

@@ -154,28 +154,11 @@
             }
             left()
         }
-      function testCookie(right, left) {
-          console.log("testCookie()")
-          function parseCookie() {
-            const cookies = document.cookie.split(';');
-            const cookieMap = new Map();
-            for (const cookie of cookies) {
-              const [name, value] = cookie.split('=').map(str => str.trim());
-              cookieMap.set(name, value);
-            }
-            return cookieMap;
-          }
-          const cookieMap = parseCookie();
-          var neotoken = cookieMap.get('neotoken')
-          if (typeof(neotoken) === 'undefined') {
-            neotoken = getQueryValue('neotoken')
-          }
-          console.log("cookie: [" + neotoken + "]")
-          verifyToken(neotoken, right, left)
-          return neotoken
-      }
+
       function onload() {
         console.log("load")
+
+        verifyToken(testCookie(), right, left)
 
         thisemail = localStorage.getItem('email');
         urlemail = getQueryValue('username')
