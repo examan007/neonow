@@ -70,7 +70,7 @@
         }
         const thishref = $('#login').attr('data')
         const newquery = thishref + "?name=value&" + searchstr +
-         "&serverurl=" + getServerURL() + getNeoToken(token)
+         "&serverurl=" + getServerURL() + getNeoToken()
         console.log("$$$ query=[" + newquery + "]")
         $('#login').attr('data', newquery)
 
