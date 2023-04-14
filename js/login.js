@@ -146,7 +146,7 @@
                 if (token.length <= 0) {
                     console("token length error.")
                 } else {
-                    right()
+                    right(token)
                     return
                 }
             } catch (e) {
@@ -158,8 +158,6 @@
       function onload() {
         console.log("load")
 
-        verifyToken(testCookie(), right, left)
-
         thisemail = localStorage.getItem('email');
         urlemail = getQueryValue('username')
         getQueryValue('password')
@@ -169,7 +167,7 @@
           thisemail = urlemail;
           localStorage.setItem('email', thisemail);
         }
-        function needAuth() {
+        function needAuth(token) {
             const hashValue = window.location.hash.slice(1).split("?")[0];
             if ( typeof(hashValue) === 'undefined' ) {
                 console.log("Start login (undefined)")
@@ -183,11 +181,12 @@
             console.log("thisemail = " + thisemail)
             $("#email").val(thisemail)
             $("#serverurl").val(getQueryValue('serverurl'))
+            $("#neotoken").val(token)
 
             getNextForm('Login')
 
         }
-        testCookie(function () { exitlogin() }, needAuth)
+        verifyToken(getQueryValue('neotoken'), function () { exitlogin() }, (t)=> needAuth(t))
       }
 
 
