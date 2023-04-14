@@ -3,7 +3,9 @@
         const searchParams = new URLSearchParams(searchstr);
         const value = searchParams.get(name)
         console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
-        $("#" + name).val(value)
+        if (value != null) {
+            $("#" + name).val(value)
+        }
         return value
       }
       function testCookie() {
