@@ -24,7 +24,7 @@
             return string;
           }
         }
-        val searchstr = removeLeadingChar(window.location.search, "?")
+        var searchstr = removeLeadingChar(window.location.search, "?")
         if (searchstr.length >= 0) {
             searchstr = "&" + searchstr
         }
