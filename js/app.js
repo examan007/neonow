@@ -22,7 +22,7 @@
           const cookieMap = parseCookie();
           var neotoken = cookieMap.get('neotoken')
           if (typeof(neotoken) === 'undefined') {
-            neotoken = getQueryValue('neotoken')
+            neotoken = "" //"neotoken=" + getQueryValue('neotoken')
           } else {
             $("#neotoken").val(neotoken)
           }
@@ -68,15 +68,11 @@
         }
         function getNeoToken() {
            const token = testCookie()
-           if (token == null) {
-                return ""
-           }
-           if (getQueryValue('neotoken') != null) {
+           if (token.length <= 0) {
                 return ""
            } else {
-                return "&neotoken=" + token
+                return "&" + token
            }
-           return ""
         }
         const thishref = $('#login').attr('data')
         const newquery = thishref + "?name=value" + getSearchStr() +
