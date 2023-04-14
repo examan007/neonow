@@ -19,15 +19,19 @@
             }
             return cookieMap;
           }
-          const cookieMap = parseCookie();
-          var neotoken = cookieMap.get('neotoken')
-          if (typeof(neotoken) === 'undefined') {
-            neotoken = "" //"neotoken=" + getQueryValue('neotoken')r
-          } else {
-            $("#neotoken").val(neotoken)
+          try {
+              const cookieMap = parseCookie();
+              const neotoken = cookieMap.get('neotoken')
+              if (typeof(neotoken) === 'undefined') {
+                callback(getQueryValue('neotoken'))
+              } else {
+                $("#neotoken").val(neotoken)
+                callback(neotoken)
+              }
+          } catch (e) {
+            console.log(e.toString())
           }
-          console.log("cookie: [" + neotoken + "]")
-          return neotoken
+          return $("#neotoken").val()
       }
       function getHashValue () {
           const hashValue = window.location.href.split("?")[0].split("#")[1]
@@ -66,25 +70,30 @@
             const fileWithPath = window.location.pathname;
             return protocol + "//" + server + fileWithPath + hashValue
         }
-        function getNeoToken() {
-           const token = testCookie()
-           try {
-               if (token.length <= 0) {
-
+        testCookie((token)=> {
+            function getNeoToken () {
+                if (token == null) {
+                    return ""
+                } else
+                if (getQueryValue('neotoken') != null) {
+                    return ""
+                }
+               try {
+                   if (token.length <= 0) {
+                        return ""
+                   }
+               } catch (e) {
                     return ""
                }
-           } catch (e) {
-                return ""
+               console.log("token=[" + token + "]")
+               return "&neotoken=" + token
            }
-           console.log("token=[" + token + "]")
-           return "&neotoken=" + token
-        }
-
-        const thishref = $('#login').attr('data')
-        const newquery = thishref + "?name=value" + getSearchStr() +
-        "&serverurl=" + getServerURL() + getNeoToken()
-        console.log("$$$ query=[" + newquery + "]")
-        $('#login').attr('data', newquery)
+           const thishref = $('#login').attr('data')
+           const newquery = thishref + "?name=value" + getSearchStr() +
+           "&serverurl=" + getServerURL() + getNeoToken()
+           console.log("$$$ query=[" + newquery + "]")
+           $('#login').attr('data', newquery)
+        })
 
         // Add an event listener for the message event
         window.addEventListener("message", receiveMessage, false);
