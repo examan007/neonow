@@ -25,7 +25,7 @@
           }
         }
         var searchstr = removeLeadingChar(window.location.search, "?")
-        if (searchstr.length >= 0) {
+        if (searchstr.length > 0) {
             searchstr = "&" + searchstr
         }
         const thishref = $('#login').attr('data')
