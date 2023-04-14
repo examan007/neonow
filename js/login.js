@@ -159,7 +159,7 @@
         }
 
       function onload() {
-        console.log("load")
+        console.log("load href=[" + window.location.href + "]")
 
         thisemail = localStorage.getItem('email');
         urlemail = getQueryValue('username')

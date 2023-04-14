@@ -1,3 +1,11 @@
+     function getQueryValue(name) {
+        const searchstr = window.location.href.split("?")[1]
+        const searchParams = new URLSearchParams(searchstr);
+        const value = searchParams.get(name)
+        console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
+        $("#" + name).val(value)
+        return value
+      }
       function testCookie() {
           console.log("testCookie()")
           function parseCookie() {
@@ -18,12 +26,14 @@
           return neotoken
       }
       function neoOnload() {
+        console.log("href=[" + window.location.href + "]")
         const token = testCookie()
         const protocol = window.location.protocol;
         const server = window.location.host;
         const fileWithPath = window.location.pathname;
-        const hashValue = window.location.hash;
-        //var hashValue = window.location.hash.slice(1).split("?")[0];
+        //const hashValue = window.location.hash.split("?")[0];
+        var hashValue = window.location.hash.slice(1).split("?")[0];
+        const searchstr = window.location.href.split("?")[1]
         if ( typeof(hashValue) === 'undefined' ) {
             console.log("Start login (undefined)")
         } else
@@ -33,7 +43,7 @@
             console.log("hashvalue=[" + hashValue + "]")
         }
         function getServerURL() {
-          return protocol + "//" + server + fileWithPath + "#" + hashValue
+          return protocol + "//" + server + fileWithPath + hashValue
         }
         function removeLeadingChar(string, char) {
           if (string.startsWith(char)) {
@@ -42,15 +52,10 @@
             return string;
           }
         }
-        var searchstr = removeLeadingChar(window.location.search, "?")
-        if (searchstr.length > 0) {
-            searchstr = "&" + searchstr
-        }
         const thishref = $('#login').attr('data')
-        const newquery = thishref + hashValue + "?name=value" + searchstr +
-         "&serverurl=" + getServerURL() +
-         "&neotoken=" + token
-        console.log("query=[" + newquery + "]")
+        const newquery = thishref + "?name=value&" + searchstr +
+         "&serverurl=" + getServerURL()
+        console.log("$$$ query=[" + newquery + "]")
         $('#login').attr('data', newquery)
 
         // Add an event listener for the message event

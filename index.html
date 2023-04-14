@@ -67,12 +67,14 @@
         console.log("cookies: [" + allCookies + "]")
       }
     </script>
-  <body style="padding:0;border:0;margin:0;height:100vh" onload="neoOnload()">
-
+  <body style="padding:0;border:0;margin:0;height:100vh">
     <div id="root"></div>
     <object id="setup"  type="text/html" data="setup.html"></object>
     <object id="login"  type="text/html" data="login-new.html"></object>
     <object id="status" type="text/html" data="https://test.neolation.com/home" ></object>
     <object id="my-object" type="text/html" data="https://test.neolation.com/home" ></object>
+    <script>
+       neoOnload()
+     </script>
   </body>
 </html>
