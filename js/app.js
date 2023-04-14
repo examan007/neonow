@@ -77,7 +77,7 @@
                 return ""
            }
            console.log("token=[" + token + "]")
-           return "&" + token
+           return "&neotoken=" + token
         }
 
         const thishref = $('#login').attr('data')
