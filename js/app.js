@@ -17,9 +17,16 @@
           const hashValue = window.location.hash;
           return protocol + "//" + server + fileWithPath + hashValue
         }
-        const searchstr = window.location.search
+        function removeLeadingChar(string, char) {
+          if (string.startsWith(char)) {
+            return string.substring(1);
+          } else {
+            return string;
+          }
+        }
+        const searchstr = removeLeadingChar(window.location.search, "?")
         const thishref = $('#login').attr('data')
-        const newquery = thishref + hashValue + searchstr + "&serverurl=" + getServerURL()
+        const newquery = thishref + hashValue + "?name=value&" + searchstr + "&serverurl=" + getServerURL()
         console.log("query=[" + newquery + "]")
         $('#login').attr('data', newquery)
 
