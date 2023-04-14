@@ -88,12 +88,12 @@
               try {
                 const token = JSON.parse(message).token
                 console.log("token=[" + token + "]")
-              } catch (e) {
-                console.log(e.toString())
                 $.cookie('neotoken', token, { expires: 1 })
                 console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
+              } catch (e) {
+                console.log(e.toString())
                 $('#login').css("display", "none")
-              }
+             }
            }
         }
       }
