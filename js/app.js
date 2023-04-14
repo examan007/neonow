@@ -27,7 +27,7 @@
             $("#neotoken").val(neotoken)
           }
           console.log("cookie: [" + neotoken + "]")
-          callback(noetoken)
+          callback(neotoken)
       }
       function getHashValue () {
           const hashValue = window.location.href.split("?")[0].split("#")[1]
