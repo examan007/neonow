@@ -127,7 +127,9 @@
                   }
                 }
           }
-          xhr.onload = onLoadAuth().onLoad
+          const onloadObject = onLoadAuth()
+          xhr.onload = onloadObject.onLoad
+          const thisemail = onloadObject.thisemail
           console.log("getAuthenticationCookie() with [" + thisemail + "]")
           const credential = thisemail + ":" + 'blockade'
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
