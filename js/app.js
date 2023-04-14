@@ -49,7 +49,6 @@
         }
       function neoOnload() {
         console.log("href=[" + window.location.href + "]")
-        const token = testCookie()
         const protocol = window.location.protocol;
         const server = window.location.host;
         const fileWithPath = window.location.pathname;
@@ -59,16 +58,19 @@
         function getServerURL() {
           return protocol + "//" + server + fileWithPath + hashValue
         }
-        function getNeoToken () {
-            if (getQueryValue('neotoken') == null) {
-                return "&neotoken=" + token
-            } else {
+        function getNeoToken(toker) {
+           const token = testCookie()
+           if (token == null) {
                 return ""
-            }
+           }
+           if (getQueryValue('neotoken') == null) {
+                return "&neotoken=" + token
+           }
+           return ""
         }
         const thishref = $('#login').attr('data')
         const newquery = thishref + "?name=value&" + searchstr +
-         "&serverurl=" + getServerURL() + getNeoToken()
+         "&serverurl=" + getServerURL() + getNeoToken(token)
         console.log("$$$ query=[" + newquery + "]")
         $('#login').attr('data', newquery)
 
