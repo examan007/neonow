@@ -196,10 +196,13 @@
             } else {
                 console.log("hashvalue=[" + hashValue + "]")
             }
-            getNextForm('Login')
 
             console.log("thisemail = " + thisemail)
             $("#email").val(thisemail)
+            $("#serverurl").val(getQueryValue('serverurl'))
+
+            getNextForm('Login')
+
         }
         testCookie(function () { exitlogin() }, needAuth)
       }
