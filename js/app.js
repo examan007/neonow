@@ -76,7 +76,7 @@
            } catch (e) {
                 return ""
            }
-           console("token=[" + token + "]")
+           console.log("token=[" + token + "]")
            return "&" + token
         }
 
