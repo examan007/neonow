@@ -8,6 +8,12 @@
         }
         return value
       }
+      function setCookie(message) {
+          const token = JSON.parse(message).token
+          console.log("set token=[" + token + "]")
+          $.cookie('neotoken', token, { expires: 1 })
+          console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
+      }
       function testCookie(callback) {
           console.log("testCookie()")
           function parseCookie() {
@@ -23,7 +29,13 @@
               const cookieMap = parseCookie();
               const neotoken = cookieMap.get('neotoken')
               if (typeof(neotoken) === 'undefined') {
-                callback(getQueryValue('neotoken'))
+                const token = getQueryValue('neotoken')
+                callback(token)
+                message = "{\"token\":\"" + token + "\" }"
+                console.log("message=[" + message + "]")
+                if (token != null) {
+                    setCookie(message)
+                }
               } else {
                 $("#neotoken").val(neotoken)
                 callback(neotoken)
@@ -108,10 +120,7 @@
               var message = event.data;
               console.log("Received message:", message);
               try {
-                const token = JSON.parse(message).token
-                console.log("token=[" + token + "]")
-                $.cookie('neotoken', token, { expires: 1 })
-                console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
+                setCookie(message)
               } catch (e) {
                 console.log(e.toString())
                 $('#login').css("display", "none")
