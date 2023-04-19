@@ -62,3 +62,26 @@
         float: right;
         color: white;
       }
+     .input-container {
+       position: relative;
+       width: 200px;
+       height: 30px;
+     }
+     #username {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+      }
+      #input-box {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 5;
+        transition: opacity 0.5s ease-in-out;
+        opacity: 1;
+      }
+      #input-box.faded {
+        opacity: 0;
+        pointer-events: none;
+      }

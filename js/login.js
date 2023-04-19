@@ -38,7 +38,15 @@
         const searchParams = new URLSearchParams(searchstr);
         const value = searchParams.get(name)
         console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
-        $("#" + name).val(value)
+        try {
+            if (value.length > 0) {
+                $("#" + name).val(value)
+            } else {
+
+            }
+        } catch (e) {
+            console.log(e.toString())
+        }
         return value
       }
       function getNextForm(section) {
@@ -168,9 +176,22 @@
       function onload() {
         console.log("load href=[" + window.location.href + "]")
 
+        const usernameBox = document.getElementById("username");
+        const inputBox = document.getElementById("input-box");
+        usernameBox.addEventListener("input", function() {
+          if (this.value.length > 0) {
+            inputBox.classList.add("faded");
+          } else {
+            inputBox.classList.remove("faded");
+          }
+        });
+
+
         thisemail = localStorage.getItem('email');
         urlemail = getQueryValue('username')
         getQueryValue('password')
+
+        $('#username').focus()
 
         console.log("urlemail=[" + urlemail + "]")
         if (thisemail !== urlemail) {
