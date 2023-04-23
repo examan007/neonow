@@ -1,3 +1,32 @@
+ var ApplicationManager = function() {
+    return {
+        getParameters: function () {
+            const params = window.location.href.split("?")[1]
+            if (typeof(params) === 'undefined') {
+                return ""
+            } else {
+                return "?" + params
+            }
+        },
+        getHashCode: function () {
+            const hash = window.location.href.split("?")[0].split("#")[1]
+            if (typeof(hash) === 'undefined') {
+                return ""
+            } else {
+                return "#" + hash
+            }
+        },
+        getServer: function () {
+            const server = window.location.href.split("?")[0].split("#")[0]
+            if (typeof(server) === 'undefined') {
+                return ""
+            } else {
+                return server
+            }
+        }
+    }
+}
+
      function getQueryValue(name) {
         const searchstr = window.location.href.split("?")[1]
         const searchParams = new URLSearchParams(searchstr);
