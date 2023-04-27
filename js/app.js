@@ -1,32 +1,31 @@
- var ApplicationManager = function() {
-    return {
-        getParameters: function () {
-            const params = window.location.href.split("?")[1]
-            if (typeof(params) === 'undefined') {
-                return ""
-            } else {
-                return "?" + params
-            }
-        },
-        getHashCode: function () {
-            const hash = window.location.href.split("?")[0].split("#")[1]
-            if (typeof(hash) === 'undefined') {
-                return ""
-            } else {
-                return "#" + hash
-            }
-        },
-        getServer: function () {
-            const server = window.location.href.split("?")[0].split("#")[0]
-            if (typeof(server) === 'undefined') {
-                return ""
-            } else {
-                return server
-            }
-        }
+ var ApplicationManager = function(msgexception) {
+    function testAndReturn(argument, delimeter) {
+         if (typeof(argument) === 'undefined') {
+             return ""
+         } else {
+             return delimeter + argument
+         }
     }
-}
-
+    function getParameters() {
+         return testAndReturn(window.location.href.split("?")[1], "?")
+     }
+     function getHashCode() {
+         return testAndReturn(window.location.href.split("?")[0].split("#")[1], "#")
+     }
+     function getServer() {
+         return testAndReturn(window.location.href.split("?")[0].split("#")[0], "")
+     }
+     function getSearchStr() {
+         const params = getParameters()
+         if (params.length > 0) {
+            return params
+         } else {
+            return "?name=value"
+         }
+    }
+     function getServerURL() {
+        return getServer() + getHashCode()
+     }
      function getQueryValue(name) {
         const searchstr = window.location.href.split("?")[1]
         const searchParams = new URLSearchParams(searchstr);
@@ -36,124 +35,164 @@
             $("#" + name).val(value)
         }
         return value
-      }
+    }
       function setCookie(message) {
           const token = JSON.parse(message).token
           console.log("set token=[" + token + "]")
           $.cookie('neotoken', token, { expires: 1 })
           console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
       }
-      function testCookie(callback) {
-          console.log("testCookie()")
-          function parseCookie() {
-            const cookies = document.cookie.split(';');
-            const cookieMap = new Map();
-            for (const cookie of cookies) {
-              const [name, value] = cookie.split('=').map(str => str.trim());
-              cookieMap.set(name, value);
-            }
-            return cookieMap;
-          }
-          try {
-              const cookieMap = parseCookie();
-              const neotoken = cookieMap.get('neotoken')
-              if (typeof(neotoken) === 'undefined') {
-                const token = getQueryValue('neotoken')
-                callback(token)
-                message = "{\"token\":\"" + token + "\" }"
-                console.log("message=[" + message + "]")
-                if (token != null) {
-                    setCookie(message)
-                }
-              } else {
-                $("#neotoken").val(neotoken)
-                callback(neotoken)
-              }
-          } catch (e) {
-            console.log(e.toString())
-            callback(null)
-          }
-          return $("#neotoken").val()
-      }
-      function getHashValue () {
-          const hashValue = window.location.href.split("?")[0].split("#")[1]
-          if ( typeof(hashValue) === 'undefined' ) {
-              console.log("Start login (undefined)")
-          } else
-          if (hashValue.length <= 0) {
-              console.log("Start login")
-          } else {
-              console.log("hashvalue=[" + hashValue + "]")
-              return "#" + hashValue
-          }
-          return ""
-      }
-        function removeLeadingChar(string, char) {
-          if (string.startsWith(char)) {
-            return string.substring(1);
-          } else {
-            return string;
-          }
-        }
-      function neoOnload() {
-        console.log("href=[" + window.location.href + "]")
-        var hashValue = getHashValue()
-        function getSearchStr() {
-            const searchstr = window.location.href.split("?")[1]
-            if (typeof(searchstr) === "undefined") {
-                return ""
-            } else {
-                return "&" + searchstr
-            }
-        }
-        function getServerURL() {
-            const protocol = window.location.protocol;
-            const server = window.location.host;
-            const fileWithPath = window.location.pathname;
-            return protocol + "//" + server + fileWithPath + hashValue
-        }
-        testCookie((token)=> {
-            function getNeoToken () {
-                if (token == null) {
-                    return ""
-                } else
-                if (getQueryValue('neotoken') != null) {
-                    return ""
-                }
-               try {
-                   if (token.length <= 0) {
-                        return ""
-                   }
-               } catch (e) {
-                    return ""
-               }
-               console.log("token=[" + token + "]")
-               return "&neotoken=" + token
+    function testCookie(callback) {
+       console.log("testCookie()")
+       function parseCookie() {
+         const cookies = document.cookie.split(';');
+         const cookieMap = new Map();
+         for (const cookie of cookies) {
+           const [name, value] = cookie.split('=').map(str => str.trim());
+           cookieMap.set(name, value);
+         }
+         return cookieMap;
+       }
+       try {
+           const cookieMap = parseCookie();
+           const neotoken = cookieMap.get('neotoken')
+           if (typeof(neotoken) === 'undefined') {
+             const token = getQueryValue('neotoken')
+             callback(token)
+             message = "{\"token\":\"" + token + "\" }"
+             console.log("message=[" + message + "]")
+             if (token != null) {
+                 setCookie(message)
+             }
+           } else {
+             $("#neotoken").val(neotoken)
+             callback(neotoken)
            }
-           const thishref = $('#login').attr('data')
-           const newquery = thishref + "?name=value" + getSearchStr() +
-           "&serverurl=" + getServerURL() + getNeoToken()
-           console.log("$$$ query=[" + newquery + "]")
-           $('#login').attr('data', newquery)
-        })
-
+       } catch (e) {
+         console.log(e.toString())
+         callback(null)
+       }
+       return $("#neotoken").val()
+    }
+    function getNeoToken (token) {
+       try {
+           if (token.length <= 0) {
+                return ""
+           }
+       } catch (e) {
+            return ""
+       }
+       console.log("token=[" + token + "]")
+       return "&neotoken=" + token
+    }
+    function registerForEvents() {
         // Add an event listener for the message event
         window.addEventListener("message", receiveMessage, false);
         console.log("Adding event listener")
+        window.addEventListener('popstate', function(event) {
+          location.reload();
+        });
+    }
 
-        function receiveMessage(event) {
-          // Check if the message is coming from the expected origin
-           console.log("origin=[" + JSON.stringify(event) + "]")
-           if (event.isTrusted === true) {
-              // Process the message data
-              var message = event.data;
-              console.log("Received message:", message);
-              try {
+    function receiveMessage(event) {
+      // Check if the message is coming from the expected origin
+       console.log("origin=[" + JSON.stringify(event) + "]")
+       if (event.isTrusted === true) {
+          // Process the message data
+          var message = event.data;
+          console.log("Received messagex:", message);
+          try {
+            const jsonmsg = JSON.parse(message)
+            if (typeof(jsonmsg.operation) === "undefined") {
                 setCookie(message)
-              } catch (e) {
-                console.log(e.toString())
-                $('#login').css("display", "none")
-             }
-           }
+            } else
+            if (jsonmsg.operation === "seturistate") {
+                window.location.href = getServer() + getHashCode() + jsonmsg.newhref
+              const state = { user: 12 };
+              const title = 'My new page';
+                //history.pushState(state, title, window.location.href)
+                console.log("New href = [" + jsonmsg.newhref + "]")
+            }
+          } catch (e) {
+            console.log(e.toString())
+            msgexception(event)
+         }
+       }
+    }
+
+    return {
+        verify: function (initialize, complete) {
+            registerForEvents()
+            testCookie((token)=> {
+                   const thishref = initialize()
+                   const newquery = thishref + getHashCode() + getSearchStr() +
+                   "&serverurl=" + getServerURL() + getNeoToken(token)
+                   console.log("$$$ verify query=[" + newquery + "]")
+                   complete(newquery)
+            })
+        },
+        getargs: function (initialize, complete) {
+            registerForEvents()
+            testCookie((token)=> {
+                   const thishref = initialize()
+                   const newquery = thishref + getHashCode() + getSearchStr() + getNeoToken(token)
+                   console.log("$$$ getargs query=[" + newquery + "]")
+                   complete(newquery)
+            })
+        },
+        testCookie: function (callback) {
+            testCookie(callback)
+        },
+        getHashValue: function () {
+            return testAndReturn(window.location.href.split("?")[0].split("#")[1], "#")
         }
-      }
+    }
+}
+function removeLeadingChar(string, char) {
+    if (string.startsWith(char)) {
+        return string.substring(1);
+    } else {
+        return string;
+    }
+}
+function testCookie(callback) {
+    ApplicationManager(() => {}).testCookie(callback)
+}
+function getHashValue() {
+    return ApplicationManager(() => {}).getHashValue()
+}
+function neobookOnLoad() {
+        ApplicationManager((event) => {
+//            $('#login').css("display", "none")
+              console.log("event.data=[" + event.data + "]")
+        }).
+        getargs(
+        () => {
+            thishref = $('#calendar').attr('data')
+            console.log("Xthishref=[" + thishref + "]")
+            return thishref
+        },
+        (newquery) => {
+            $('#calendar').attr('data', newquery)
+        })
+}
+function neoOnload() {
+        console.log("neoOnload()")
+
+        ApplicationManager((event) => {
+            $('#login').css("display", "none")
+            console.log("event.data=[" + event.data + "]")
+        }).
+        verify(
+        () => {
+            thishref = $('#login').attr('data')
+            console.log("Xthishref=[" + thishref + "]")
+            return thishref
+        },
+        (newquery) => {
+            $('#login').attr('data', newquery)
+        })
+
+        neobookOnLoad()
+}
+

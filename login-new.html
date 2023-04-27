@@ -7,7 +7,7 @@
   <script src="js/login.js"></script>
   <link rel="stylesheet" href="css/login.css">
 </head>
-<body onload="onload()">
+<body>
 <div class="login-window">
   <section id="Login">
     <form id="Login-form" action="#Verify" method="post">
@@ -115,5 +115,15 @@
     </form>
   </section>
 </div>
+<script>
+  LogMgr = LoginManager()
+  LogMgr.onload()
+  function getAuthenticationCookie() {
+    LogMgr.getAuthenticationCookie()
+  }
+  function exitlogin() {
+    LogMgr.exitlogin()
+  }
+</script>
 </body>
 </html>

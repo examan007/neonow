@@ -1,3 +1,4 @@
+  var LoginManager = function() {
       function executeAJAX(amethod) {
         var xhttp = new XMLHttpRequest()
         xhttp.withCredentials = false;
@@ -34,6 +35,7 @@
           .catch(error => console.error(error));
       }
       function getQueryValue(name) {
+        console.log("query href=[" + window.location.href + "]")
         const searchstr = window.location.href.split("?")[1]
         const searchParams = new URLSearchParams(searchstr);
         const value = searchParams.get(name)
@@ -158,11 +160,11 @@
         }
         function verifyToken (token, right, left) {
             try {
-                if (token.length <= 0) {
-                    console("token length error.")
-                } else
                 if (token === "undefined") {
                     console("token undefined.")
+                } else
+                if (token.length <= 0) {
+                    console("token length error.")
                 } else {
                     right(token)
                     return
@@ -172,42 +174,51 @@
             }
             left()
         }
+    return {
+        onload: function () {
+            console.log("load href=[" + window.location.href + "]")
+            const serverurl = getQueryValue('serverurl')
+            const usernameBox = document.getElementById("username");
+            const inputBox = document.getElementById("input-box");
+            usernameBox.addEventListener("input", function() {
+              if (this.value.length > 0) {
+                inputBox.classList.add("faded");
+              } else {
+                inputBox.classList.remove("faded");
+              }
+            });
 
-      function onload() {
-        console.log("load href=[" + window.location.href + "]")
+            //thisemail = localStorage.getItem('email');
+            urlemail = getQueryValue('username')
+            getQueryValue('password')
 
-        const usernameBox = document.getElementById("username");
-        const inputBox = document.getElementById("input-box");
-        usernameBox.addEventListener("input", function() {
-          if (this.value.length > 0) {
-            inputBox.classList.add("faded");
-          } else {
-            inputBox.classList.remove("faded");
-          }
-        });
+            $('#username').focus()
 
+            console.log("urlemail=[" + urlemail + "]")
+            if (thisemail !== urlemail) {
+              thisemail = urlemail;
+              //localStorage.setItem('email', thisemail);
+            }
+            function needAuth(token) {
+                console.log("thisemail = " + thisemail)
+                $("#email").val(thisemail)
+                $("#serverurl").val(serverurl)
+                $("#neotoken").val(token)
 
-        thisemail = localStorage.getItem('email');
-        urlemail = getQueryValue('username')
-        getQueryValue('password')
+                getNextForm('Login')
 
-        $('#username').focus()
-
-        console.log("urlemail=[" + urlemail + "]")
-        if (thisemail !== urlemail) {
-          thisemail = urlemail;
-          localStorage.setItem('email', thisemail);
+            }
+            verifyToken(getQueryValue('neotoken'), function () { exitlogin() }, (t)=> needAuth(t))
+        },
+        exitlogin: function () {
+            exitlogin()
+        },
+        getAuthenticationCookie: function () {
+            getAuthenticationCookie()
         }
-        function needAuth(token) {
-            console.log("thisemail = " + thisemail)
-            $("#email").val(thisemail)
-            $("#serverurl").val(getQueryValue('serverurl'))
-            $("#neotoken").val(token)
 
-            getNextForm('Login')
 
-        }
-        verifyToken(getQueryValue('neotoken'), function () { exitlogin() }, (t)=> needAuth(t))
-      }
+    }
+}
 
 
