@@ -11,6 +11,7 @@
         text-align: center;
         width: 16em;
         background-image: url("https://illuminatinglaserandstyle.com/images/business-card-mdm.png");
+        border-radius: 25px;
       }
       .login-window h2 {
         margin-top: 0;
@@ -85,4 +86,7 @@
       #input-box.faded {
         opacity: 0;
         pointer-events: none;
+      }
+      #datetime {
+        width: 19.5em;
       }

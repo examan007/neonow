@@ -1,4 +1,12 @@
  var ApplicationManager = function(msgexception) {
+    var LoginWindow = null
+    function setLoginWindow() {
+        $('#login').css("display", "block")
+        var objectEl = document.getElementById('login');
+        if (objectEl.contentWindow != null) {
+            LoginWindow = objectEl.contentWindow;
+        }
+    }
     function testAndReturn(argument, delimeter) {
          if (typeof(argument) === 'undefined') {
              return ""
@@ -28,6 +36,7 @@
      }
      function getQueryValue(name) {
         const searchstr = window.location.href.split("?")[1]
+
         const searchParams = new URLSearchParams(searchstr);
         const value = searchParams.get(name)
         console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
@@ -85,6 +94,7 @@
        console.log("token=[" + token + "]")
        return "&neotoken=" + token
     }
+
     function registerForEvents() {
         // Add an event listener for the message event
         window.addEventListener("message", receiveMessage, false);
@@ -92,8 +102,8 @@
         window.addEventListener('popstate', function(event) {
           location.reload();
         });
+        setLoginWindow()
     }
-
     function receiveMessage(event) {
       // Check if the message is coming from the expected origin
        console.log("origin=[" + JSON.stringify(event) + "]")
@@ -106,12 +116,25 @@
             if (typeof(jsonmsg.operation) === "undefined") {
                 setCookie(message)
             } else
-            if (jsonmsg.operation === "seturistate") {
+            if (jsonmsg.operation === 'seturistate') {
                 window.location.href = getServer() + getHashCode() + jsonmsg.newhref
               const state = { user: 12 };
               const title = 'My new page';
                 //history.pushState(state, title, window.location.href)
                 console.log("New href = [" + jsonmsg.newhref + "]")
+            } else
+            if (jsonmsg.operation === 'showappointmentrequest') {
+                console.log("appointment request")
+                console.log("Request object", JSON.stringify($('#login').children()))
+                setLoginWindow()
+                var message = {
+                  operation: 'showsection',
+                  sectionname: 'Request',
+                  datetime: jsonmsg.datetime,
+                  message: jsonmsg
+                }
+                LoginWindow.postMessage(JSON.stringify(message), "*");
+                $('#login').css("display", "block")
             }
           } catch (e) {
             console.log(e.toString())
@@ -132,7 +155,7 @@
             })
         },
         getargs: function (initialize, complete) {
-            registerForEvents()
+            //registerForEvents()
             testCookie((token)=> {
                    const thishref = initialize()
                    const newquery = thishref + getHashCode() + getSearchStr() + getNeoToken(token)
@@ -191,6 +214,14 @@ function neoOnload() {
         },
         (newquery) => {
             $('#login').attr('data', newquery)
+        })
+
+        testCookie((token)=> {
+            if (token == null) {
+                $('#login').css("display", "block")
+            } else {
+                $('#login').css("display", "none")
+            }
         })
 
         neobookOnLoad()

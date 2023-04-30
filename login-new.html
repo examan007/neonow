@@ -21,8 +21,9 @@
           <input type="text" id="input-box" value="Enter email address here." required>
         </div>
         <input type="hidden" id="xpassword" name="password" required>
-        <input type="hidden" id="neotoken" name="neotoken" value="hidden" required>
-        <input type="hidden" id="serverurl" name="serverurl" value="hidden" required>
+        <input type="hidden" id="neotoken" name="neotoken" value="" required>
+        <input type="hidden" id="serverurl" name="serverurl" value="" required>
+        <input type="hidden" name="title" valaue="Verify your email address.">
         <input type="hidden" name="message" value=
       "Please check ${username} for iLaS verification message and follow instructions to make a booking."
         >
@@ -30,6 +31,29 @@
       <br>
       <br>
       <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()">Verify Email</a>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section id="Request" style="display: none;">
+    <form id="Request-form" action="#Request" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <label for="username">Please confirm</label>
+        <label for="username">Date and time for appointment</label>
+        <div class="input-container">
+          <input type="text" id="datetime" name="datetime"  required>
+        </div>
+        <input type="hidden" name="title" value="Your appointment is booked.">
+        <input type="hidden" name="message" value=
+                "Appointment booked successfully; notification message has been sent to ${username}."
+        >
+     </span>
+      <br>
+      <br>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="requestAppointment()">Request Appointment</a>
       <br>
       <br>
     </form>
@@ -43,7 +67,6 @@
         <label for="verification">Code:</label>
         <input type="text" id="verification" name="verification" required>
       </span>
-
     <br>
     <br>
     <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()" style="display: none;">Make Booking</a>
@@ -90,16 +113,6 @@
       <br>
     </form>
   </section>
-  <section id="Authenticate" style="display: none;">
-    <h2>Authenticate</h2>
-    <form action="" method="post">
-      <label for="verification">Code:</label>
-      <input type="text" id="authentication" name="verification" required>
-      <br>
-      <input type="submit" value="Verfiy">
-      <br>
-    </form>
-  </section>
   <section id="Changepass" style="display: none;">
     <h2>Change Password</h2>
     <form action="" method="post">
@@ -120,6 +133,9 @@
   LogMgr.onload()
   function getAuthenticationCookie() {
     LogMgr.getAuthenticationCookie()
+  }
+  function requestAppointment() {
+    LogMgr.requestAppointment()
   }
   function exitlogin() {
     LogMgr.exitlogin()
