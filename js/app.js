@@ -216,13 +216,13 @@ function neoOnload() {
             $('#login').attr('data', newquery)
         })
 
-        testCookie((token)=> {
-            if (token == null) {
-                $('#login').css("display", "block")
-            } else {
+//        testCookie((token)=> {
+//            if (token == null) {
+//                $('#login').css("display", "block")
+//            } else {
                 $('#login').css("display", "none")
-            }
-        })
+//            }
+//        })
 
         neobookOnLoad()
 }
