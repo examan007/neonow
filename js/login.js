@@ -53,14 +53,12 @@
         return value
       }
       function getNextForm(section) {
-          $("#email").val(thisemail)
-          console.log($("#username").val())
-          $("#Login").css("display", "none")
-          $("#Login-pass").css("display", "none")
-          $("#Newuser").css("display", "none")
-          $("#Verify").css("display", "none")
-          $("#Request").css("display", "none")
-          $("#" + section).css("display", "block")
+        //console.log("$$$%%%$$$ getNextForm $$$")
+        $('.Dialogue').each( function () {
+            $(this).css("display", "none")
+            //console.log("section=[" + $(this).attr('id') + "]");
+        })
+        $("#" + section).css("display", "block")
       }
       function setEmail(templatename, extended) {
           function getParameters(formname, delim) {
@@ -87,6 +85,14 @@
           });
 
           thisemail = formData.get('username')
+          function getNextSectionForm() {
+            const nextform = formData.get('nextform')
+            if (nexform == null) {
+                return 'Verify'
+            } else {
+                return nextform
+            }
+          }
           console.log("thisemail=[" + thisemail + "] template=[" + templatename + "]")
           const xhr = new XMLHttpRequest();
           xhr.timeout = 5000;

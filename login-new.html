@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="login-window">
-  <section id="Login">
+  <section class="Dialogue" id="Login">
     <form id="Login-form" action="#Verify" method="post">
       <span class="exitx" onclick="exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
@@ -35,7 +35,7 @@
       <br>
     </form>
   </section>
-  <section id="Request" style="display: none;">
+  <section class="Dialogue" id="Request" style="display: none;">
     <form id="Request-form" action="#Request" method="post">
       <span class="exitx" onclick="exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
@@ -46,6 +46,7 @@
         <div class="input-container">
           <input type="text" id="datetime" name="datetime"  required>
         </div>
+        <input type="hidden" name="nextform" value="Confirmed">
         <input type="hidden" name="title" value="Your appointment is booked.">
         <input type="hidden" name="message" value=
                 "Appointment booked successfully; notification message has been sent to ${username}."
@@ -58,23 +59,37 @@
       <br>
     </form>
   </section>
-  <section id="Verify" style="display: none;">
+  <section class="Dialogue" id="Verify" style="display: none;">
     <form id="Verfiy-form" action="#Booking" method="post">
       <span class="exitx" onclick="exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
         <label for="verification">Code:</label>
-        <input type="text" id="verification" name="verification" required>
+        <input type="hidden" id="verification" name="verification" required>
       </span>
     <br>
     <br>
-    <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()" style="display: none;">Make Booking</a>
     <br>
     <br>
     </form>
   </section>
-  <section id="Login-pass" style="display: none;">
+  <section class="Dialogue" id="Confirm" style="display: none;">
+    <form id="Confirm-form" action="#Booking" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <label for="confirmdatetime">Code:</label>
+        <input type="hidden" id="confirmdatetime" name="datetime" required>
+      </span>
+      <br>
+      <br>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Login-pass" style="display: none;">
     <form id="Login-form-pass" action="#Newuser" method="post">
       <span class="exitx" onclick="exitlogin()">X</span>
       <span class="form-input"><label for="username">Email:</label>
@@ -92,7 +107,7 @@
     </form>
     <a id="newuserlink" href="#Newuser" onclick="getNextForm('Newuser')">Create new account.</a>
   </section>
-  <section id="Newuser" style="display: none;">
+  <section class="Dialogue" id="Newuser" style="display: none;">
     <form action="#Verify" method="post">
       <span class="exitx" onclick="exitlogin()">X</span>
       <span class="form-input">
@@ -113,7 +128,7 @@
       <br>
     </form>
   </section>
-  <section id="Changepass" style="display: none;">
+  <section class="Dialogue" id="Changepass" style="display: none;">
     <h2>Change Password</h2>
     <form action="" method="post">
       <label for="email">Email:</label>
