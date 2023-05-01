@@ -244,16 +244,19 @@
         onload: function () {
             console.log("load href=[" + window.location.href + "]")
             const serverurl = getQueryValue('serverurl')
-            const usernameBox = document.getElementById("username");
-            const inputBox = document.getElementById("input-box");
-            usernameBox.addEventListener("input", function() {
-              if (this.value.length > 0) {
-                inputBox.classList.add("faded");
-              } else {
-                inputBox.classList.remove("faded");
-              }
-            });
-
+            function initHelpedInput(inputid, helpid) {
+                const usernameBox = document.getElementById(inputid);
+                const inputBox = document.getElementById(helpid);
+                usernameBox.addEventListener("input", function() {
+                  if (this.value.length > 0) {
+                    inputBox.classList.add("faded");
+                  } else {
+                    inputBox.classList.remove("faded");
+                  }
+                });
+            }
+            initHelpedInput('username','input-box')
+            initHelpedInput('usermessage','message-box')
             //thisemail = localStorage.getItem('email');
             urlemail = getQueryValue('username')
             getQueryValue('password')
