@@ -72,9 +72,13 @@
              console.log("message=[" + message + "]")
              if (token != null) {
                  setCookie(message)
+                return callback(message)
+             } else {
+                return callback(null)
              }
            } else {
              $("#neotoken").val(neotoken)
+             return callback(neotoken)
            }
        } catch (e) {
          console.log(e.toString())
