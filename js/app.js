@@ -65,6 +65,7 @@
        try {
            const cookieMap = parseCookie();
            const neotoken = cookieMap.get('neotoken')
+           console.log("cookie token=[" + neotoken + "]")
            if (typeof(neotoken) === 'undefined') {
              const token = getQueryValue('neotoken')
              message = "{\"token\":\"" + token + "\" }"
