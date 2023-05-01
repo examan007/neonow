@@ -79,7 +79,9 @@
          console.log(e.toString())
          return callback(null)
        }
-       return callback($("#neotoken").val())
+       const savedtoken = $("#neotoken").val()
+       console.log("saved token=[" + savedtoken + "]")
+       return callback(savedtoken)
     }
     function getNeoToken (token) {
        try {
