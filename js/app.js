@@ -67,7 +67,6 @@
            const neotoken = cookieMap.get('neotoken')
            if (typeof(neotoken) === 'undefined') {
              const token = getQueryValue('neotoken')
-             callback(token)
              message = "{\"token\":\"" + token + "\" }"
              console.log("message=[" + message + "]")
              if (token != null) {
@@ -75,13 +74,12 @@
              }
            } else {
              $("#neotoken").val(neotoken)
-             callback(neotoken)
            }
        } catch (e) {
          console.log(e.toString())
-         callback(null)
+         return callback(null)
        }
-       return $("#neotoken").val()
+       return callback($("#neotoken").val())
     }
     function getNeoToken (token) {
        try {
