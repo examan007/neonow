@@ -155,7 +155,7 @@
                 onLoad: function () {
                     if (xhr.status === 200) {
                       console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
-                      setCookieInParent(xhr.response)
+                      //setCookieInParent(xhr.response)
                       $("#neotoken").val(JSON.parse(xhr.response).token)
                       const serverurl = formData.get('serverurl')
                       if (serverurl == null) {
@@ -283,7 +283,10 @@
                 getNextForm('Login')
 
             }
-            verifyToken(getQueryValue('neotoken'), function () { exitlogin() }, (t)=> needAuth(t))
+            verifyToken(getQueryValue('neotoken'), (token)=> {
+                exitlogin()
+                setCookieInParent(token)
+            }, (t)=> needAuth(t))
             registerForEvents()
         },
         exitlogin: function () {
