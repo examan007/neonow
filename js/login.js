@@ -106,6 +106,7 @@
               getNextForm('Verify')
             } else {
             console.error(xhr.statusText);
+            getNextForm('Login')
             }
           };
           const data = formData.toString();
@@ -113,7 +114,12 @@
           console.log("credential=[" + credential + "]")
           console.log("Login-form=[" + formData.toString() + "]");
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
-          xhr.send(data);
+          try {
+              console.log("About to send email notification.")
+              xhr.send(data);
+          } catch (e) {
+            console.log(e.toString())
+          }
       }
       function setCookieInParent (token) {
         // Get a reference to the parent window
