@@ -253,18 +253,20 @@
             function initHelpedInput(inputid, helpid) {
                 const usernameBox = document.getElementById(inputid);
                 const inputBox = document.getElementById(helpid);
-                usernameBox.addEventListener("input", function() {
+                usernameBox.checkValue = function () {
                   if (this.value.length > 0) {
                     inputBox.classList.add("faded");
                   } else {
                     inputBox.classList.remove("faded");
                   }
-                });
+                }
+                usernameBox.addEventListener("input", usernameBox.checkValue);
+                usernameBox.checkValue()
             }
+            urlemail = getQueryValue('username')
             initHelpedInput('username','input-box')
             initHelpedInput('usermessage','message-box')
             //thisemail = localStorage.getItem('email');
-            urlemail = getQueryValue('username')
             getQueryValue('password')
 
             $('#username').focus()
