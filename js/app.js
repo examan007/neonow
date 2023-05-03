@@ -208,7 +208,7 @@ function neoOnload() {
         console.log("neoOnload()")
 
         ApplicationManager((event) => {
-            $('#login').css("display", "none")
+            //$('#login').css("display", "none")
             console.log("event.data=[" + event.data + "]")
         }).
         verify(
