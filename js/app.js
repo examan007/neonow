@@ -1,4 +1,4 @@
- var ApplicationManager = function(msgexception) {
+var ApplicationManager = function(msgexception) {
     var LoginWindow = null
     function setLoginWindow() {
         $('#login').css("display", "block")
@@ -68,11 +68,15 @@
            console.log("cookie token=[" + neotoken + "]")
            if (typeof(neotoken) === 'undefined') {
              const token = getQueryValue('neotoken')
-             message = "{\"token\":\"" + token + "\" }"
-             console.log("message=[" + message + "]")
              if (token != null) {
-                 setCookie(message)
-                return callback(message)
+                messageobj = {
+                 token: token,
+                 renew: "true"
+                }
+                message = JSON.stringify(messageobj)
+                console.log("message=[" + message + "]")
+                setCookie(message)
+                return callback(token, true)
              } else {
                 return callback(null)
              }
@@ -88,7 +92,7 @@
        console.log("saved token=[" + savedtoken + "]")
        return callback(savedtoken)
     }
-    function getNeoToken (token) {
+    function getNeoToken (token, renewflag) {
        try {
            if (token.length <= 0) {
                 return ""
@@ -96,8 +100,18 @@
        } catch (e) {
             return ""
        }
-       console.log("token=[" + token + "]")
-       return "&neotoken=" + token
+       function getRenewFlag () {
+            if (typeof(renewflag) === "undefined") {
+                return ""
+            } else
+            if (renewflag) {
+                return "&renewflag=true"
+            } else {
+                return ""
+            }
+       }
+       console.log("token=[" + token + "] renew=[" + renewflag + "]")
+       return "&neotoken=" + token + getRenewFlag()
     }
 
     function registerForEvents() {
@@ -116,10 +130,22 @@
           // Process the message data
           var message = event.data;
           console.log("Received messagex:", message);
+          function getJSONMsg() {
+            try{
+                return JSON.parse(message)
+            } catch (e) {
+            }
+            msessageobj = {
+                token: message
+            }
+            setCookie(JSON.stringify(messageobj))
+            return messageobj
+          }
           try {
-            const jsonmsg = JSON.parse(message)
+            const jsonmsg = getJSONMsg()
+            console.log("returned json object.")
             if (typeof(jsonmsg.operation) === "undefined") {
-                setCookie(message)
+                msgexception(event)
             } else
             if (jsonmsg.operation === 'seturistate') {
                 window.location.href = getServer() + getHashCode() + jsonmsg.newhref
@@ -151,10 +177,10 @@
     return {
         verify: function (initialize, complete) {
             registerForEvents()
-            testCookie((token)=> {
+            testCookie((token, renewflag)=> {
                    const thishref = initialize()
                    const newquery = thishref + getHashCode() + getSearchStr() +
-                   "&serverurl=" + getServerURL() + getNeoToken(token)
+                   "&serverurl=" + getServerURL() + getNeoToken(token, renewflag)
                    console.log("$$$ verify query=[" + newquery + "]")
                    complete(newquery)
             })

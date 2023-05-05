@@ -126,10 +126,12 @@
         var parentWindow = window.parent;
 
         // Create a message object
-        var message = token
+        var message = {
+           token: token
+        }
 
         // Send the message to the parent window
-        parentWindow.postMessage(message, "*");
+        parentWindow.postMessage(token, "*") // gJSON.stringify(message), "*");
         console.log("message posted [" + JSON.stringify(message) + "]")
       }
 
@@ -138,7 +140,8 @@
           xhr.timeout = 5000;
           const url = 'https://test.neolation.com/auth';
           xhr.open('POST', url);
-          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+//          xhr.setRequestHeader('Content-Type', 'application/json');
           function showHeader() {
             var headers = xhr.getAllResponseHeaders();
             var headerLines = headers.trim().split('\n');
@@ -154,17 +157,46 @@
                 thisemail: formData.get('username'),
                 onLoad: function () {
                     if (xhr.status === 200) {
-                      console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
-                      //setCookieInParent(xhr.response)
-                      $("#neotoken").val(JSON.parse(xhr.response).token)
-                      const serverurl = formData.get('serverurl')
-                      if (serverurl == null) {
-                          $("#serverurl").val('https://illuminatinglaserandstyle.com/side.html#Booking')
-                      } else {
-                          $("#serverurl").val(serverurl)
+                      console.log("new response=[" + xhr.response + "] status=[" + xhr.status + "]")
+                      try {
+                        const serverurl = formData.get('serverurl')
+                        function testForNeoToken() {
+                            const neotoken = formData.get('neotoken')
+                            if (neotoken == null) {
+                                return false
+                            } else
+                            if (typeof(neotoken) === "undefined") {
+                                return false
+                            } else
+                            if (neotoken.length < 16) {
+                                return false
+                            }
+                            return true
+                        }
+                        if (serverurl == null) {
+                            $("#serverurl").val('https://illuminatinglaserandstyle.com/side.html#Booking')
+                        } else {
+                            $("#serverurl").val(serverurl)
+                        }
+                        response = JSON.parse(xhr.response)
+                        const email = response.email
+                        const token = response.token
+                        if (typeof(token) !== "undefined") {
+                          setCookieInParent(xhr.response)
+                          $("#neotoken").val(JSON.parse(xhr.response).token)
+                        } else
+                        if (testForNeoToken()) {
+                           console.log("status=[" + xhr.status + "]")
+                        } else
+                        if (typeof(email) !== "undefined") {
+                          showHeader()
+                          setEmail('verification.html')
+                        } else {
+                           console.log("status=[" + xhr.status + "]")
+                        }
+                      } catch (e) {
+                        console.log(e.toString())
                       }
-                      showHeader()
-                      setEmail('verification.html')
                     } else {
                       console.log("status=[" + xhr.status + "]")
                       console.error(xhr.statusText);
@@ -178,7 +210,8 @@
           console.log("getAuthenticationCookie() with [" + thisemail + "]")
           const credential = thisemail + ":" + 'blockade'
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
-          xhr.send()
+          const formData = new URLSearchParams("?" + $('#Login-form').serialize())
+          xhr.send(formData.toString())
       }
         function exitlogin() {
           // Get a reference to the parent window
@@ -283,11 +316,14 @@
                 $("#neotoken").val(token)
 
                 getNextForm('Login')
-
             }
             verifyToken(getQueryValue('neotoken'), (token)=> {
                 exitlogin()
                 setCookieInParent(token)
+                console.log("$@#%@%@%@ Checking for renew flag.")
+                if (getQueryValue('renewflag') == "true") {
+                    getAuthenticationCookie()
+                }
             }, (t)=> needAuth(t))
             registerForEvents()
         },
