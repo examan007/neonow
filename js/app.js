@@ -135,7 +135,7 @@ var ApplicationManager = function(msgexception) {
                 return JSON.parse(message)
             } catch (e) {
             }
-            msessageobj = {
+            messageobj = {
                 token: message
             }
             setCookie(JSON.stringify(messageobj))
@@ -166,6 +166,9 @@ var ApplicationManager = function(msgexception) {
                 }
                 LoginWindow.postMessage(JSON.stringify(message), "*");
                 $('#login').css("display", "block")
+            } else
+            if (jsonmsg.operation === 'closesidebar') {
+                toggleSidebar(false)
             }
           } catch (e) {
             console.log(e.toString())

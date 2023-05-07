@@ -223,8 +223,19 @@
           };
 
           // Send the message to the parent window
-          parentWindow.postMessage(message, "*");
+          parentWindow.postMessage(JSON.stringify(message), "*");
           console.log("message posted [" + JSON.stringify(message) + "]")
+        }
+        function closeSidebar() {
+            const message = {
+                operation: 'closesidebar',
+            }
+            try {
+                window.parent.postMessage(JSON.stringify(message), "*");
+                console.log("message posted [" + JSON.stringify(message) + "]")
+            } catch (e) {
+                console.log(e.toString())
+            }
         }
         function verifyToken (token, right, left) {
             try {
@@ -303,6 +314,10 @@
             getQueryValue('password')
 
             $('#username').focus()
+
+            $('.login-window').on('click', function () {
+                closeSidebar()
+            })
 
             console.log("urlemail=[" + urlemail + "]")
             if (thisemail !== urlemail) {
