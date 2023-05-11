@@ -35,15 +35,23 @@ var ApplicationManager = function(msgexception) {
         return getServer() + getHashCode()
      }
      function getQueryValue(name) {
-        const searchstr = window.location.href.split("?")[1]
-
-        const searchParams = new URLSearchParams(searchstr);
-        const value = searchParams.get(name)
-        console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
-        if (value != null) {
-            $("#" + name).val(value)
+        try {
+            const searchstr = window.location.href.split("?")[1]
+            const searchParams = new URLSearchParams(searchstr);
+            const value = searchParams.get(name)
+            console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
+            try {
+                if (value != null) {
+                    $("#" + name).val(value)
+                }
+            } catch(e) {
+                console.log(e.toString())
+            }
+            return value
+        } catch (e) {
+            console.log(e.toString())
         }
-        return value
+        return null
     }
       function setCookie(message) {
           const token = JSON.parse(message).token
@@ -202,6 +210,9 @@ var ApplicationManager = function(msgexception) {
         },
         getHashValue: function () {
             return testAndReturn(window.location.href.split("?")[0].split("#")[1], "#")
+        },
+        getQueryValue: function (name) {
+            return getQueryValue(name)
         }
     }
 }
@@ -236,10 +247,11 @@ function neobookOnLoad() {
 function neoOnload() {
         console.log("neoOnload()")
 
-        ApplicationManager((event) => {
+        let AppMan = ApplicationManager((event) => {
             $('#login').css("display", "none")
             console.log("event.data=[" + event.data + "]")
-        }).
+        })
+        AppMan.
         verify(
         () => {
             thishref = $('#login').attr('data')
@@ -259,5 +271,7 @@ function neoOnload() {
 //        })
 
         neobookOnLoad()
+
+        return AppMan;
 }
 
