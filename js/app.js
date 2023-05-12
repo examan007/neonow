@@ -56,8 +56,10 @@ var ApplicationManager = function(msgexception) {
       function setCookie(message) {
           const token = JSON.parse(message).token
           console.log("set token=[" + token + "]")
-          $.cookie('neotoken', token, { expires: 1 })
-          console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
+          if (token.length > 0) {
+              $.cookie('neotoken', token, { expires: 1 })
+              console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
+          }
       }
     function testCookie(callback) {
        console.log("testCookie()")
@@ -143,17 +145,18 @@ var ApplicationManager = function(msgexception) {
                 return JSON.parse(message)
             } catch (e) {
             }
-            messageobj = {
-                token: message
-            }
-            setCookie(JSON.stringify(messageobj))
-            return messageobj
+            return {}
           }
           try {
             const jsonmsg = getJSONMsg()
             console.log("returned json object.")
             if (typeof(jsonmsg.operation) === "undefined") {
-                msgexception(event)
+                if (typeof(jsonmsg.token) === "undefined") {
+                    console.log("Operation undefined;")
+                    msgexception(event)
+                } else {
+                    setCookie(JSON.stringify(message))
+                }
             } else
             if (jsonmsg.operation === 'seturistate') {
                 window.location.href = getServer() + getHashCode() + jsonmsg.newhref
@@ -177,6 +180,9 @@ var ApplicationManager = function(msgexception) {
             } else
             if (jsonmsg.operation === 'closesidebar') {
                 toggleSidebar(false)
+            } else {
+                console.log("Operation unknown; [" + jsonmsg.operation + "]")
+                msgexception(event)
             }
           } catch (e) {
             console.log(e.toString())
