@@ -56,10 +56,8 @@ var ApplicationManager = function(msgexception) {
       function setCookie(message) {
           const token = JSON.parse(message).token
           console.log("set token=[" + token + "]")
-          if (token.length > 0) {
-              $.cookie('neotoken', token, { expires: 1 })
-              console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
-          }
+          $.cookie('neotoken', token, { expires: 1 })
+          console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
       }
     function testCookie(callback) {
        console.log("testCookie()")

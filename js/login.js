@@ -58,6 +58,9 @@
             $(this).css("display", "none")
             //console.log("section=[" + $(this).attr('id') + "]");
         })
+        if (section === "Login") {
+            setCookieInParent("")
+        }
         $("#" + section).css("display", "block")
       }
       function setEmail(templatename, extended) {
@@ -200,6 +203,7 @@
                     } else {
                       console.log("status=[" + xhr.status + "]")
                       console.error(xhr.statusText);
+                      getNextForm('Login')
                     }
                   }
                 }
