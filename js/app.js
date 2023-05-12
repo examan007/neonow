@@ -156,7 +156,7 @@ var ApplicationManager = function(msgexception) {
                     console.log("Operation undefined;")
                     msgexception(event)
                 } else {
-                    setCookie(JSON.stringify(message))
+                    setCookie(JSON.stringify(jsonmsg))
                 }
             } else
             if (jsonmsg.operation === 'seturistate') {
