@@ -137,7 +137,7 @@ var ApplicationManager = function(msgexception) {
        if (event.isTrusted === true) {
           // Process the message data
           var message = event.data;
-          console.log("Received messagex:", message);
+          console.log("Received messagex: [" + message + "]");
           function getJSONMsg() {
             try{
                 return JSON.parse(message)

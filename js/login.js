@@ -134,7 +134,7 @@
         }
 
         // Send the message to the parent window
-        parentWindow.postMessage(token, "*") // gJSON.stringify(message), "*");
+        parentWindow.postMessage(JSON.stringify(message), "*");
         console.log("message posted [" + JSON.stringify(message) + "]")
       }
 
