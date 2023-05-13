@@ -40,7 +40,6 @@ var ApplicationManager = function(msgexception) {
             const searchParams = new URLSearchParams(searchstr);
             const value = searchParams.get(name)
             console.log("getQueryValue(); name=[" + name + "] value=[" + value + "] search=[" + searchstr + "]")
-            try {
                 if (value != null) {
                     $("#" + name).val(value)
                 }
