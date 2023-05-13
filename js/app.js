@@ -77,10 +77,10 @@ var ApplicationManager = function(msgexception) {
              if (typeof(neotoken) === 'undefined') {
                 return false
              } else
-             if (neotoken.length <= 0) {
-                return false
-             } else {
+             if (neotoken.length > 0) {
                 return true
+             } else {
+                return false
              }
            }
            if (testNeotokenCookie()) {
@@ -90,7 +90,8 @@ var ApplicationManager = function(msgexception) {
               const token = getQueryValue('neotoken')
               if (token == null) {
                 return callback(null)
-              } else {
+              } else
+              if (token.length > 0) {
                 messageobj = {
                  token: token,
                  renew: "true"
@@ -99,6 +100,8 @@ var ApplicationManager = function(msgexception) {
                 console.log("message=[" + message + "]")
                 setCookie(message)
                 return callback(token, true)
+             } else {
+                return callback(null)
              }
           }
        } catch (e) {
