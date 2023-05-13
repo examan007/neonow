@@ -44,10 +44,7 @@ var ApplicationManager = function(msgexception) {
                 if (value != null) {
                     $("#" + name).val(value)
                 }
-            } catch(e) {
-                console.log(e.toString())
-            }
-            return value
+                return value
         } catch (e) {
             console.log(e.toString())
         }
