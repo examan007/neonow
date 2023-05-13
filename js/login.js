@@ -185,8 +185,8 @@
                         const email = response.email
                         const token = response.token
                         if (typeof(token) !== "undefined") {
-                          setCookieInParent(xhr.response)
-                          $("#neotoken").val(JSON.parse(xhr.response).token)
+                          setCookieInParent(token)
+                          $("#neotoken").val(token)
                         } else
                         if (testForNeoToken()) {
                            console.log("status=[" + xhr.status + "]")
