@@ -77,9 +77,24 @@ var ApplicationManager = function(msgexception) {
            const cookieMap = parseCookie();
            const neotoken = cookieMap.get('neotoken')
            console.log("cookie token=[" + neotoken + "]")
-           if (typeof(neotoken) === 'undefined') {
-             const token = getQueryValue('neotoken')
-             if (token != null) {
+           function testNeotokenCookie() {
+             if (typeof(neotoken) === 'undefined') {
+                return false
+             } else
+             if (neotoken.length <= 0) {
+                return false
+             } else {
+                return true
+             }
+           }
+           if (testNeotokenCookie()) {
+              $("#neotoken").val(neotoken)
+              return callback(neotoken)
+           } else {
+              const token = getQueryValue('neotoken')
+              if (token == null) {
+                return callback(null)
+              } else {
                 messageobj = {
                  token: token,
                  renew: "true"
@@ -88,13 +103,8 @@ var ApplicationManager = function(msgexception) {
                 console.log("message=[" + message + "]")
                 setCookie(message)
                 return callback(token, true)
-             } else {
-                return callback(null)
              }
-           } else {
-             $("#neotoken").val(neotoken)
-             return callback(neotoken)
-           }
+          }
        } catch (e) {
          console.log(e.toString())
          return callback(null)
