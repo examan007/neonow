@@ -57,6 +57,7 @@ var ApplicationManager = function(msgexception) {
           }
           $.cookie('neotoken', token, { expires: 1 })
           console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
+          return token
       }
     function testCookie(callback) {
        console.log("testCookie()")
@@ -164,8 +165,15 @@ var ApplicationManager = function(msgexception) {
                 if (typeof(jsonmsg.token) === "undefined") {
                     console.log("Operation undefined;")
                     msgexception(event)
+                } else
+                if (setCookie(JSON.stringify(jsonmsg)).length > 0) {
+                    console.log("HHHHHAS a cookie")
+                } else
+                if (jsonmsg.login == true) {
+                    console.log("HHHHHAS NO cookie")
+                    msgexception(event, true)
                 } else {
-                    setCookie(JSON.stringify(jsonmsg))
+                    console.log("no login required.")
                 }
             } else
             if (jsonmsg.operation === 'seturistate') {
@@ -263,9 +271,15 @@ function neobookOnLoad() {
 function neoOnload() {
         console.log("neoOnload()")
 
-        let AppMan = ApplicationManager((event) => {
-            $('#login').css("display", "none")
-            console.log("event.data=[" + event.data + "]")
+        let AppMan = ApplicationManager((event, flag) => {
+            if (typeof(flag) === "undefined") {
+                $('#login').css("display", "none")
+                console.log("event.data=[" + event.data + "]")
+            } else
+            if (flag == true) {
+                $('#login').css("display", "block")
+                console.log("event.data=[" + event.data + "]")
+            }
         })
         AppMan.
         verify(

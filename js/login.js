@@ -52,14 +52,15 @@
         }
         return value
       }
-      function getNextForm(section) {
+      function getNextForm(section, flag) {
         //console.log("$$$%%%$$$ getNextForm $$$")
         $('.Dialogue').each( function () {
             $(this).css("display", "none")
             //console.log("section=[" + $(this).attr('id') + "]");
         })
         if (section === "Login") {
-            setCookieInParent("")
+            $('#neotoken').val("")
+            setCookieInParent("", flag)
         }
         $("#" + section).css("display", "block")
       }
@@ -105,8 +106,17 @@
           xhr.onload = function() {
             if (xhr.status === 200) {
               console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
-              $('label[for="verification"]').text(xhr.response)
-              getNextForm('Verify')
+              try {
+                const jsonmsg = JSON.parse(xhr.response)
+                $('label[for="verification"]').text(jsonmsg.response)
+              } catch (e) {
+                $('label[for="verification"]').text(xhr.response)
+              }
+              try {
+                getNextForm(request.nextform)
+              } catch (e) {
+                  getNextForm('Verify')
+              }
             } else {
             console.error(xhr.statusText);
             getNextForm('Login')
@@ -124,13 +134,13 @@
             console.log(e.toString())
           }
       }
-      function setCookieInParent (token) {
+      function setCookieInParent (token, flag) {
         // Get a reference to the parent window
         var parentWindow = window.parent;
-
         // Create a message object
         var message = {
-           token: token
+           token: token,
+           login: flag
         }
 
         // Send the message to the parent window
@@ -173,6 +183,9 @@
                             } else
                             if (neotoken.length < 16) {
                                 return false
+                            } else
+                            if( formData.get('renewflag') === "true") {
+                                return false
                             }
                             return true
                         }
@@ -189,7 +202,8 @@
                           $("#neotoken").val(token)
                         } else
                         if (testForNeoToken()) {
-                           console.log("status=[" + xhr.status + "]")
+                           $("#renewflag").val(false)
+                           console.log("token found status=[" + xhr.status + "]")
                         } else
                         if (typeof(email) !== "undefined") {
                           showHeader()
@@ -202,8 +216,11 @@
                       }
                     } else {
                       console.log("status=[" + xhr.status + "]")
-                      console.error(xhr.statusText);
-                      getNextForm('Login')
+                      console.log("status=[" + xhr.statusText + "]")
+                      console.log("message=[" + xhr.response + "]")
+                    //console.error(xhr.statusText);
+                      $("#renewflag").val(false)
+                      getNextForm('Login', true)
                     }
                   }
                 }
