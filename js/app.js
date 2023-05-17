@@ -54,6 +54,20 @@ var ApplicationManager = function(msgexception) {
           console.log("set token=[" + token + "]")
           if (typeof(token) === "undefined") {
             token = ""
+          } else
+          if (token.length > 0)
+          try {
+            const formData = new URLSearchParams(getSearchStr())
+            const oldtoken = formData.get('neotoken')
+            if (oldtoken != token) {
+                formData.delete('neotoken')
+                formData.set('neotoken', token)
+                const newhref = getServer() + getHashCode() + "?" + formData.toString()
+                console.log("$$$$$$$$ New href = [" + newhref + "]")
+                window.location.href = newhref;
+            }
+          } catch (e) {
+            console.log("$$$$$$$$ No New href = [" + e.toString() + "]")
           }
           $.cookie('neotoken', token, { expires: 1 })
           console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
