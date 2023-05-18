@@ -60,6 +60,8 @@ var ApplicationManager = function(msgexception) {
             const formData = new URLSearchParams(getSearchStr())
             const oldtoken = formData.get('neotoken')
             if (oldtoken != token) {
+                $.cookie('neotoken', token, { expires: 365 })
+                console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
                 formData.delete('neotoken')
                 formData.set('neotoken', token)
                 const newhref = getServer() + getHashCode() + "?" + formData.toString()
@@ -69,8 +71,6 @@ var ApplicationManager = function(msgexception) {
           } catch (e) {
             console.log("$$$$$$$$ No New href = [" + e.toString() + "]")
           }
-          $.cookie('neotoken', token, { expires: 1 })
-          console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
           return token
       }
     function testCookie(callback) {
