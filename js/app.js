@@ -1,5 +1,6 @@
 var ApplicationManager = function(msgexception) {
     var LoginWindow = null
+    registerForEvents()
     function setLoginWindow() {
         $('#login').css("display", "block")
         var objectEl = document.getElementById('login');
@@ -235,7 +236,6 @@ var ApplicationManager = function(msgexception) {
 
     return {
         verify: function (initialize, complete) {
-            registerForEvents()
             testCookie((token, renewflag)=> {
                    const thishref = initialize()
                    const newquery = thishref + getHashCode() + getSearchStr() +

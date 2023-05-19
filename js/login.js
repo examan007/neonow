@@ -322,7 +322,7 @@
            if (event.isTrusted === true) {
               // Process the message data
               var message = event.data;
-              console.log("Received messagex:", message);
+              console.log("Received messageL:", message);
               try {
                     const jsonmsg = JSON.parse(message)
                 if (jsonmsg.operation === 'showsection') {
@@ -342,8 +342,10 @@
                     getNextForm(jsonmsg.sectionname)
                 } else
                 if (jsonmsg.operation === 'showstatus') {
-                    alert('showstatus')
                     getNextForm('Status')
+                } else
+                if (jsonmsg.operation === 'tokenneeded') {
+                    getNextForm('Login')
                 }
               } catch (e) {
                 console.log(e.toString())
@@ -356,9 +358,10 @@
             window.addEventListener("message", receiveMessage, false);
             console.log("Adding event listener")
         }
+        registerForEvents()
+
     return {
         onload: function () {
-            registerForEvents()
             console.log("load href=[" + window.location.href + "]")
             const serverurl = getQueryValue('serverurl')
             function initHelpedInput(inputid, helpid) {
