@@ -74,6 +74,7 @@
         <label for="verification">Code:</label>
         <input type="hidden" id="verification" name="verification" required>
       </span>
+
     <br>
     <br>
     <br>
@@ -87,6 +88,23 @@
       </span>
       <span class="form-input">
         <label for="verification">Code:</label>
+        <input class="response" name="request.datetime" value="undefined" readonly>
+        <input class="response" name="request.usermessage" value="undefined" readonly>
+      </span>
+      <br>
+      <br>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Status" style="display: none;">
+    <form id="Status-form" action="#Status" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <input class="response" name="request.datetime" value="undefined" readonly>
+        <input class="response" name="request.usermessage" value="undefined" readonly>
       </span>
       <br>
       <br>

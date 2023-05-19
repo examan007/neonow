@@ -59,14 +59,17 @@ var ApplicationManager = function(msgexception) {
           try {
             const formData = new URLSearchParams(getSearchStr())
             const oldtoken = formData.get('neotoken')
+            if (token === "expired") {
+                token = ""
+            }
             if (oldtoken != token) {
                 $.cookie('neotoken', token, { expires: 365 })
                 console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
                 formData.delete('neotoken')
                 formData.set('neotoken', token)
                 const newhref = getServer() + getHashCode() + "?" + formData.toString()
-                console.log("$$$$$$$$ New href = [" + newhref + "]")
-                window.location.href = newhref;
+                //alert("$$$$$$$$ New href = [" + newhref + "]")
+                //window.location.href = newhref;
             }
           } catch (e) {
             console.log("$$$$$$$$ No New href = [" + e.toString() + "]")
@@ -191,7 +194,14 @@ var ApplicationManager = function(msgexception) {
                 }
             } else
             if (jsonmsg.operation === 'seturistate') {
-                window.location.href = getServer() + getHashCode() + jsonmsg.newhref
+                function sethref () {
+                    const formData = new URLSearchParams(jsonmsg.newhref.substring(1))
+                    formData.delete('neotoken')
+                    const newhref = getServer() + getHashCode() + "?" + formData.toString()
+                    console.log(newhref)
+                    return newhref
+                }
+                window.location.href = sethref()
               const state = { user: 12 };
               const title = 'My new page';
                 //history.pushState(state, title, window.location.href)
@@ -231,6 +241,9 @@ var ApplicationManager = function(msgexception) {
                    const newquery = thishref + getHashCode() + getSearchStr() +
                    "&serverurl=" + getServerURL() + getNeoToken(token, renewflag)
                    console.log("$$$ verify query=[" + newquery + "]")
+                   console.log("thishref=[" + thishref + "]")
+                   console.log("hashcode=[" + getHashCode() + "]")
+                   console.log("searchstr=[" + getSearchStr() + "]")
                    complete(newquery)
             })
         },

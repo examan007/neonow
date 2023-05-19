@@ -106,20 +106,56 @@
           xhr.onload = function() {
             if (xhr.status === 200) {
               console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
+              function getJsonobj() {
+                  try {
+                    const jsonmsg = JSON.parse(xhr.response)
+                    $('label[for="verification"]').text(jsonmsg.response)
+                    return jsonmsg
+                  } catch (e) {
+                    $('label[for="verification"]').text(xhr.response)
+                  }
+                  return {}
+              }
+              const jsonmsg = getJsonobj()
               try {
-                const jsonmsg = JSON.parse(xhr.response)
-                $('label[for="verification"]').text(jsonmsg.response)
+                  const messageobj = {
+                      operation: "showtoken",
+                      token: jsonmsg.token,
+                  }
+                  function getJsonElement(jsonData, nameString) {
+                    var names = nameString.split('.');
+                    var element = jsonData;
+
+                    for (var i = 0; i < names.length; i++) {
+                     if (element[names[i]]) {
+                       element = element[names[i]];
+                     } else {
+                       element = undefined;
+                       break;
+                     }
+                    }
+                    return element;
+                  }
+                 $(".response").each(function() {
+                          $(this).val(getJsonElement(jsonmsg, $(this).attr('name')))
+                  });
+                  window.parent.postMessage(JSON.stringify(messageobj), "*");
               } catch (e) {
-                $('label[for="verification"]').text(xhr.response)
+                console.log(e.toString())
               }
               try {
-                getNextForm(request.nextform)
+                getNextForm(jsonmsg.request.nextform)
               } catch (e) {
                   getNextForm('Verify')
               }
+            } else
+            if (xhr.status === 401) {
+              setCookieInParent('expired')
+              $("#renewflag").val(false)
+              getNextForm('Login', true)
             } else {
-            console.error(xhr.statusText);
-            getNextForm('Login')
+                console.error(xhr.statusText);
+                getNextForm('Login')
             }
           };
           const data = formData.toString();
@@ -214,11 +250,16 @@
                       } catch (e) {
                         console.log(e.toString())
                       }
-                    } else {
+                    } else
+                    if (xhr.status === 401) {
                       console.log("status=[" + xhr.status + "]")
                       console.log("status=[" + xhr.statusText + "]")
                       console.log("message=[" + xhr.response + "]")
-                    //console.error(xhr.statusText);
+                      setCookieInParent('expired')
+                      $("#renewflag").val(false)
+                      getNextForm('Login', true)
+                    } else {
+                      console.error(xhr.statusText);
                       $("#renewflag").val(false)
                       getNextForm('Login', true)
                     }
@@ -274,13 +315,9 @@
             }
             left()
         }
-        function registerForEvents() {
-            // Add an event listener for the message event
-            window.addEventListener("message", receiveMessage, false);
-            console.log("Adding event listener")
-        }
         function receiveMessage(event) {
           // Check if the message is coming from the expected origin
+          console.log("rec mess")
            console.log("origin=[" + JSON.stringify(event) + "]")
            if (event.isTrusted === true) {
               // Process the message data
@@ -288,8 +325,7 @@
               console.log("Received messagex:", message);
               try {
                     const jsonmsg = JSON.parse(message)
-                    $('.login-window').css("top", "" + (jsonmsg.message.ypos + 50) + "px")
-                    if (jsonmsg.operation === 'showsection') {
+                if (jsonmsg.operation === 'showsection') {
                     const options = {
                       weekday: 'long',
                       year: 'numeric',
@@ -304,6 +340,10 @@
                     console.log(formattedDate);
                     $("#datetime").val(formattedDate)
                     getNextForm(jsonmsg.sectionname)
+                } else
+                if (jsonmsg.operation === 'showstatus') {
+                    alert('showstatus')
+                    getNextForm('Status')
                 }
               } catch (e) {
                 console.log(e.toString())
@@ -311,8 +351,14 @@
              }
            }
         }
+        function registerForEvents() {
+            // Add an event listener for the message event
+            window.addEventListener("message", receiveMessage, false);
+            console.log("Adding event listener")
+        }
     return {
         onload: function () {
+            registerForEvents()
             console.log("load href=[" + window.location.href + "]")
             const serverurl = getQueryValue('serverurl')
             function initHelpedInput(inputid, helpid) {
@@ -361,7 +407,6 @@
                     getAuthenticationCookie()
                 }
             }, (t)=> needAuth(t))
-            registerForEvents()
         },
         exitlogin: function () {
             exitlogin()
