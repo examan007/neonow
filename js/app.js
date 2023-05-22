@@ -192,6 +192,7 @@ var ApplicationManager = function(msgexception) {
                     msgexception(event, true)
                 } else {
                     console.log("no login required.")
+                    msgexception(event)
                 }
             } else
             if (jsonmsg.operation === 'seturistate') {
