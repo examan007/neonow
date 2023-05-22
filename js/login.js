@@ -281,7 +281,7 @@
 
           // Create a message object
           var message = {
-            data: "Hello, parent window!"
+            operation: "exitlogin"
           };
 
           // Send the message to the parent window
