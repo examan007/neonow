@@ -1,5 +1,9 @@
   var LoginManager = function() {
-      function executeAJAX(amethod) {
+    var console = {
+        log: function(msg) {},
+        error: function(msg) {},
+    }
+    function executeAJAX(amethod) {
         var xhttp = new XMLHttpRequest()
         xhttp.withCredentials = false;
         xhttp.onreadystatechange = function() {
@@ -45,7 +49,6 @@
             if (value.length > 0) {
                 $("#" + name).val(value)
             } else {
-
             }
         } catch (e) {
             console.log(e.toString())
@@ -119,8 +122,8 @@
               const jsonmsg = getJsonobj()
               try {
                   const messageobj = {
-                      operation: "showtoken",
-                      token: jsonmsg.token,
+                      operation: "createevent",
+                      data: jsonmsg,
                   }
                   function getJsonElement(jsonData, nameString) {
                     var names = nameString.split('.');
@@ -143,10 +146,11 @@
               } catch (e) {
                 console.log(e.toString())
               }
+              //exitlogin()
               try {
                 getNextForm(jsonmsg.request.nextform)
               } catch (e) {
-                  getNextForm('Verify')
+                getNextForm('Verify')
               }
             } else
             if (xhr.status === 401) {

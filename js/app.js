@@ -1,4 +1,7 @@
 var ApplicationManager = function(msgexception) {
+    var console = {
+        log: function(msg) {},
+    }
     var LoginWindow = null
     registerForEvents()
     function setLoginWindow() {
@@ -225,7 +228,7 @@ var ApplicationManager = function(msgexception) {
             if (jsonmsg.operation === 'closesidebar') {
                 toggleSidebar(false)
             } else {
-                console.log("Operation unknown; [" + jsonmsg.operation + "]")
+//                console.log("Operation unknown; [" + jsonmsg.operation + "]")
                 msgexception(event)
             }
           } catch (e) {
