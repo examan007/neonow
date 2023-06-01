@@ -2,15 +2,7 @@ var ApplicationManager = function(msgexception) {
     var console = {
         log: function(msg) {},
     }
-    var LoginWindow = null
     registerForEvents()
-    function setLoginWindow() {
-        $('#login').css("display", "block")
-        var objectEl = document.getElementById('login');
-        if (objectEl.contentWindow != null) {
-            LoginWindow = objectEl.contentWindow;
-        }
-    }
     function testAndReturn(argument, delimeter) {
          if (typeof(argument) === 'undefined') {
              return ""
@@ -163,7 +155,6 @@ var ApplicationManager = function(msgexception) {
         window.addEventListener('popstate', function(event) {
           location.reload();
         });
-        setLoginWindow()
     }
     function receiveMessage(event) {
       // Check if the message is coming from the expected origin
@@ -211,19 +202,6 @@ var ApplicationManager = function(msgexception) {
               const title = 'My new page';
                 //history.pushState(state, title, window.location.href)
                 console.log("New href = [" + jsonmsg.newhref + "]")
-            } else
-            if (jsonmsg.operation === 'showappointmentrequest') {
-                console.log("appointment request")
-                console.log("Request object", JSON.stringify($('#login').children()))
-                setLoginWindow()
-                var message = {
-                  operation: 'showsection',
-                  sectionname: 'Request',
-                  datetime: jsonmsg.datetime,
-                  message: jsonmsg
-                }
-                LoginWindow.postMessage(JSON.stringify(message), "*");
-                $('#login').css("display", "block")
             } else
             if (jsonmsg.operation === 'closesidebar') {
                 toggleSidebar(false)

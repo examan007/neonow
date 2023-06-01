@@ -67,6 +67,62 @@
         }
         $("#" + section).css("display", "block")
       }
+        function getForms (extraparams, extended) {
+            function getParameters(formname, delim) {
+                try {
+                   const formext = $(formname).serialize();
+                   if (formext.length > 0) {
+                        return delim + formext
+                   }
+                } catch (e) {
+                    console.log(e.toString())
+                }
+                return ""
+            }
+            const formData = new URLSearchParams(getParameters('#Login-form', "?") +
+                extraparams
+                )
+            const extData = new URLSearchParams(getParameters(extended, "?"))
+            try {
+                extData.forEach((value, key) => {
+                    if (formData.get(key) != null) {
+                        formData.set(key, value)
+                    } else {
+                        formData.append(key, value);
+                    }
+                });
+            } catch {
+                console.log(e.toString())
+            }
+            return formData
+        }
+            function getCredentials(formData) {
+            const credential = formData.get('username') + ":" + formData.get('password')
+            console.log("credential=[" + credential + "]")
+            console.log("Login-form=[" + formData.toString() + "]");
+            return credential
+        }
+        function getBooks(extended) {
+            console.log("getBooks() ...")
+            formData = getForms("", extended)
+            const xhr = executeAJAX((jsondata)=> {
+                window.parent.postMessage(JSON.stringify({
+                    operation: 'readappointments',
+                    data: jsondata
+                }), "*");
+            })
+            const url = 'https://test.neolation.com/booking';
+            xhr.open('POST', url);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            const data = formData.toString();
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(getCredentials(formData)))
+            try {
+                console.log("About to send booking request.")
+                xhr.send(data);
+            } catch (e) {
+                console.log(e.toString())
+            }
+        }
       function setEmail(templatename, extended) {
           function getParameters(formname, delim) {
             try {
@@ -146,11 +202,15 @@
               } catch (e) {
                 console.log(e.toString())
               }
-              //exitlogin()
-              try {
-                getNextForm(jsonmsg.request.nextform)
-              } catch (e) {
-                getNextForm('Verify')
+              if (templatename !== "verification.html") {
+                  exitlogin()
+                  try {
+                    getNextForm(jsonmsg.request.nextform)
+                  } catch (e) {
+                    getNextForm('Verify')
+                  }
+              } else {
+               getNextForm('Verify')
               }
             } else
             if (xhr.status === 401) {
@@ -328,7 +388,7 @@
               var message = event.data;
               console.log("Received messageL:", message);
               try {
-                    const jsonmsg = JSON.parse(message)
+                const jsonmsg = JSON.parse(message)
                 if (jsonmsg.operation === 'showsection') {
                     const options = {
                       weekday: 'long',
@@ -350,6 +410,9 @@
                 } else
                 if (jsonmsg.operation === 'tokenneeded') {
                     getNextForm('Login')
+                } else
+                if (jsonmsg.operation === 'readappointments') {
+                    getBooks()
                 }
               } catch (e) {
                 console.log(e.toString())
@@ -360,13 +423,20 @@
         function registerForEvents() {
             // Add an event listener for the message event
             window.addEventListener("message", receiveMessage, false);
-            console.log("Adding event listener")
+            console.log("Adding event listeners for login.")
+            window.addEventListener("load", function() {
+                console.log("Page load complete.")
+                var message = {
+                   operation: "loginpageloaded",
+                }
+                window.parent.postMessage(JSON.stringify(message), "*")
+            })
         }
         registerForEvents()
 
     return {
         onload: function () {
-            console.log("load href=[" + window.location.href + "]")
+           console.log("load href=[" + window.location.href + "]")
             const serverurl = getQueryValue('serverurl')
             function initHelpedInput(inputid, helpid) {
                 const usernameBox = document.getElementById(inputid);
