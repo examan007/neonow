@@ -194,14 +194,11 @@ var ApplicationManager = function(msgexception) {
                     const formData = new URLSearchParams(jsonmsg.newhref.substring(1))
                     formData.delete('neotoken')
                     const newhref = getServer() + getHashCode() + "?" + formData.toString()
-                    console.log(newhref)
+                    console.log("New href = [" + jsonmsg.newhref + "]")
                     return newhref
                 }
                 window.location.href = sethref()
-              const state = { user: 12 };
-              const title = 'My new page';
-                //history.pushState(state, title, window.location.href)
-                console.log("New href = [" + jsonmsg.newhref + "]")
+                //window.history.pushState({}, '', sethref());
             } else
             if (jsonmsg.operation === 'closesidebar') {
                 toggleSidebar(false)

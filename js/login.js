@@ -57,6 +57,7 @@
       }
       function getNextForm(section, flag) {
         //console.log("$$$%%%$$$ getNextForm $$$")
+        $('.login-window').css("display", "none")
         $('.Dialogue').each( function () {
             $(this).css("display", "none")
             //console.log("section=[" + $(this).attr('id') + "]");
@@ -65,7 +66,11 @@
             $('#neotoken').val("")
             setCookieInParent("", flag)
         }
-        $("#" + section).css("display", "block")
+        try {
+            $("#" + section).css("display", "block")
+            $('.login-window').css("display", "block")
+        } catch (e) {
+        }
       }
         function getForms (extraparams, extended) {
             function getParameters(formname, delim) {
@@ -124,6 +129,7 @@
             }
         }
       function setEmail(templatename, extended) {
+          getNextForm("empty")
           function getParameters(formname, delim) {
             try {
                const formext = $(formname).serialize();
@@ -203,7 +209,7 @@
                 console.log(e.toString())
               }
               if (templatename !== "verification.html") {
-                  exitlogin()
+                  //exitlogin()
                   try {
                     getNextForm(jsonmsg.request.nextform)
                   } catch (e) {
@@ -379,30 +385,78 @@
             }
             left()
         }
+        function initHelpedInput(inputid, helpid) {
+            const usernameBox = document.getElementById(inputid);
+            const inputBox = document.getElementById(helpid);
+            usernameBox.checkValue = function () {
+              if (this.value.length > 0) {
+                inputBox.classList.add("faded");
+              } else {
+                inputBox.classList.remove("faded");
+              }
+            }
+            usernameBox.addEventListener("input", usernameBox.checkValue);
+            usernameBox.checkValue()
+        }
+        function convertDateTime(jsonmsg) {
+            const options = {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              timeZoneName: 'short'
+            };
+            const date = new Date(jsonmsg.datetime);
+            const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+            console.log(formattedDate);
+            return formattedDate
+        }
+        function setOldDateTime(datetime) {
+            try {
+                const input = document.getElementById('olddatetime')
+                input.value = datetime
+            } catch (e) {
+                console.log(e.toString())
+            }
+        }
+        function setInputValues(json) {
+            var inputs = document.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; i++) {
+                const input = inputs[i];
+                const name = input.getAttribute('name')
+                if (json.hasOwnProperty(name)) {
+                    if (name === 'datetime') {
+                        setOldDateTime(json.datetime)
+                        input.value = convertDateTime(json)
+                    } else
+                    if (name === 'message') {
+                        console.log("skipping [" + name + "]")
+                    } else {
+                      input.value = json[name];
+                    }
+                }
+            }
+        }
         function receiveMessage(event) {
           // Check if the message is coming from the expected origin
           console.log("rec mess")
            console.log("origin=[" + JSON.stringify(event) + "]")
            if (event.isTrusted === true) {
               // Process the message data
+
               var message = event.data;
               console.log("Received messageL:", message);
               try {
                 const jsonmsg = JSON.parse(message)
                 if (jsonmsg.operation === 'showsection') {
-                    const options = {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: 'numeric',
-                      timeZoneName: 'short'
-                    };
-                    const date = new Date(jsonmsg.datetime);
-                    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
-                    console.log(formattedDate);
-                    $("#datetime").val(formattedDate)
+                    try {
+                        setInputValues(jsonmsg)
+                        initHelpedInput('usermessage','message-box')
+                    } catch (e) {
+                        console.log("showsection: " + e.toString())
+                    }
                     getNextForm(jsonmsg.sectionname)
                 } else
                 if (jsonmsg.operation === 'showstatus') {
@@ -438,19 +492,6 @@
         onload: function () {
            console.log("load href=[" + window.location.href + "]")
             const serverurl = getQueryValue('serverurl')
-            function initHelpedInput(inputid, helpid) {
-                const usernameBox = document.getElementById(inputid);
-                const inputBox = document.getElementById(helpid);
-                usernameBox.checkValue = function () {
-                  if (this.value.length > 0) {
-                    inputBox.classList.add("faded");
-                  } else {
-                    inputBox.classList.remove("faded");
-                  }
-                }
-                usernameBox.addEventListener("input", usernameBox.checkValue);
-                usernameBox.checkValue()
-            }
             urlemail = getQueryValue('username')
             initHelpedInput('username','input-box')
             initHelpedInput('usermessage','message-box')
@@ -494,6 +535,9 @@
         },
         requestAppointment: function () {
             setEmail('confirmation.html', '#Request-form')
+        },
+        changeAppointment: function () {
+            setEmail('cancellation.html', '#Change-form')
         },
         showForm(sectionname) {
             getNextForm(sectionname)

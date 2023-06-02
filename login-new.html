@@ -66,6 +66,35 @@
       <br>
     </form>
   </section>
+  <section class="Dialogue" id="Change" style="display: none;">
+    <form id="Change-form" action="#Change" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <label for="username">Please confirm</label>
+        <label for="username">Date and time for appointment</label>
+        <div class="input-container">
+          <input type="text" name="datetime"  required>
+          <input type="hidden" id="olddatetime" name="olddatetime"  required>
+        </div>
+        <div class="input-container">
+          <input type="text" name="usermessage">
+        </div>
+        <input type="hidden" name="version" value="1.0">
+        <input type="hidden" name="nextform" value="Confirm">
+        <input type="hidden" name="title" value="Your appointment is changed.">
+        <input type="hidden" name="message" value=
+                "Appointment CANCELLED; notification message has been sent to ${username}."
+        >
+     </span>
+      <br>
+      <br>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="changeAppointment()">CANCEL Appointment</a>
+      <br>
+      <br>
+    </form>
+  </section>
   <section class="Dialogue" id="Verify" style="display: none;">
     <form id="Verfiy-form" action="#Booking" method="post">
       <span class="exitx" onclick="exitlogin()">
@@ -175,6 +204,9 @@
   }
   function requestAppointment() {
     LogMgr.requestAppointment()
+  }
+  function changeAppointment() {
+    LogMgr.changeAppointment()
   }
   function exitlogin() {
     LogMgr.exitlogin()
