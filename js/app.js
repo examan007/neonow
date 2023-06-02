@@ -2,7 +2,6 @@ var ApplicationManager = function(msgexception) {
     var console = {
         log: function(msg) {},
     }
-    registerForEvents()
     function testAndReturn(argument, delimeter) {
          if (typeof(argument) === 'undefined') {
              return ""
@@ -197,8 +196,9 @@ var ApplicationManager = function(msgexception) {
                     console.log("New href = [" + jsonmsg.newhref + "]")
                     return newhref
                 }
-                window.location.href = sethref()
-                //window.history.pushState({}, '', sethref());
+                //window.location.href = sethref()
+                const newhref = sethref()
+                window.history.pushState({}, '', newhref);
             } else
             if (jsonmsg.operation === 'closesidebar') {
                 toggleSidebar(false)
@@ -215,6 +215,7 @@ var ApplicationManager = function(msgexception) {
 
     return {
         verify: function (initialize, complete) {
+            registerForEvents()
             testCookie((token, renewflag)=> {
                    const thishref = initialize()
                    const newquery = thishref + getHashCode() + getSearchStr() +
