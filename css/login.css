@@ -12,6 +12,7 @@
         width: 16em;
         background-image: url("https://illuminatinglaserandstyle.com/images/business-card-mdm.png");
         border-radius: 25px;
+        z-index: 20;
       }
       .login-window h2 {
         margin-top: 0;
@@ -89,4 +90,8 @@
       }
       #datetime,#message-box,#usermessage{
         width: 19.5em;
+      }
+      #wrapper {
+        height: 100vh;
+        z-index: 1;
       }

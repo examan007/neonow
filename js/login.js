@@ -57,7 +57,7 @@
       }
       function getNextForm(section, flag) {
         //console.log("$$$%%%$$$ getNextForm $$$")
-        $('.login-window').css("display", "none")
+        $('#login-window').css("display", "none")
         $('.Dialogue').each( function () {
             $(this).css("display", "none")
             //console.log("section=[" + $(this).attr('id') + "]");
@@ -68,7 +68,10 @@
         }
         try {
             $("#" + section).css("display", "block")
-            $('.login-window').css("display", "block")
+            if (section != 'empty') {
+                $('#login-window').css("display", "block")
+            }
+            showlogin()
         } catch (e) {
         }
       }
@@ -221,13 +224,12 @@
             } else
             if (xhr.status === 401) {
               setCookieInParent('expired')
-              $("#renewflag").val(false)
               getNextForm('Login', true)
             } else {
                 console.error(xhr.statusText);
                 getNextForm('Login')
             }
-          };
+          }
           const data = formData.toString();
           const credential = formData.get('username') + ":" + formData.get('password')
           console.log("credential=[" + credential + "]")
@@ -346,16 +348,17 @@
           xhr.send(formData.toString())
       }
         function exitlogin() {
-          // Get a reference to the parent window
-          var parentWindow = window.parent;
-
-          // Create a message object
           var message = {
             operation: "exitlogin"
           };
-
-          // Send the message to the parent window
-          parentWindow.postMessage(JSON.stringify(message), "*");
+          window.parent.postMessage(JSON.stringify(message), "*");
+          console.log("message posted [" + JSON.stringify(message) + "]")
+        }
+        function showlogin() {
+          var message = {
+            operation: "showlogin"
+          };
+          window.parent.postMessage(JSON.stringify(message), "*");
           console.log("message posted [" + JSON.stringify(message) + "]")
         }
         function closeSidebar() {
@@ -454,6 +457,7 @@
                     try {
                         setInputValues(jsonmsg)
                         initHelpedInput('usermessage','message-box')
+                        $("#login-window").css("top", jsonmsg.message.ypos + "px");
                     } catch (e) {
                         console.log("showsection: " + e.toString())
                     }
@@ -500,7 +504,7 @@
 
             $('#username').focus()
 
-            $('.login-window').on('click', function () {
+            $('#login-window').on('click', function () {
                 closeSidebar()
             })
 
@@ -525,6 +529,22 @@
                     getAuthenticationCookie()
                 }
             }, (t)=> needAuth(t))
+          document.getElementById("wrapper").addEventListener("click", function(event) {
+            var rect = document.getElementById("login-window").getBoundingClientRect();
+            var mouseX = event.clientX;
+            var mouseY = event.clientY;
+            if (
+              mouseX >= rect.left &&
+              mouseX <= rect.right &&
+              mouseY >= rect.top &&
+              mouseY <= rect.bottom
+            ) {
+              console.log("Coordinates are within the element.");
+            } else {
+              console.log("Coordinates are outside the element.");
+              exitlogin()
+            }
+          });
         },
         exitlogin: function () {
             exitlogin()
