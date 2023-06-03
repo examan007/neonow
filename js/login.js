@@ -62,7 +62,7 @@
             $(this).css("display", "none")
             //console.log("section=[" + $(this).attr('id') + "]");
         })
-        if (section === "Login") {
+        if (section === "X-Login") {
             $('#neotoken').val("")
             setCookieInParent("", flag)
         }
@@ -129,6 +129,7 @@
                 xhr.send(data);
             } catch (e) {
                 console.log(e.toString())
+                showlogin()
             }
         }
       function setEmail(templatename, extended) {
@@ -223,7 +224,7 @@
               }
             } else
             if (xhr.status === 401) {
-              setCookieInParent('expired')
+              setCookieInParent('expired' + $('#neotoken').val())
               getNextForm('Login', true)
             } else {
                 console.error(xhr.statusText);
@@ -327,7 +328,7 @@
                       console.log("status=[" + xhr.status + "]")
                       console.log("status=[" + xhr.statusText + "]")
                       console.log("message=[" + xhr.response + "]")
-                      setCookieInParent('expired')
+                      setCookieInParent('expired' + $('#neotoken').val())
                       $("#renewflag").val(false)
                       getNextForm('Login', true)
                     } else {
@@ -482,6 +483,8 @@
                     getNextForm('Login')
                 } else
                 if (jsonmsg.operation === 'readappointments') {
+                    $('#renewflag').val('true')
+                    getAuthenticationCookie()
                     getBooks()
                 }
               } catch (e) {
@@ -535,7 +538,7 @@
             }
             verifyToken(getQueryValue('neotoken'), (token)=> {
                 exitlogin()
-                setCookieInParent(token)
+                //setCookieInParent(token)
                 console.log("$@#%@%@%@ Checking for renew flag.")
                 if (getQueryValue('renewflag') == "true") {
                     getAuthenticationCookie()

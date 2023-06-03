@@ -44,7 +44,40 @@ var ApplicationManager = function(msgexception) {
         }
         return null
     }
-      function setCookie(message) {
+     function removeQueryName(name) {
+        try {
+            const searchstr = window.location.href.split("?")[1]
+            const searchParams = new URLSearchParams(searchstr);
+            searchParams.delete(name)
+            console.log("removeQueryName(); name=[" + name + "] search=[" + searchParams.toString() + "]")
+            function getNewParams() {
+                const newparams = searchParams.toString()
+                if (typeof(newparams) === 'undefined') {
+                    return ""
+                } else
+                if (newparams.length > 0) {
+                    return "?" + newparams
+                } else {
+                    return ""
+                }
+            }
+            history.replaceState(null, "", getServer() + getHashCode() + getNewParams());
+        } catch (e) {
+            console.log("removeQueryName: " + e.toString())
+        }
+    }
+
+       function parseCookie() {
+         const cookies = document.cookie.split(';');
+         const cookieMap = new Map();
+         for (const cookie of cookies) {
+           const [name, value] = cookie.split('=').map(str => str.trim());
+           cookieMap.set(name, value);
+         }
+         return cookieMap;
+       }
+
+       function setCookie(message) {
           var token = JSON.parse(message).token
           console.log("set token=[" + token + "]")
           if (typeof(token) === "undefined") {
@@ -54,10 +87,25 @@ var ApplicationManager = function(msgexception) {
           try {
             const formData = new URLSearchParams(getSearchStr())
             const oldtoken = formData.get('neotoken')
-            if (token === "expired") {
-                token = ""
+            if (token.substring(0, 7) === 'expired') {
+               const cookieMap = parseCookie();
+               const neotoken = cookieMap.get('neotoken')
+               if (typeof(neotoken) === 'undefined') {
+                    token = ""
+               } else
+               if (neotoken.length < 16) {
+                    token = ""
+               } else
+               if (token.substring(7) === neotoken) {
+                    token = ""
+               } else {
+                    return neotoken
+               }
             }
-            if (oldtoken != token) {
+            if (token.length == 0) {
+                removeQueryName('neotoken')
+            }
+            if (oldtoken != token | token.length == 0) {
                 $.cookie('neotoken', token, { expires: 365 })
                 console.log("Cookie set: [" + document.cookie + "] token=[" + token + "]")
                 formData.delete('neotoken')
@@ -73,15 +121,6 @@ var ApplicationManager = function(msgexception) {
       }
     function testCookie(callback) {
        console.log("testCookie()")
-       function parseCookie() {
-         const cookies = document.cookie.split(';');
-         const cookieMap = new Map();
-         for (const cookie of cookies) {
-           const [name, value] = cookie.split('=').map(str => str.trim());
-           cookieMap.set(name, value);
-         }
-         return cookieMap;
-       }
        try {
            const cookieMap = parseCookie();
            const neotoken = cookieMap.get('neotoken')
@@ -97,6 +136,7 @@ var ApplicationManager = function(msgexception) {
              }
            }
            if (testNeotokenCookie()) {
+              removeQueryName('neotoken')
               $("#neotoken").val(neotoken)
               return callback(neotoken)
            } else {
@@ -111,7 +151,7 @@ var ApplicationManager = function(msgexception) {
                 }
                 message = JSON.stringify(messageobj)
                 console.log("message=[" + message + "]")
-                setCookie(message)
+                //setCookie(message)
                 return callback(token, true)
              } else {
                 return callback(null)
