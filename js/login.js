@@ -458,6 +458,8 @@
                         setInputValues(jsonmsg)
                         initHelpedInput('usermessage','message-box')
                         $("#login-window").css("top", jsonmsg.message.ypos + "px");
+                        const newxpos = Number(jsonmsg.message.xpos) + Number(50)
+                        $("#login-window").css("left", newxpos + "px");
                     } catch (e) {
                         console.log("showsection: " + e.toString())
                     }
