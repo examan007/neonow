@@ -442,6 +442,15 @@
                 }
             }
         }
+        function getWindowDimensions () {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            //console.log(`Window size is ${width}x${height}`);
+            return {
+                width: width,
+                height: height,
+            }
+        }
         function receiveMessage(event) {
           // Check if the message is coming from the expected origin
           console.log("rec mess")
@@ -458,8 +467,10 @@
                         setInputValues(jsonmsg)
                         initHelpedInput('usermessage','message-box')
                         $("#login-window").css("top", jsonmsg.message.ypos + "px");
-                        const newxpos = Number(jsonmsg.message.xpos) + Number(50)
-                        $("#login-window").css("left", newxpos + "px");
+                        if (getWindowDimensions().width > 550) {
+                            const newxpos = Number(jsonmsg.message.xpos) + Number(50)
+                            //$("#login-window").css("left", newxpos + "px");
+                        }
                     } catch (e) {
                         console.log("showsection: " + e.toString())
                     }
