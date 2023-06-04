@@ -70,8 +70,8 @@
             $("#" + section).css("display", "block")
             if (section != 'empty') {
                 $('#login-window').css("display", "block")
+                showlogin()
             }
-            showlogin()
         } catch (e) {
         }
       }
@@ -560,6 +560,7 @@
               exitlogin()
             }
           });
+          getNextForm('empty')
         },
         exitlogin: function () {
             exitlogin()
