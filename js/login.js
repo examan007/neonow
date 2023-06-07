@@ -519,7 +519,7 @@
 
             $('#username').focus()
 
-            $('#login-window').on('click', function () {
+            $('#wrapper').on('click', function () {
                 closeSidebar()
             })
 

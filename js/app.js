@@ -239,9 +239,6 @@ var ApplicationManager = function(msgexception) {
                 //window.location.href = sethref()
                 const newhref = sethref()
                 window.history.pushState({}, '', newhref);
-            } else
-            if (jsonmsg.operation === 'closesidebar') {
-                toggleSidebar(false)
             } else {
 //                console.log("Operation unknown; [" + jsonmsg.operation + "]")
                 msgexception(event)
@@ -303,12 +300,12 @@ function getHashValue() {
 function neobookOnLoad() {
         ApplicationManager((event) => {
 //            $('#login').css("display", "none")
-              console.log("event.data=[" + event.data + "]")
+//              console.log("event.data=[" + event.data + "]")
         }).
         getargs(
         () => {
             thishref = $('#calendar').attr('data')
-            console.log("Xthishref=[" + thishref + "]")
+//            console.log("Xthishref=[" + thishref + "]")
             return thishref
         },
         (newquery) => {
