@@ -229,15 +229,42 @@ var ApplicationManager = function(msgexception) {
                 }
             } else
             if (jsonmsg.operation === 'seturistate') {
-                function sethref () {
-                    const formData = new URLSearchParams(jsonmsg.newhref.substring(1))
+                function getNewHashCode(newhashcode) {
+                    if (typeof(newhashcode) === 'undefined') {
+                        return getHashCode()
+                    } else {
+                        return "#" + newhashcode
+                    }
+                }
+                function getNewParams(newparams) {
+                    if (typeof(newparams) === 'undefined') {
+                        const params = window.location.href.split('?')[1]
+                        if (typeof(params) === 'undefined') {
+                            return ""
+                        } else {
+                            return params
+                        }
+                    } else {
+                        return newparams.substring(1)
+                    }
+                }
+                function getNewParameters(params) {
+                    const formData = new URLSearchParams(getNewParams())
                     formData.delete('neotoken')
-                    const newhref = getServer() + getHashCode() + "?" + formData.toString()
+                    const newparams = formData.toString()
+                    if (newparams.length > 0) {
+                        return "?" + newparms
+                    } else {
+                        return ""
+                    }
+                }
+                function sethref (newhashcode) {
+                    const newhref = getServer() + getNewHashCode(newhashcode) + getNewParameters(jsonmsg.newhref)
                     console.log("New href = [" + jsonmsg.newhref + "]")
                     return newhref
                 }
                 //window.location.href = sethref()
-                const newhref = sethref()
+                const newhref = sethref(jsonmsg.newhashcode)
                 window.history.pushState({}, '', newhref);
             } else {
 //                console.log("Operation unknown; [" + jsonmsg.operation + "]")
