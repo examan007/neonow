@@ -249,18 +249,19 @@ var ApplicationManager = function(msgexception) {
                     }
                 }
                 function getNewParameters(params) {
-                    const formData = new URLSearchParams(getNewParams())
+                    const formData = new URLSearchParams(getNewParams(params))
                     formData.delete('neotoken')
                     const newparams = formData.toString()
                     if (newparams.length > 0) {
-                        return "?" + newparms
+                        return "?" + newparams
                     } else {
                         return ""
                     }
                 }
                 function sethref (newhashcode) {
                     const newhref = getServer() + getNewHashCode(newhashcode) + getNewParameters(jsonmsg.newhref)
-                    console.log("New href = [" + jsonmsg.newhref + "]")
+                    console.log("Original href = [" + window.location.href + "]")
+                    console.log("New href = [" + newhref + "]")
                     return newhref
                 }
                 //window.location.href = sethref()
