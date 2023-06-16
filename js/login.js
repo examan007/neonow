@@ -212,6 +212,8 @@
               if (templatename !== "verification.html") {
                   //exitlogin()
                   try {
+                    console.log("message: [" + JSON.stringify(jsonmsg) + "]")
+                    setInputValues(jsonmsg)
                     getNextForm(jsonmsg.request.nextform)
                   } catch (e) {
                     getNextForm('Verify')
@@ -482,6 +484,7 @@
                 const jsonmsg = JSON.parse(message)
                 if (jsonmsg.operation === 'showsection') {
                     try {
+                        console.log("message: [" + JSON.stringify(jsonmsg) + "]")
                         setInputValues(jsonmsg)
                         $("#login-window").css("top", jsonmsg.message.ypos + "px");
                         if (getWindowDimensions().width > 800) {
@@ -492,7 +495,7 @@
                     }
                     function getSectionName() {
                         const section = jsonmsg.sectionname
-                        if (section === 'Request') {
+                        if (false) { //section === 'Request') {
                             return 'Appoint'
                         } else {
                             return section
