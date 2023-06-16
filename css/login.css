@@ -6,11 +6,10 @@
         transform: translate(-50%, -50%);
         background-color: rgba(240, 240, 240);
         padding: 20px;
-        border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         text-align: center;
-        width: 16em;
-        background-image: url("https://illuminatinglaserandstyle.com/images/business-card-mdm.png");
+        width: 18em;
+        background-image: url("https://test.neolation.com/ilas/images/business-card-partial.png");
         border-radius: 25px;
         z-index: 20;
       }
@@ -31,8 +30,7 @@
         margin-bottom: 10px;
         background-color: rgba(255, 255, 255, 0.25);
         color: white;
-        width: 18em;
-      }
+     }
       .login-window input[type="submit"] {
         background-color: #4CAF50;
         color: white;
@@ -41,15 +39,16 @@
         border-radius: 5px;
         cursor: pointer;
       }
-      #newuserlink {
-        color: white;
-        background-color: rgba(255, 255, 255, 0);
-      }
+
       .form-input {
         display: inline-block;
-        margin-right: 10px;
+        width: 100%;
+      }
+      .form-input h4 {
+        color: white;
       }
      .button-login {
+        z-index: 4;
         display: inline-block;
         padding: 0.5rem 1rem;
         background-color: rgba(45, 30, 100, 1);
@@ -67,31 +66,45 @@
      .input-container {
        position: relative;
        left: 0;
-       width: 200px;
+       width: 100%;
        height: 30px;
      }
-     #username,#usermessage {
+     .input-box {
         position: absolute;
         top: 0;
         left: 0;
         z-index: 10;
+        width: 100%;
       }
-      #input-box,#message-box{
+      .helper-box {
           position: absolute;
           top: 0;
           left: 0;
           z-index: 5;
         transition: opacity 0.5s ease-in-out;
-        opacity: 1;
+        opacity: 0.75;
+        width: 100%;
+        color: black;
       }
-      #input-box.faded,#message-box.faded {
+      .helper-box.faded {
         opacity: 0;
         pointer-events: none;
       }
-      #datetime,#message-box,#usermessage{
-        width: 19.5em;
-      }
       #wrapper {
         height: 100vh;
-        z-index: 1;
+        z-index: 4;
+      }
+      .Dialogue {
+        margin: 0
+        padding: 0
+      }
+      .softener {
+        background-color: rgba(0,0,0, 0.5);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -100;
+        border-radius: 25px;
       }
