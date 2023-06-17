@@ -1,5 +1,5 @@
   var LoginManager = function() {
-    var consolex = {
+    var console = {
         log: function(msg) {},
         error: function(msg) {},
     }
@@ -532,11 +532,57 @@
                 window.parent.postMessage(JSON.stringify(message), "*")
             })
         }
+        function setServices(newvalue) {
+            const services = document.querySelectorAll('input[name="services"]')
+            services.forEach((element)=> {
+                console.log("services=[" + newvalue + "]")
+                element.value = newvalue
+                element.checkValue()
+            })
+        }
+        function getServices() {
+            try {
+                const services = document.querySelectorAll('input[name="services"]')
+                return services[0].value
+            } catch (e) {
+                console.log(e.toString())
+            }
+            return ""
+        }
+        function checkInputValue() {
+            console.log("checkValue " + this.value)
+            if (this.value.length > 0) {
+                console.log("value exists.")
+                this.helper.classList.add("faded");
+            } else {
+                this.helper.classList.remove("faded");
+            }
+        }
+        function clickInputValue() {
+            console.log("clickInputValue()")
+            var services = getServices()
+            if (this.value.length > 0) {
+                this.helper.classList.remove("faded");
+                window.setTimeout( ()=> { this.value = "" }, 500)
+                services = services.replace(this.value, "").trim()
+            } else {
+                this.helper.classList.add("faded");
+                this.value = this.helper.value
+                if (services.length > 0) {
+                    services = services + " " + this.value
+                } else {
+                    services = this.value
+                }
+            }
+            setServices(services)
+        }
         function checkInputContainerHelper(sectionname) {
             const section = document.getElementById('#' + sectionname)
-            initInputContainerHelper(section, ()=> {})
+            initInputContainerHelper(section, (input)=> {
+                input.checkValue()
+            }, "input-box", checkInputValue)
         }
-        function initInputContainerHelper(parent, register) {
+        function initInputContainerHelper(parent, register, inputclass, checkmethod) {
             function getElements() {
                 if (parent == null) {
                     return document.querySelectorAll('.input-container')
@@ -549,18 +595,11 @@
                 try {
                     const inputs = element.getElementsByTagName('input')
                     const input = inputs[0]
-                    const helper = inputs[1]
-                    input.checkValue = function () {
-                        console.log("checkValue " + this.value)
-                        if (this.value.length > 0) {
-                            console.log("value exists.")
-                            helper.classList.add("faded");
-                        } else {
-                            helper.classList.remove("faded");
-                        }
+                    if (input.classList.contains(inputclass)) {
+                        input.helper = inputs[1]
+                        input.checkValue = checkmethod
+                        register(input)
                     }
-                    register(input)
-                    input.checkValue()
                 } catch (e) {
                     console.log(e.stack.toString())
                 }
@@ -572,8 +611,13 @@
            console.log("load href=[" + window.location.href + "]")
             registerForEvents()
             initInputContainerHelper(null, (input)=> {
-                input.addEventListener("input", input.checkValue);
-            })
+                input.addEventListener("input", input.checkValue)
+                input.checkValue()
+            }, "input-box", checkInputValue )
+            initInputContainerHelper(null, (input)=> {
+                input.addEventListener("click", input.checkValue)
+            }, "input-select", clickInputValue)
+
             const serverurl = getQueryValue('serverurl')
             urlemail = getQueryValue('username')
             getQueryValue('password')
@@ -647,8 +691,18 @@
         changeAppointment: function () {
             setEmail('cancellation.html', '#Change-form')
         },
-        showForm(sectionname) {
+        showForm: function (sectionname) {
             getNextForm(sectionname)
+        },
+        LastPanel: "",
+        setServices: function (nextpanel) {
+            console.log("setServices(); ")
+            LastPanel = nextpanel
+            getNextForm("Select")
+        },
+        doneServices: function () {
+            console.log("doneServices(); ")
+            getNextForm(LastPanel)
         }
     }
 }

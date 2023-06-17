@@ -45,11 +45,11 @@
       </span>
       <span class="form-input">
         <h4>Please confirm date and time for appointment.</h4>
-\        <div class="input-container-nohelper">
+        <div class="input-container-nohelper">
           <input type="text" name="datetime"  required>
         </div>
         <div class="input-container">
-          <input class="input-box" type="text" name="services">
+          <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Request')">
           <input class="helper-box" type="text" value="Select from services.">
         </div>
         <input type="hidden" name="version" value="1.0">
@@ -77,7 +77,7 @@
           <input type="text" name="datetime" required>
         </div>
         <div class="input-container">
-          <input class="input-box" type="text" name="services">
+          <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Appoint')">
           <input class="helper-box" type="text" value="Select from services.">
         </div>
         <div class="input-container">
@@ -137,6 +137,44 @@
       <br>
       <br>
       <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="changeAppointment()">CANCEL Appointment</a>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Select" style="display: none;">
+    <form id="Select-form" action="#Select" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <h4>Please select services being requested.</h4>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Laser"  required>
+          <input class="helper-box" type="text" value="Laser">
+        </div>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Massage">
+          <input class="helper-box" type="text" value="Massage">
+        </div>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Eyelash extensions">
+          <input class="helper-box" type="text" value="Eyelash extensions">
+        </div>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Micro blading">
+          <input class="helper-box" type="text" value="Micro blading">
+        </div>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Hair">
+          <input class="helper-box" type="text" value="Hair">
+        </div>
+        <input type="hidden" name="version" value="1.0">
+        <input type="hidden" name="nextform" value="Appoint">
+        <input type="hidden" name="title" value="Your selected services.">
+     </span>
+      <br>
+      <br>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.doneServices()">Done</a>
       <br>
       <br>
     </form>
