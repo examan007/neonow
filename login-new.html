@@ -16,10 +16,10 @@
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
-        <label for="username">Please verify your email address to receive booking confirmation:</label>
+        <h4>Please verify your email address to receive booking confirmation:</h4>
         <div class="input-container">
-          <input type="text" id="username" name="username"  required>
-          <input type="text" id="input-box" value="Enter email address here." required>
+          <input class="input-box" type="text" id="username" name="username"  required>
+          <input class="helper-box" type="text" id="input-box" value="Enter email address here." required>
         </div>
         <input type="hidden" name="version" value="1.0">
         <input type="hidden" id="xpassword" name="password" required>
@@ -44,14 +44,13 @@
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
-        <label for="username">Please confirm</label>
-        <label for="username">Date and time for appointment</label>
-        <div class="input-container">
-          <input type="text" id="datetime" name="datetime"  required>
+        <h4>Please confirm date and time for appointment.</h4>
+        <div class="input-container-nohelper">
+          <input type="text" name="datetime"  required>
         </div>
         <div class="input-container">
-          <input type="text" id="usermessage" name="usermessage">
-          <input type="text" id="message-box" value="Enter message here.">
+          <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Request')">
+          <input class="helper-box" type="text" value="Select from services.">
         </div>
         <input type="hidden" name="version" value="1.0">
         <input type="hidden" name="nextform" value="Confirm">
@@ -67,23 +66,69 @@
       <br>
     </form>
   </section>
+  <section class="Dialogue" id="Appoint" style="display: none;">
+    <form id="Appoint-form" action="#Appoint" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <h4>Please complete the information form then click request appointment.</h4>
+        <div class="input-container-nohelper">
+          <input type="text" name="datetime" required>
+        </div>
+        <div class="input-container">
+          <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Appoint')">
+          <input class="helper-box" type="text" value="Select from services.">
+        </div>
+        <div class="input-container">
+          <input class="input-box" type="text" name="email" required>
+          <input class="helper-box" type="text" value="Email address.">
+        </div>
+        <div class="input-container">
+          <input class="input-box" type="text" name="phone" required>
+          <input class="helper-box" type="text" value="Telephone number.">
+        </div>
+        <div class="input-container">
+          <input class="input-box" type="text" name="name">
+          <input class="helper-box" type="text" value="Preferred client name.">
+        </div>
+        <div class="input-container">
+          <input class="input-box" type="text" name="birthday">
+          <input class="helper-box" type="text" value="Birth month and day.">
+        </div>
+        <input type="hidden" name="version" value="1.0">
+        <input type="hidden" name="template" value="appointment.html">
+        <input type="hidden" name="nextform" value="Pended">
+        <input type="hidden" name="title" value="Verify your appointment request.">
+        <input type="hidden" name="message" value=
+                "Please check ${username} for iLaS Verify message and click on Book appointment."
+        >
+     </span>
+      <br>
+      <br>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.verifyAppointment()">Request Appointment</a>
+      <br>
+      <br>
+    </form>
+    <div class="softener">&nbsp</div>
+  </section>
   <section class="Dialogue" id="Change" style="display: none;">
     <form id="Change-form" action="#Change" method="post">
       <span class="exitx" onclick="exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
-        <label for="username">Please confirm</label>
-        <label for="username">Date and time for appointment</label>
+        <h4>Please confirm appointment information that is being changed.</h4>
         <div class="input-container">
-          <input type="text" name="datetime"  required>
-          <input type="hidden" id="olddatetime" name="olddatetime"  required>
+          <input class="input-box" type="text" name="datetime"  required>
+          <input class="helper-box" type="text" name="olddatetime">
         </div>
         <div class="input-container">
-          <input type="text" name="usermessage">
+          <input class="input-box" type="text" name="usermessage">
+          <input class="helper-box" type="text" value="Select from services.">
         </div>
         <input type="hidden" name="version" value="1.0">
-        <input type="hidden" name="nextform" value="Confirm">
+        <input type="hidden" name="nextform" value="Removed">
         <input type="hidden" name="title" value="Your appointment is changed.">
         <input type="hidden" name="message" value=
                 "Appointment CANCELLED; notification message has been sent to ${username}."
@@ -92,6 +137,44 @@
       <br>
       <br>
       <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="changeAppointment()">CANCEL Appointment</a>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Select" style="display: none;">
+    <form id="Select-form" action="#Select" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <h4>Please select services being requested.</h4>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Laser"  required>
+          <input class="helper-box" type="text" value="Laser">
+        </div>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Massage">
+          <input class="helper-box" type="text" value="Massage">
+        </div>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Eyelash extensions">
+          <input class="helper-box" type="text" value="Eyelash extensions">
+        </div>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Micro blading">
+          <input class="helper-box" type="text" value="Micro blading">
+        </div>
+        <div class="input-container">
+          <input class="input-select" type="text" readonly name="Hair">
+          <input class="helper-box" type="text" value="Hair">
+        </div>
+        <input type="hidden" name="version" value="1.0">
+        <input type="hidden" name="nextform" value="Appoint">
+        <input type="hidden" name="title" value="Your selected services.">
+     </span>
+      <br>
+      <br>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.doneServices()">Done</a>
       <br>
       <br>
     </form>
@@ -120,7 +203,39 @@
       <span class="form-input">
         <label for="verification">Code:</label>
         <input class="response" name="request.datetime" value="undefined" readonly>
+        <input class="response" name="request.services" value="undefined" readonly>
+      </span>
+      <br>
+      <br>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Removed" style="display: none;">
+    <form id="Removed-form" action="#Booking" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <label for="verification">Code:</label>
+        <input class="response" name="request.datetime" value="undefined" readonly>
         <input class="response" name="request.usermessage" value="undefined" readonly>
+      </span>
+      <br>
+      <br>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Pended" style="display: none;">
+    <form id="Pended-form" action="#Booking" method="post">
+      <span class="exitx" onclick="exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <label for="verification">Code:</label>
+        <input class="response" name="request.datetime" value="undefined" readonly>
+        <input class="response" name="request.services" value="undefined" readonly>
       </span>
       <br>
       <br>
