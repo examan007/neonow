@@ -679,7 +679,7 @@
                 var sourceElement = document.getElementById("email");
                 var targetElement = document.getElementById("username");
                 var sourceValue = sourceElement.getAttribute("value");
-                targetElement.setAttribute("value", 'james.hayes@neolation.com');
+                //targetElement.setAttribute("value", 'james.hayes@neolation.com');
             } catch (e) {
                 console.log(e.stack.toString())
             }
