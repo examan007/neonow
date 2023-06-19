@@ -666,6 +666,8 @@
             }
           });
           getNextForm('empty')
+
+          return this
         },
         exitlogin: function () {
             exitlogin()
@@ -676,10 +678,12 @@
         },
         verifyAppointment: function () {
             try {
-                var sourceElement = document.getElementById("email");
-                var targetElement = document.getElementById("username");
-                var sourceValue = sourceElement.getAttribute("value");
-                //targetElement.setAttribute("value", 'james.hayes@neolation.com');
+                var parent = document.getElementById('Appoint')
+                var sourceElement = parent.querySelectorAll('input[name="email"]')[0]
+                var targetElement = document.getElementById("username")
+                var sourceValue = sourceElement.value
+                targetElement.value = sourceValue
+                console.log('Appointment: email=[' + sourceValue + ']')
             } catch (e) {
                 console.log(e.stack.toString())
             }

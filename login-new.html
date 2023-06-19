@@ -12,7 +12,7 @@
 <div id="login-window" class="login-window">
   <section class="Dialogue" id="Login">
     <form id="Login-form" action="#Verify" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -33,14 +33,14 @@
      </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()">Verify Email</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.getAuthenticationCookie()">Verify Email</a>
       <br>
       <br>
     </form>
   </section>
   <section class="Dialogue" id="Request" style="display: none;">
     <form id="Request-form" action="#Request" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -61,14 +61,14 @@
      </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="requestAppointment()">Request Appointment</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.requestAppointment()">Request Appointment</a>
       <br>
       <br>
     </form>
   </section>
   <section class="Dialogue" id="Appoint" style="display: none;">
     <form id="Appoint-form" action="#Appoint" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -114,7 +114,7 @@
   </section>
   <section class="Dialogue" id="Change" style="display: none;">
     <form id="Change-form" action="#Change" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -124,8 +124,8 @@
           <input class="helper-box" type="text" name="olddatetime">
         </div>
         <div class="input-container">
-          <input class="input-box" type="text" name="usermessage">
-          <input class="helper-box" type="text" value="Select from services.">
+          <input class="input-box" type="text" readonly name="usermessage">
+          <input class="helper-box" type="text" value="">
         </div>
         <input type="hidden" name="version" value="1.0">
         <input type="hidden" name="nextform" value="Removed">
@@ -136,14 +136,14 @@
      </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="changeAppointment()">CANCEL Appointment</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.changeAppointment()">CANCEL Appointment</a>
       <br>
       <br>
     </form>
   </section>
   <section class="Dialogue" id="Select" style="display: none;">
     <form id="Select-form" action="#Select" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -181,7 +181,7 @@
   </section>
   <section class="Dialogue" id="Verify" style="display: none;">
     <form id="Verfiy-form" action="#Booking" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -197,7 +197,7 @@
   </section>
   <section class="Dialogue" id="Confirm" style="display: none;">
     <form id="Confirm-form" action="#Booking" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -213,7 +213,7 @@
   </section>
   <section class="Dialogue" id="Removed" style="display: none;">
     <form id="Removed-form" action="#Booking" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -229,7 +229,7 @@
   </section>
   <section class="Dialogue" id="Pended" style="display: none;">
     <form id="Pended-form" action="#Booking" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -245,7 +245,7 @@
   </section>
   <section class="Dialogue" id="Status" style="display: none;">
     <form id="Status-form" action="#Status" method="post">
-      <span class="exitx" onclick="exitlogin()">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
@@ -260,7 +260,7 @@
   </section>
   <section class="Dialogue" id="Login-pass" style="display: none;">
     <form id="Login-form-pass" action="#Newuser" method="post">
-      <span class="exitx" onclick="exitlogin()">X</span>
+      <span class="exitx" onclick="LogMgr.exitlogin()">X</span>
       <span class="form-input"><label for="username">Email:</label>
         <input type="text" id="username-pass" name="username" required>
       </span>
@@ -270,7 +270,7 @@
       </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()">Login</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.getAuthenticationCookie()">Login</a>
       <br>
       <br>
     </form>
@@ -278,7 +278,7 @@
   </section>
   <section class="Dialogue" id="Newuser" style="display: none;">
     <form action="#Verify" method="post">
-      <span class="exitx" onclick="exitlogin()">X</span>
+      <span class="exitx" onclick="LogMgr.exitlogin()">X</span>
       <span class="form-input">
       <label for="email">Email:</label>
       <input type="text" id="email" name="email" required>
@@ -293,7 +293,7 @@
       </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="getAuthenticationCookie()">Create</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.getAuthenticationCookie()">Create</a>
       <br>
     </form>
   </section>
@@ -314,20 +314,7 @@
 </div>
 </div>
 <script>
-  LogMgr = LoginManager()
-  LogMgr.onload()
-  function getAuthenticationCookie() {
-    LogMgr.getAuthenticationCookie()
-  }
-  function requestAppointment() {
-    LogMgr.requestAppointment()
-  }
-  function changeAppointment() {
-    LogMgr.changeAppointment()
-  }
-  function exitlogin() {
-    LogMgr.exitlogin()
-  }
+  LogMgr = LoginManager().onload()
 </script>
 </body>
 </html>
