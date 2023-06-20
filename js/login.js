@@ -501,7 +501,13 @@
                             return section
                         }
                     }
-                    getNextForm(getSectionName())
+                    const sectionname = getSectionName()
+                    if (sectionname === "Appoint" || sectionname === "Request") {
+                        LastPanel = sectionname
+                        getNextForm("Select")
+                    } else {
+                        getNextForm(sectionname)
+                    }
                 } else
                 if (jsonmsg.operation === 'showstatus') {
                     getNextForm('Status')
