@@ -347,9 +347,27 @@
                       console.log("status=[" + xhr.status + "]")
                       console.log("status=[" + xhr.statusText + "]")
                       console.log("message=[" + xhr.response + "]")
-                      setCookieInParent('expired' + $('#neotoken').val())
-                      $("#renewflag").val(false)
-                      getNextForm('Login', true)
+                      function testForPendedEmailVerification() {
+                        try {
+                            const jsonobj = JSON.parse(xhr.response)
+                            if (jsonobj.message.includes('Pending')) {
+
+                            }
+                            return true
+                        } catch (e) {
+                            console.log(e.stack.toString())
+                        }
+                        return false
+                      }
+                      if (testForPendedEmailVerification()) {
+                          getNextForm('Verify')
+                          showlogin()
+                      } else {
+                          setCookieInParent('expired' + $('#neotoken').val())
+                          $("#renewflag").val(false)
+                          getNextForm('Login', true)
+                          showlogin()
+                      }
                     } else {
                       console.error(xhr.statusText);
                       $("#renewflag").val(false)
