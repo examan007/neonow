@@ -15,7 +15,7 @@
                        try {
                            ret = JSON.parse(response);
                        } catch(e) {
-                           console.log("Respone is not json")
+                           console.log("Response is not json")
                            ret = response
                        }
                    }
