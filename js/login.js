@@ -8,7 +8,8 @@
         xhttp.withCredentials = false;
         xhttp.onreadystatechange = function() {
            console.log("ready" + this.responseText)
-           if (this.readyState == 4 && this.status == 200) {
+           if (this.readyState == 4)
+           if (this.status == 200) {
               function parseResponse(response) {
                    var ret = {}
                    if(response) {
@@ -22,8 +23,18 @@
                    return ret
               }
               amethod(parseResponse(this.responseText), this)
+            } else
+            if( this.status == 401){
+               setCookieInParent('expired' + $('#neotoken').val())
+                $('#neotoken').val("")
+               //exitlogin()
+            } else
+            if( this.status == 0){
+               //exitlogin()
             } else {
-               console.log(this)
+                console.log(this.status + " NOT 200 [" + this.toString() + "]")
+                $('label[for="verification"]').text("Something went wrong; please try again later.")
+                getNextForm('Verify')
             }
         }
         return xhttp
@@ -55,6 +66,15 @@
         }
         return value
       }
+      function getVerification() {
+          var element = document.querySelector('label[for="verification"]');
+          if (element) {
+            return element.textContent
+          } else {
+            console.log("Element not found.");
+            return ""
+          }
+      }
       function getNextForm(section, flag) {
         console.log("$$$%%%$$$ getNextForm $$$ section=[" + section + "]")
         $('#login-window').css("display", "none")
@@ -69,7 +89,7 @@
         try {
             function testSectionName(section) {
                 if (typeof(section) === 'undefined') {
-                    return empty
+                    return 'empty'
                 } else {
                     return section
                 }
@@ -79,10 +99,15 @@
                 $("#" + section).css("display", "block")
                 checkInputContainerHelper(section)
                 showlogin()
-            } else {
-                exitlogin()
             }
         } catch (e) {
+        }
+        if (section === "Verify") {
+            if (getVerification() === 'Code:') {
+                exitlogin()
+            } else {
+                showlogin()
+            }
         }
       }
         function getForms (extraparams, extended) {
@@ -170,6 +195,7 @@
           xhr.open('POST', url);
           xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
           xhr.onload = function() {
+           if (xhr.readyState == 4)
             if (xhr.status === 200) {
               console.log("response=[" + xhr.response + "] status=[" + xhr.status + "]")
               function getJsonobj() {
@@ -351,9 +377,12 @@
                         try {
                             const jsonobj = JSON.parse(xhr.response)
                             if (jsonobj.message.includes('Pending')) {
-
+                               $('label[for="verification"]').text(jsonobj.message +
+                                " Please check your email for verify message and click on Book appointment.")
+                                return true
+                            } else {
+                                return false
                             }
-                            return true
                         } catch (e) {
                             console.log(e.stack.toString())
                         }
@@ -361,9 +390,9 @@
                       }
                       if (testForPendedEmailVerification()) {
                           getNextForm('Verify')
-                          showlogin()
                       } else {
                           setCookieInParent('expired' + $('#neotoken').val())
+                          $('#neotoken').val("")
                           $("#renewflag").val(false)
                           getNextForm('Login', true)
                           showlogin()
