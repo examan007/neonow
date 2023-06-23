@@ -760,6 +760,41 @@
         doneServices: function () {
             console.log("doneServices(); ")
             getNextForm(LastPanel)
+        },
+        getData: function (resource, callback) {
+            function getSubstringBeforeLastSlash(url) {
+                try {
+                    var lastSlashIndex = url.lastIndexOf('/');
+                    if (lastSlashIndex === -1) {
+                        return url;
+                    } else {
+                        return url.substring(0, lastSlashIndex);
+                    }
+                } catch (e) {
+                    console.log(e.stack.toString())
+                }
+                return url
+            }
+            console.log("getData")
+            const server = getSubstringBeforeLastSlash(window.location.href)
+            console.log("Getting: [" + server + "/" + resource + "]")
+            const url = resource
+            fetch(url)
+              .then(response => {
+                if (response.ok) {
+                  return response.json();
+                } else {
+                  throw new Error("Failed to retrieve data. Status code: " + response.status);
+                }
+              })
+              .then(data => {
+                // Process the JSON data as needed
+                callback(data);
+              })
+              .catch(error => {
+                console.error("Error:", error);
+                callback(null)
+              });
         }
     }
 }
