@@ -795,6 +795,7 @@
                 console.error("Error:", error);
                 callback(null)
               });
+              return this
         }
     }
 }
