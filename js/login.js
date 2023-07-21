@@ -602,32 +602,119 @@
             }
             return ""
         }
-        function checkInputValue() {
-            console.log("checkValue " + this.value)
-            if (this.value.length > 0) {
+        function processCheckInputValue(element) {
+            if (element.value.length > 0) {
                 console.log("value exists.")
-                this.helper.classList.add("faded");
+                element.helper.classList.add("faded");
             } else {
-                this.helper.classList.remove("faded");
+                element.helper.classList.remove("faded");
+            }
+        }
+        function checkInputValue() {
+            console.log("checkValue " + this)
+            processCheckInputValue(this.worker)
+        }
+        function getLength(input) {
+            try {
+                if (input.value.length === 'undefined') {
+                    return 0
+                } else {
+                    return input.value.length
+                }
+            } catch (e) {
+                console.log(e.toString())
+            }
+            return 0
+        }
+        function processClickInput(element) {
+            const services = getServices()
+            const helper = element.helper
+            const worker = element.worker
+            if (getLength(worker) > 0) {
+                helper.classList.remove("faded");
+                window.setTimeout( ()=> { worker.value = "" }, 100)
+                setServices(services.replace(worker.value, "").trim())
+            } else {
+                helper.classList.add("faded");
+                worker.value = helper.value
+                if (services.length > 0) {
+                    setServices(services + " " + worker.value)
+                } else {
+                    setServices(worker.value)
+                }
             }
         }
         function clickInputValue() {
             console.log("clickInputValue()")
-            var services = getServices()
-            if (this.value.length > 0) {
-                this.helper.classList.remove("faded");
-                window.setTimeout( ()=> { this.value = "" }, 500)
-                services = services.replace(this.value, "").trim()
-            } else {
-                this.helper.classList.add("faded");
-                this.value = this.helper.value
-                if (services.length > 0) {
-                    services = services + " " + this.value
-                } else {
-                    services = this.value
+            console.log(this)
+            processClickInput(this)
+        }
+        function setOptionValue(value) {
+            console.log("Setting ... [" + value + "]")
+            const optionlist = document.querySelectorAll('.input-option')
+            optionlist.forEach((element)=> {
+                console.log(element)
+                if (element.name === CurrentSelectedName) {
+                    console.log("Setting : " + element)
+                    element.value = value
+                    processCheckInputValue(element)
                 }
+            })
+        }
+        function clearOptionValue(flag) {
+            console.log("Clearing ... " + flag)
+            if (flag) {
+                processClickOptionValue({
+                    worker: null
+                })
             }
-            setServices(services)
+            const optionlist = document.querySelectorAll('.input-option')
+            optionlist.forEach((element)=> {
+                console.log(element)
+                if (element.name === CurrentSelectedName) {
+                    console.log("Clearing : " + element)
+                    if (flag) {
+                        element.value = ""
+                    }
+                    processCheckInputValue(element)
+                }
+            })
+            getNextForm("Select")
+        }
+        var CurrentSelectedName = ""
+        function processClickOptionValue(thisnode) {
+            const optionlist = document.querySelectorAll('.select-option')
+            optionlist.forEach((workernode)=> {
+                try {
+                    const inputs = workernode.parentNode.getElementsByTagName('input')
+                    const worker = inputs[0]
+                    const helper = inputs[1]
+                    if (worker === thisnode.worker) {
+                        if (getLength(worker) <= 0) {
+                            processClickInput(worker)
+                        }
+                        setOptionValue(helper.value)
+                    } else
+                    if (getLength(worker) > 0) {
+                        processClickInput(worker)
+                    }
+                } catch (e) {
+                    console.log(e.stack.toString())
+                }
+            })
+        }
+        function clickOptionValue() {
+            console.log("clickOptionValue ...")
+            console.log(this)
+            processClickOptionValue(this)
+        }
+        function clickForOptions() {
+            console.log("clickForOptions ...")
+            console.log(this)
+            CurrentSelectedName = this.parentNode.getElementsByTagName('input')[0].name
+            console.log("Current=[" + CurrentSelectedName + "]")
+            getNextForm("Option")
+            //clickInputValue()
         }
         function checkInputContainerHelper(sectionname) {
             const section = document.getElementById('#' + sectionname)
@@ -637,29 +724,37 @@
         }
         function initInputContainerHelper(parent, register, inputclass, checkmethod) {
             function getElements() {
+                const selector = '.' + inputclass
                 if (parent == null) {
-                    return document.querySelectorAll('.input-container')
+                    return document.querySelectorAll(selector)
                 } else {
-                    return parent.querySelectorAll('.input-container')
+                    return parent.querySelectorAll(selector)
                 }
             }
+            console.log("initInputContainerHelper for " + inputclass)
             const elements = getElements()
             elements.forEach((element)=> {
                 try {
-                    const inputs = element.getElementsByTagName('input')
-                    const input = inputs[0]
-                    if (input.classList.contains(inputclass)) {
-                        input.helper = inputs[1]
-                        input.checkValue = checkmethod
-                        register(input)
+                    const inputs = element.parentNode.getElementsByTagName('input')
+                    const worker = inputs[0]
+                    const helper = inputs[1]
+                    function setMembers(element) {
+                        element.worker = inputs[0]
+                        element.helper = inputs[1]
+                        element.checkValue = checkmethod
+                        register(element)
                     }
+                    setMembers(worker)
+                    setMembers(helper)
                 } catch (e) {
                     console.log(e.stack.toString())
                 }
             })
         }
-
     return {
+        clearOption: function (flag) {
+            clearOptionValue(flag)
+        },
         onload: function () {
            console.log("load href=[" + window.location.href + "]")
             registerForEvents()
@@ -670,6 +765,14 @@
             initInputContainerHelper(null, (input)=> {
                 input.addEventListener("click", input.checkValue)
             }, "input-select", clickInputValue)
+            initInputContainerHelper(null, (input)=> {
+                console.log("Registering for select-option")
+                input.addEventListener("click", input.checkValue)
+            }, "select-option", clickOptionValue)
+            initInputContainerHelper(null, (input)=> {
+                console.log("Registering for input-option")
+                input.addEventListener("click", input.checkValue)
+            }, "input-option", clickForOptions)
 
             const serverurl = getQueryValue('serverurl')
             urlemail = getQueryValue('username')

@@ -165,7 +165,7 @@
           <input class="helper-box" type="text" value="Micro blading">
         </div>
         <div class="input-container">
-          <input class="input-select" type="text" readonly name="Hair">
+          <input class="input-option" type="text" readonly name="Hair">
           <input class="helper-box" type="text" value="Hair">
         </div>
         <input type="hidden" name="version" value="1.0">
@@ -175,6 +175,45 @@
       <br>
       <br>
       <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.doneServices()">Done</a>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Option" style="display: none;">
+    <form id="Option-form" action="#Option" method="post">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <h4>Please select option for hair service.</h4>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Hair cut for man"  required>
+          <input class="helper-box" type="text" value="Hair cut for man">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Hair cut for woman">
+          <input class="helper-box" type="text" value="Hair cut for woman">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Hair cut and style">
+          <input class="helper-box" type="text" value="Hair cut and style">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Hair colour">
+          <input class="helper-box" type="text" value="Hair colour">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Hair style">
+          <input class="helper-box" type="text" value="Hair style">
+        </div>
+        <input type="hidden" name="version" value="1.0">
+        <input type="hidden" name="nextform" value="Select">
+        <input type="hidden" name="title" value="Your service options.">
+     </span>
+      <br>
+      <br>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.clearOption(true)">Clear</a>
+      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.clearOption(false)">Done</a>
       <br>
       <br>
     </form>

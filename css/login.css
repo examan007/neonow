@@ -1,4 +1,7 @@
-      /* Center the login window on the page */
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
       .login-window {
         position: absolute;
         top: 50%;
@@ -69,7 +72,7 @@
        width: 100%;
        height: 30px;
      }
-     .input-select {
+     .input-select, .input-option, .select-option {
         position: absolute;
         top: 0;
         left: 0;
@@ -100,6 +103,7 @@
       }
       #wrapper {
         height: 100vh;
+        width: 100vw;
         z-index: 4;
       }
       .Dialogue {
