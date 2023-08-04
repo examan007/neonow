@@ -147,26 +147,18 @@
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
       <span class="form-input">
-        <h4>Please select services being requested.</h4>
+        <h4>Please select service being requested.</h4>
         <div class="input-container">
-          <input class="input-select" type="text" readonly name="Laser"  required>
-          <input class="helper-box" type="text" value="Laser">
-        </div>
-        <div class="input-container">
-          <input class="input-select" type="text" readonly name="Massage">
-          <input class="helper-box" type="text" value="Massage">
-        </div>
-        <div class="input-container">
-          <input class="input-select" type="text" readonly name="Eyelash extensions">
-          <input class="helper-box" type="text" value="Eyelash extensions">
-        </div>
-        <div class="input-container">
-          <input class="input-select" type="text" readonly name="Micro blading">
-          <input class="helper-box" type="text" value="Micro blading">
+          <input class="input-treatment" type="text" readonly name="Laser"  required>
+          <input class="helper-box" type="text" value="Laser treatment">
         </div>
         <div class="input-container">
           <input class="input-option" type="text" readonly name="Hair">
-          <input class="helper-box" type="text" value="Hair">
+          <input class="helper-box" type="text" value="Hair options">
+        </div>
+        <div class="input-container">
+          <input class="input-other" type="text" readonly name="Other">
+          <input class="helper-box" type="text" value="Other services">
         </div>
         <input type="hidden" name="version" value="1.0">
         <input type="hidden" name="nextform" value="Appoint">
@@ -175,6 +167,91 @@
       <br>
       <br>
       <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.doneServices()">Done</a>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Treatment" style="display: none;">
+    <form id="Treatment-form" action="#Treatment" method="post">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <h4>Please select other service.</h4>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Body Contouring">
+          <input class="helper-box" type="text" value="Body Contouring">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Facial Contouring">
+          <input class="helper-box" type="text" value="Facial Contouring">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Hair Removal">
+          <input class="helper-box" type="text" value="Hair Removal">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Stretch Mark Removal">
+          <input class="helper-box" type="text" value="Stretch Mark Removal">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Cellulite Reduction">
+          <input class="helper-box" type="text" value="Cellulite Reduction">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Skin Rejuvenation">
+          <input class="helper-box" type="text" value="Skin Rejuvenation">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Vascular Lesions">
+          <input class="helper-box" type="text" value="Vascular Lesions">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Pigmented Lesions">
+          <input class="helper-box" type="text" value="Pigmented Lesions">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Acne Treatment">
+          <input class="helper-box" type="text" value="Acne Treatment">
+        </div>
+        <input type="hidden" name="version" value="1.0">
+        <input type="hidden" name="nextform" value="Select">
+        <input type="hidden" name="title" value="Your service options.">
+     </span>
+      <br>
+      <br>
+      <a id="clear-input-treatment" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Clear</a>
+      <a id="done-input-treatment" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Done</a>
+      <br>
+      <br>
+    </form>
+  </section>  <section class="Dialogue" id="Other" style="display: none;">
+    <form id="Other-form" action="#Other" method="post">
+      <span class="exitx" onclick="LogMgr.exitlogin()">
+        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+      </span>
+      <span class="form-input">
+        <h4>Please select other service.</h4>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Massage">
+          <input class="helper-box" type="text" value="Massage">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Eyelash extensions">
+          <input class="helper-box" type="text" value="Eyelash extensions">
+        </div>
+        <div class="input-container">
+          <input class="select-option" type="text" readonly name="Micro blading">
+          <input class="helper-box" type="text" value="Micro blading">
+        </div>
+        <input type="hidden" name="version" value="1.0">
+        <input type="hidden" name="nextform" value="Select">
+        <input type="hidden" name="title" value="Your service options.">
+     </span>
+      <br>
+      <br>
+      <a id="clear-input-other" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Clear</a>
+      <a id="done-input-other" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Done</a>
       <br>
       <br>
     </form>
@@ -212,8 +289,8 @@
      </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.clearOption(true)">Clear</a>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.clearOption(false)">Done</a>
+      <a id="clear-input-option" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Clear</a>
+      <a id="done-input-option" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Done</a>
       <br>
       <br>
     </form>

@@ -72,7 +72,7 @@
        width: 100%;
        height: 30px;
      }
-     .input-select, .input-option, .select-option {
+     .input-select, .input-option, .input-treatment, .input-other, .select-option {
         position: absolute;
         top: 0;
         left: 0;

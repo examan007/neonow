@@ -649,30 +649,38 @@
             console.log(this)
             processClickInput(this)
         }
-        function setOptionValue(value) {
+        function setOptionValueForClass(value, classname) {
             console.log("Setting ... [" + value + "]")
-            const optionlist = document.querySelectorAll('.input-option')
+            const optionlist = document.querySelectorAll('.' + classname)
             optionlist.forEach((element)=> {
                 console.log(element)
                 if (element.name === CurrentSelectedName) {
                     console.log("Setting : " + element)
                     element.value = value
                     processCheckInputValue(element)
+                } else {
+                    element.value = ""
+                    processCheckInputValue(element)
                 }
             })
         }
-        function clearOptionValue(flag) {
+        function setOptionValue(value) {
+            setOptionValueForClass(value, 'input-treatment')
+            setOptionValueForClass(value, 'input-option')
+            setOptionValueForClass(value, 'input-other')
+        }
+        function clearOptionValue(flag, classname) {
             console.log("Clearing ... " + flag)
             if (flag) {
                 processClickOptionValue({
                     worker: null
                 })
             }
-            const optionlist = document.querySelectorAll('.input-option')
+            const optionlist = document.querySelectorAll('.' + classname)
             optionlist.forEach((element)=> {
                 console.log(element)
                 if (element.name === CurrentSelectedName) {
-                    console.log("Clearing : " + element)
+                    console.log("Clearing : " + element.name)
                     if (flag) {
                         element.value = ""
                     }
@@ -716,6 +724,22 @@
             getNextForm("Option")
             //clickInputValue()
         }
+        function clickForOther() {
+            console.log("clickForOther ...")
+            console.log(this)
+            CurrentSelectedName = this.parentNode.getElementsByTagName('input')[0].name
+            console.log("Current=[" + CurrentSelectedName + "]")
+            getNextForm("Other")
+            //clickInputValue()
+        }
+        function clickForTreatment() {
+            console.log("clickForTreatment ...")
+            console.log(this)
+            CurrentSelectedName = this.parentNode.getElementsByTagName('input')[0].name
+            console.log("Current=[" + CurrentSelectedName + "]")
+            getNextForm("Treatment")
+            //clickInputValue()
+        }
         function checkInputContainerHelper(sectionname) {
             const section = document.getElementById('#' + sectionname)
             initInputContainerHelper(section, (input)=> {
@@ -752,8 +776,8 @@
             })
         }
     return {
-        clearOption: function (flag) {
-            clearOptionValue(flag)
+        clearOption: function (flag, classname) {
+            clearOptionValue(flag, classname)
         },
         onload: function () {
            console.log("load href=[" + window.location.href + "]")
@@ -773,6 +797,52 @@
                 console.log("Registering for input-option")
                 input.addEventListener("click", input.checkValue)
             }, "input-option", clickForOptions)
+            initInputContainerHelper(null, (input)=> {
+                console.log("Registering for select-other")
+                input.addEventListener("click", input.checkValue)
+            }, "input-treatment", clickForTreatment)
+            initInputContainerHelper(null, (input)=> {
+                console.log("Registering for select-other")
+                input.addEventListener("click", input.checkValue)
+            }, "input-other", clickForOther)
+
+            const dialoguebuttonids=[
+                "done-input-treatment",
+                "clear-input-treatment",
+                "done-input-option",
+                "clear-input-option",
+                "done-input-other",
+                "clear-input-other",
+            ]
+            function registerButton(index) {
+                const buttonid = dialoguebuttonids[index]
+                if (typeof(buttonid) != 'undefined') {
+                    const idarray = buttonid.split('-')
+                    function getflag() {
+                        if (idarray[0] === "done") {
+                            return false
+                        } else {
+                            return true
+                        }
+                    }
+                    function registerButtonClick() {
+                        const button = document.getElementById(buttonid);
+                        button.addEventListener('click', function (event) {
+                          event.stopPropagation();
+                          console.log('Button clicked!');
+                          clearOptionValue(getflag(), idarray[1] + '-' + idarray[2])
+                        })
+
+                    }
+                    registerButtonClick()
+                    registerButton(index + 1)
+                }
+            }
+            try {
+                registerButton(0)
+            } catch (e) {
+                log.console(e.stack.toString())
+            }
 
             const serverurl = getQueryValue('serverurl')
             urlemail = getQueryValue('username')
