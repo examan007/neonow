@@ -551,7 +551,7 @@
                     const sectionname = getSectionName()
                     if (sectionname === "Appoint" || sectionname === "Request") {
                         LastPanel = sectionname
-                        getNextForm("Select")
+                        getNextForm(sectionname) //"Select")
                     } else {
                         getNextForm(sectionname)
                     }
