@@ -544,9 +544,6 @@
                         const section = jsonmsg.sectionname
                         try {
                             const services = getQueryValue("services")
-                            var parent = document.getElementById('Appoint')
-                            var sourceElement = parent.querySelectorAll('input[name="services"]')[0]
-                            sourceElement.setAttribute("value", services)
                             console.log("GSN href=[" + window.location.href + "] services=[" + services + "]")
                         } catch (e) {
                             console.log(e.stack.toString())
