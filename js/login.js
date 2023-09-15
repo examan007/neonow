@@ -542,6 +542,12 @@
                     }
                     function getSectionName() {
                         const section = jsonmsg.sectionname
+                        try {
+                            const services = getQueryValue("services")
+                            console.log("GSN href=[" + window.location.href + "] services=[" + services + "]")
+                        } catch (e) {
+                            console.log(e.stack.toString())
+                        }
                         if (false) { //section === 'Request') {
                             return 'Appoint'
                         } else {
@@ -551,7 +557,7 @@
                     const sectionname = getSectionName()
                     if (sectionname === "Appoint" || sectionname === "Request") {
                         LastPanel = sectionname
-                        getNextForm("Select")
+                        getNextForm(sectionname) //"Select")
                     } else {
                         getNextForm(sectionname)
                     }
@@ -843,8 +849,19 @@
             } catch (e) {
                 log.console(e.stack.toString())
             }
-
-            const serverurl = getQueryValue('serverurl')
+            function getServerURL() {
+                 const url = getQueryValue('serverurl')
+                 if (url == null) {
+                    return ""
+                 } else
+                 if (url.indexOf("#Booking") >= 0) {
+                    return url
+                 } else {
+                    const newurl = url.replace(/#Services?/g, "#Booking?")
+                    return newurl.replace(/html?/g, "html#Booking?")
+                 }
+            }
+            const serverurl = getServerURL()
             urlemail = getQueryValue('username')
             getQueryValue('password')
 
