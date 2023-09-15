@@ -258,11 +258,35 @@ var ApplicationManager = function(msgexception) {
                         return ""
                     }
                 }
+                function combineParameters(url1, url2) {
+                    const params1 = new URLSearchParams(url1.split("?")[1])
+                    const params2 = new URLSearchParams(url2.split("?")[1])
+                    params2.forEach((value, key) => {
+                      if (!params1.has(key)) {
+                        params1.append(key, value)
+                      } else {
+                        //params1.set(key, value)
+                      }
+                    })
+                    const mergedQueryString = params1.toString();
+                    const finalURL = "?" + mergedQueryString
+
+                    console.log("final=" + finalURL);
+                    return finalURL
+                }
                 function sethref (newhashcode) {
-                    const newhref = getServer() + getNewHashCode(newhashcode) + getNewParameters(jsonmsg.newhref)
+                    const newserver = getServer() + getNewHashCode(newhashcode)
+                    const prenewhref = newserver + getNewParameters(jsonmsg.newhref)
                     console.log("Original href = [" + window.location.href + "]")
-                    console.log("New href = [" + newhref + "]")
-                    return newhref
+                    console.log("Pre href = [" + prenewhref + "]")
+                    try {
+                        const newhref = newserver + combineParameters(prenewhref, window.location.href)
+                        console.log("New href = [" + newhref + "]")
+                        return newhref
+                    } catch (e) {
+                        console.log(e.stack.toString())
+                    }
+                    return ""
                 }
                 //window.location.href = sethref()
                 const newhref = sethref(jsonmsg.newhashcode)
