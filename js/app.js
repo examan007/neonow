@@ -1,5 +1,5 @@
 var ApplicationManager = function(msgexception) {
-    var consolex = {
+    var console = {
         log: function(msg) {},
     }
     function testAndReturn(argument, delimeter) {

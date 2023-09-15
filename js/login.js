@@ -1,5 +1,5 @@
   var LoginManager = function() {
-    var consolex = {
+    var console = {
         log: function(msg) {},
         error: function(msg) {},
     }
@@ -849,8 +849,19 @@
             } catch (e) {
                 log.console(e.stack.toString())
             }
-
-            const serverurl = getQueryValue('serverurl')
+            function getServerURL() {
+                 const url = getQueryValue('serverurl')
+                 if (url == null) {
+                    return ""
+                 } else
+                 if (url.indexOf("#Booking") >= 0) {
+                    return url
+                 } else {
+                    const newurl = url.replace(/#Services?/g, "#Booking?")
+                    return newurl.replace(/html?/g, "html#Booking?")
+                 }
+            }
+            const serverurl = getServerURL()
             urlemail = getQueryValue('username')
             getQueryValue('password')
 
