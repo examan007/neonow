@@ -1,7 +1,7 @@
-  var LoginManager = function() {
+var LoginManager = function() {
     var console = {
         log: function(msg) {},
-        error: function(msg) {},
+        error: function(msg) {}
     }
     function executeAJAX(amethod) {
         var xhttp = new XMLHttpRequest()
@@ -154,14 +154,28 @@
             console.log("Login-form=[" + formData.toString() + "]");
             return credential
         }
-        function getBooks(extended) {
+        function replaceValue(searchParams, parameterName, newValue) {
+            if (searchParams.has(parameterName)) {
+              searchParams.set(parameterName, newValue);
+            } else {
+              searchParams.append(parameterName, newValue);
+            }
+        }
+        function getBooks(authentication) {
             console.log("getBooks() ...")
-            const formData = getForms("", extended)
+            const formData = getForms("")
+            if (authentication === false) {
+                replaceValue(formData, "username", "*")
+            }
             const xhr = executeAJAX((jsondata)=> {
+                jsondata.authentication = authentication
                 window.parent.postMessage(JSON.stringify({
                     operation: 'readappointments',
                     data: jsondata
                 }), "*");
+                if (authentication === true) {
+                    getBooks(false)
+                }
             })
             const url = 'https://test.neolation.com/booking';
             xhr.open('POST', url);
@@ -570,8 +584,10 @@
                 } else
                 if (jsonmsg.operation === 'readappointments') {
                     $('#renewflag').val('true')
-                    getAuthenticationCookie()
-                    getBooks()
+                    if (jsonmsg.authentication === true) {
+                        getAuthenticationCookie()
+                    }
+                    getBooks(jsonmsg.authentication)
                 }
               } catch (e) {
                 console.log(e.stack.toString())
@@ -858,7 +874,9 @@
                     return url
                  } else {
                     const newurl = url.replace(/#Services?/g, "#Booking?")
-                    return newurl.replace(/html?/g, "html#Booking?")
+                    const returl = newurl.replace(/html?/g, "html#Booking?")
+                    console.log("returned url: " + returl)
+                    return returl
                  }
             }
             const serverurl = getServerURL()
