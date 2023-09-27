@@ -29,6 +29,28 @@ var ApplicationManager = function(msgexception) {
      function getServerURL() {
         return getServer() + getHashCode()
      }
+     function replaceQueryValue(name, newvalue, insearchstr) {
+        function getThisSearchStr() {
+            if (typeof(insearchstr) === "undefined") {
+                return window.location.href.split("?")[1]
+            } else {
+                return insearchstr
+            }
+        }
+        try {
+            const searchstr = getThisSearchStr()
+            const urlParams = new URLSearchParams(searchstr);
+            if (urlParams.has(name)) {
+              urlParams.set(name, newvalue);
+            } else {
+              urlParams.append(name, newvalue);
+            }
+            return urlParams.toString()
+        } catch (e) {
+            console.log(e.toString())
+        }
+        return getThisSearchStr()
+     }
      function getQueryValue(name) {
         try {
             const searchstr = window.location.href.split("?")[1]
@@ -328,11 +350,20 @@ var ApplicationManager = function(msgexception) {
         testCookie: function (callback) {
             testCookie(callback)
         },
+        getServerURL: function () {
+            return getServerURL()
+        },
         getHashValue: function () {
             return testAndReturn(window.location.href.split("?")[0].split("#")[1], "#")
         },
         getQueryValue: function (name) {
             return getQueryValue(name)
+        },
+        getSearchStr: function () {
+            return getSearchStr()
+        },
+        replaceQueryValue: function (nane, newvalue, insearchstr) {
+            return replaceQueryValue(nane, newvalue, insearchstr)
         }
     }
 }
