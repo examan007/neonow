@@ -583,8 +583,8 @@ var LoginManager = function() {
                     getNextForm('Login')
                 } else
                 if (jsonmsg.operation === 'readappointments') {
-                    $('#renewflag').val('true')
                     if (jsonmsg.authentication === true) {
+                        $('#renewflag').val('true')
                         getAuthenticationCookie()
                     }
                     getBooks(jsonmsg.authentication)
