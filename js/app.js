@@ -83,7 +83,9 @@ var ApplicationManager = function(msgexception) {
                     return ""
                 }
             }
-            history.replaceState(null, "", getServer() + getHashCode() + getNewParams());
+            const newhref = getServer() + getHashCode() + getNewParams()
+            console.log("newhref=[" + newhref + "]")
+            history.replaceState(null, "", newhref);
         } catch (e) {
             console.log("removeQueryName: " + e.toString())
         }
@@ -303,7 +305,7 @@ var ApplicationManager = function(msgexception) {
                     console.log("Pre href = [" + prenewhref + "]")
                     try {
                         const newhref = newserver + combineParameters(prenewhref, window.location.href)
-                        console.log("New href = [" + newhref + "]")
+                        console.log("newhref = [" + newhref + "]")
                         return newhref
                     } catch (e) {
                         console.log(e.stack.toString())
@@ -312,6 +314,7 @@ var ApplicationManager = function(msgexception) {
                 }
                 //window.location.href = sethref()
                 const newhref = sethref(jsonmsg.newhashcode)
+                console.log("newhref=[" + newhref + "]")
                 window.history.pushState({}, '', newhref);
             } else {
 //                console.log("Operation unknown; [" + jsonmsg.operation + "]")
@@ -349,6 +352,9 @@ var ApplicationManager = function(msgexception) {
         },
         testCookie: function (callback) {
             testCookie(callback)
+        },
+        getServer: function () {
+            return getServer()
         },
         getServerURL: function () {
             return getServerURL()
