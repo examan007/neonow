@@ -270,13 +270,27 @@ var LoginManager = function() {
                 getNextForm('Login')
             }
           }
-          const data = formData.toString();
+          function filterForm(searchParams, parameterName) {
+            try {
+              if (searchParams.has(parameterName)) {
+                const value = searchParams.get(parameterName)
+                const newval = value.replace(/#Services/g, "#Booking")
+                console.log("email: " + newval)
+                searchParams.set(parameterName, newval)
+              }
+            } catch (e) {
+                console.log(e.toString())
+            }
+              return searchParams
+          }
+          const data = filterForm(formData, "serverurl").toString();
           const credential = formData.get('username') + ":" + formData.get('password')
           console.log("credential=[" + credential + "]")
           console.log("Login-form=[" + formData.toString() + "]");
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
           try {
               console.log("About to send email notification.")
+              console.log("email: " + data.toString())
               xhr.send(data);
           } catch (e) {
             console.log(e.toString())
