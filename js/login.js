@@ -1,5 +1,5 @@
 var LoginManager = function() {
-    var console = {
+    var consolex= {
         log: function(msg) {},
         error: function(msg) {}
     }
@@ -582,6 +582,18 @@ var LoginManager = function() {
                 if (jsonmsg.operation === 'tokenneeded') {
                     getNextForm('Login')
                 } else
+                if (jsonmsg.operation === 'readservices') {
+                    getData(
+                        "https://illuminatinglaserandstyle.com/data/services.json",
+                        (data)=> {
+                            window.parent.postMessage(JSON.stringify({
+                                operation: 'readservices',
+                                data: data
+                            }), "*")
+                            addOptions(data, 'template-input-container')
+                            bindOptions()
+                        })
+                } else
                 if (jsonmsg.operation === 'readappointments') {
                     if (jsonmsg.authentication === true) {
                         $('#renewflag').val('true')
@@ -691,8 +703,8 @@ var LoginManager = function() {
             setOptionValueForClass(value, 'input-option')
             setOptionValueForClass(value, 'input-other')
         }
-        function clearOptionValue(flag, classname) {
-            console.log("Clearing ... " + flag)
+        function clearOptionValue(flag, classname, button) {
+            console.log("Clearing ... " + flag + " classname=[" + classname + "]")
             if (flag) {
                 processClickOptionValue({
                     worker: null
@@ -700,16 +712,40 @@ var LoginManager = function() {
             }
             const optionlist = document.querySelectorAll('.' + classname)
             optionlist.forEach((element)=> {
-                console.log(element)
+                console.log("Clearing :" + element.outerHTML)
                 if (element.name === CurrentSelectedName) {
-                    console.log("Clearing : " + element.name)
+                    console.log("Clearing: " + element.name)
                     if (flag) {
                         element.value = ""
                     }
                     processCheckInputValue(element)
                 }
             })
-            getNextForm("Select")
+            function getFormElement(inparent) {
+                function getForm(parent) {
+                    if (typeof(parent) === 'undefined') {
+                        return null
+                    } else
+                    if (parent.tagName === 'form') {
+                        return parent
+                    } else
+                    if (parent.parentNode) {
+                        return getForm(parent.parentNode)
+                    } else {
+                        return null
+                    }
+                }
+                const formelem = getForm(inparent)
+                if (formelem) {
+                    return formelem
+                } else {
+                    return inparent.closest('form')
+                }
+            }
+            const formElement = getFormElement(button)
+            const inputElement = formElement.querySelector('input[name="nextform"]')
+            console.log("Clearing: " + inputElement.outerHTML)
+            getNextForm(inputElement.value)
         }
         var CurrentSelectedName = ""
         function processClickOptionValue(thisnode) {
@@ -797,13 +833,81 @@ var LoginManager = function() {
                 }
             })
         }
-    return {
-        clearOption: function (flag, classname) {
-            clearOptionValue(flag, classname)
-        },
-        onload: function () {
-           console.log("load href=[" + window.location.href + "]")
-            registerForEvents()
+        function cloneOptions(data, templateclass, addmethod) {
+            const templates = document.querySelectorAll('.' + templateclass)
+            console.log("Tab: " + templates.length)
+            function processTemplate(index) {
+                if (index < templates.length) {
+                   const template = templates[index]
+                    function processTab(index) {
+                        if (index < data.tabs.length) {
+                            const services = data.tabs[index].services
+                            function processOption(count) {
+                                if( count < services.length) {
+                                    const option = services[count]
+                                    if (option.name.length > 0) {
+                                        console.log("Tab: ", JSON.stringify(option))
+                                        addmethod(option, template)
+                                        processOption(count + 1)
+                                    }
+                                }
+                            }
+                            processOption(0)
+                        }
+                    }
+                    processTab(index)
+                    processTemplate(index + 1)
+                }
+            }
+            processTemplate(0)
+        }
+        function addOptions(data, templateclass) {
+            cloneOptions(data, templateclass, (option, template)=> {
+                console.log("Tab: Service option: " + JSON.stringify(option))
+                const cloneSection = template.cloneNode(true)
+                cloneSection.classList.remove(templateclass)
+                cloneSection.innerHTML = eval('`' + cloneSection.innerHTML + '`')
+                template.parentNode.appendChild(cloneSection)
+            })
+        }
+        function getData(resource, callback) {
+            function getSubstringBeforeLastSlash(url) {
+                try {
+                    var lastSlashIndex = url.lastIndexOf('/');
+                    if (lastSlashIndex === -1) {
+                        return url;
+                    } else {
+                        return url.substring(0, lastSlashIndex);
+                    }
+                } catch (e) {
+                    console.log(e.stack.toString())
+                }
+                return url
+            }
+            console.log("getData")
+            const server = getSubstringBeforeLastSlash(window.location.href)
+            console.log("getData Getting: [" + server + "/" + resource + "]")
+            const url = resource
+            fetch(url)
+              .then(response => {
+                if (response.ok) {
+                  return response.json();
+                } else {
+                  throw new Error("Failed to retrieve data. Status code: " + response.status);
+                }
+              })
+              .then(data => {
+                // Process the JSON data as needed
+                console.log(JSON.stringify(data))
+                callback(data);
+              })
+              .catch(error => {
+                console.error("Error:", error);
+                callback(null)
+              });
+              return this
+        }
+        function bindOptions() {
             initInputContainerHelper(null, (input)=> {
                 input.addEventListener("input", input.checkValue)
                 input.checkValue()
@@ -827,7 +931,17 @@ var LoginManager = function() {
                 console.log("Registering for select-other")
                 input.addEventListener("click", input.checkValue)
             }, "input-other", clickForOther)
-
+        }
+    return {
+        clearOption: function (flag, classname) {
+            clearOptionValue(flag, classname)
+        },
+        getData: function (resource, callback) {
+            getData(resource, callback)
+        },
+        onload: function () {
+           console.log("load href=[" + window.location.href + "]")
+            registerForEvents()
             const dialoguebuttonids=[
                 "done-input-treatment",
                 "clear-input-treatment",
@@ -837,8 +951,8 @@ var LoginManager = function() {
                 "clear-input-other",
             ]
             function registerButton(index) {
-                const buttonid = dialoguebuttonids[index]
-                if (typeof(buttonid) != 'undefined') {
+                if (index < dialoguebuttonids.length) {
+                    const buttonid = dialoguebuttonids[index]
                     const idarray = buttonid.split('-')
                     function getflag() {
                         if (idarray[0] === "done") {
@@ -852,9 +966,8 @@ var LoginManager = function() {
                         button.addEventListener('click', function (event) {
                           event.stopPropagation();
                           console.log('Button clicked!');
-                          clearOptionValue(getflag(), idarray[1] + '-' + idarray[2])
+                          clearOptionValue(getflag(), idarray[1] + '-' + idarray[2], button)
                         })
-
                     }
                     registerButtonClick()
                     registerButton(index + 1)
@@ -960,50 +1073,40 @@ var LoginManager = function() {
             getNextForm(sectionname)
         },
         LastPanel: "",
-        setServices: function (nextpanel) {
+        setServices: function (nextpanel, obj) {
             console.log("setServices(); ")
             LastPanel = nextpanel
-            getNextForm("Select")
+            console.log("setServices: " + obj.parentNode.outerHTML)
+            console.log("setServices: [" + obj.value + "] nextpanel=[" + nextpanel + "]")
+            function setNextForm (formname) {
+                const section = document.getElementById(formname)
+                const inputElement = section.querySelector('input[name="nextform"]')
+                console.log("setServices: " + inputElement.outerHTML)
+                if (inputElement) {
+                    inputElement.value = nextpanel
+                }
+                console.log("setServices: " + section.outerHTML)
+                getNextForm(formname)
+            }
+
+            if (obj.value.startsWith("Laser Treatment")) {
+                setNextForm("Treatment")
+            } else
+            if (obj.value.startsWith("Hair Care Option")) {
+                setNextForm("Option")
+            } else
+            if (obj.value.startsWith("Other Service")) {
+                setNextForm("Other")
+            } else
+            if (obj.value.startsWith("Phone Consult")) {
+                getNextForm("Select")
+            } else {
+                getNextForm("Select")
+            }
         },
         doneServices: function () {
             console.log("doneServices(); ")
-            getNextForm(LastPanel)
-        },
-        getData: function (resource, callback) {
-            function getSubstringBeforeLastSlash(url) {
-                try {
-                    var lastSlashIndex = url.lastIndexOf('/');
-                    if (lastSlashIndex === -1) {
-                        return url;
-                    } else {
-                        return url.substring(0, lastSlashIndex);
-                    }
-                } catch (e) {
-                    console.log(e.stack.toString())
-                }
-                return url
-            }
-            console.log("getData")
-            const server = getSubstringBeforeLastSlash(window.location.href)
-            console.log("Getting: [" + server + "/" + resource + "]")
-            const url = resource
-            fetch(url)
-              .then(response => {
-                if (response.ok) {
-                  return response.json();
-                } else {
-                  throw new Error("Failed to retrieve data. Status code: " + response.status);
-                }
-              })
-              .then(data => {
-                // Process the JSON data as needed
-                callback(data);
-              })
-              .catch(error => {
-                console.error("Error:", error);
-                callback(null)
-              });
-              return this
+            //getNextForm(LastPanel)
         }
     }
 }
