@@ -1,5 +1,5 @@
 var LoginManager = function() {
-    var consolex= {
+    var console= {
         log: function(msg) {},
         error: function(msg) {}
     }
