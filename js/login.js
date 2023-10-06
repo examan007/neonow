@@ -597,8 +597,19 @@ var LoginManager = function() {
                     getNextForm('Login')
                 } else
                 if (jsonmsg.operation === 'readservices') {
+                    function getResource() {
+                        try {
+                            const resource = jsonmsg.resource
+                            if (resource.length  >= 0) {
+                                return resource
+                            }
+                        } catch (e) {
+                            console.log(e.toString())
+                            return "https://illuminatinglaserandstyle.com/data/services.json"
+                        }
+                    }
                     getData(
-                        "https://illuminatinglaserandstyle.com/data/services.json",
+                        getResource(),
                         (data)=> {
                             window.parent.postMessage(JSON.stringify({
                                 operation: 'readservices',
