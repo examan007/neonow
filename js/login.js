@@ -1,5 +1,5 @@
 var LoginManager = function() {
-    var console= {
+    var consolex= {
         log: function(msg) {},
         error: function(msg) {}
     }
@@ -547,6 +547,85 @@ var LoginManager = function() {
                 height: height,
             }
         }
+        const durationlist = [
+            "Duration is 30 minutes.",
+            "Duration is 1 hour.",
+            "Duration is 1.5 hours.",
+            "Duration is 2 hours.",
+            "Duration is 2.5 hours.",
+            "Duration is 3 hours."
+        ]
+        function registerControls() {
+            document.querySelectorAll('.number-container').
+              forEach((container)=> {
+                const controls = container.querySelectorAll('.number-control')
+                controls.forEach((control)=> {
+                    console.log("item loop: " + control.outerHTML)
+                    const item = control.querySelectorAll('i')[0]
+                    if (item) {
+                        console.log("item: " + item.outerHTML)
+                        function getNextValue(upflag, current) {
+                            function getNext(index) {
+                                if (index < durationlist.length) {
+                                    const test = durationlist[index]
+                                    console.log("item test: " + test + "current: " + current)
+                                    if (test === current) {
+                                        console.log("item found: " + test)
+                                        if (upflag) {
+                                            if (index < durationlist.length - 1) {
+                                                return durationlist[index + 1]
+                                            } else {
+                                                return current
+                                            }
+                                        } else {
+                                            if (index > 0) {
+                                                return durationlist[index -1]
+                                            } else {
+                                                return current
+                                            }
+                                        }
+                                    } else {
+                                        return getNext(index + 1)
+                                    }
+                                } else {
+                                    return current
+                                }
+                            }
+                            return getNext(0)
+                        }
+                        function updateValue(upflag) {
+                            const box = container.querySelectorAll('.number-box input')[0]
+                            const current = box.getAttribute("value")
+                            console.log("item value: " + current)
+                            const newcurrent = getNextValue(upflag, current)
+                            box.setAttribute("value", newcurrent)
+                            if (newcurrent === current) {
+                                item.style.color = 'red'
+                                box.style.color = 'red'
+                                window.setTimeout(() => {
+                                    item.style.color = 'white';
+                                    box.style.color = 'white'
+                                  }, 1000)
+                            }
+                        }
+                        const classes = item.getAttribute("class")
+                        if (classes.indexOf('fa-plus') >= 0) {
+                            item.addEventListener("click", ()=> {
+                                 console.log("item: add time: ")
+                                updateValue(true, this)
+                            })
+                        } else
+                        if (classes.indexOf('fa-minus') >= 0) {
+                            item.addEventListener("click", ()=> {
+                                 console.log("item: subtract time")
+                                updateValue(false, this)
+                            })
+                        }
+
+                    }
+                })
+            })
+        }
         function receiveMessage(event) {
           // Check if the message is coming from the expected origin
           console.log("rec mess")
@@ -617,6 +696,7 @@ var LoginManager = function() {
                             }), "*")
                             addOptions(data, 'template-input-container')
                             bindOptions()
+                            registerControls()
                         })
                 } else
                 if (jsonmsg.operation === 'readappointments') {
