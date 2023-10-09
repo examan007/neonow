@@ -206,6 +206,8 @@ var LoginManager = function() {
                 return nextform
             }
           }
+          const duration = formData.get('duration')
+          replaceValue(formData, 'duration', (getNextValueIndex(null, duration) + 1) * 30)
           console.log("thisemail=[" + thisemail + "] template=[" + templatename + "]")
           const xhr = new XMLHttpRequest();
           xhr.timeout = 5000;
@@ -561,6 +563,38 @@ var LoginManager = function() {
             "Duration is 3.5 hours.",
             "Duration is 4 hours."
         ]
+        function getNextValueIndex(upflag, current) {
+            function getNext(index) {
+                if (index < durationlist.length) {
+                    const test = durationlist[index]
+                    console.log("item test: " + test + "current: " + current)
+                    if (test === current) {
+                        console.log("item found: " + test)
+                        if (upflag == null) {
+                            return index
+                        } else
+                        if (upflag) {
+                            if (index < durationlist.length - 1) {
+                                return index + 1
+                            } else {
+                                return index
+                            }
+                        } else {
+                            if (index > 0) {
+                                return index -1
+                            } else {
+                                return index
+                            }
+                        }
+                    } else {
+                        return getNext(index + 1)
+                    }
+                } else {
+                    return durationlist.length - 1
+                }
+            }
+            return getNext(0)
+        }
         function isDateTimeAvailable(events, available, datetime, duration, servicesstring) {
             // Convert datetime and duration to moment objects for easier
             const startDatetime = moment(datetime);
@@ -628,35 +662,6 @@ var LoginManager = function() {
                     const item = control.querySelectorAll('i')[0]
                     if (item) {
                         console.log("item: " + item.outerHTML)
-                        function getNextValueIndex(upflag, current) {
-                            function getNext(index) {
-                                if (index < durationlist.length) {
-                                    const test = durationlist[index]
-                                    console.log("item test: " + test + "current: " + current)
-                                    if (test === current) {
-                                        console.log("item found: " + test)
-                                        if (upflag) {
-                                            if (index < durationlist.length - 1) {
-                                                return index + 1
-                                            } else {
-                                                return index
-                                            }
-                                        } else {
-                                            if (index > 0) {
-                                                return index -1
-                                            } else {
-                                                return index
-                                            }
-                                        }
-                                    } else {
-                                        return getNext(index + 1)
-                                    }
-                                } else {
-                                    return durationlist.length - 1
-                                }
-                            }
-                            return getNext(0)
-                        }
                         function getSelectedValue(selector, name) {
                             const inputs = container.parentNode.querySelectorAll(selector)
                             function testInput(index) {
