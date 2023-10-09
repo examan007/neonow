@@ -4,6 +4,7 @@
   <title>Login Window</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="js/login.js"></script>
   <link rel="stylesheet" href="css/login.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-..." crossorigin="anonymous">
@@ -48,6 +49,7 @@
         <h4>Please confirm date and time for appointment.</h4>
         <div class="input-container-nohelper">
           <input type="text" name="datetime"  required>
+          <input type="hidden" class="helper-box" type="text" name="olddatetime">
         </div>
         <div class="input-container">
           <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Request', this)">
