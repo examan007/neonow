@@ -4,8 +4,10 @@
   <title>Login Window</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="js/login.js"></script>
   <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-..." crossorigin="anonymous">
 </head>
 <body>
 <div id="wrapper">
@@ -52,6 +54,21 @@
           <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Request', this)">
           <input class="helper-box" type="text" value="Select from services.">
         </div>
+        <div class="number-container">
+          <div class="number-box">
+            <input type="text" name="duration" value="Duration is 30 minutes.">
+          </div>
+          <div class="number-control">
+            <a href="#">
+              <i class="fas fa-plus"></i>
+            </a>
+          </div>
+          <div class="number-control">
+            <a href="#">
+              <i class="fas fa-minus"></i>
+            </a>
+          </div>
+        </div>
         <input type="hidden" name="version" value="1.0">
         <input type="hidden" name="nextform" value="empty">
         <input type="hidden" name="title" value="Verify your appointment request.">
@@ -79,6 +96,21 @@
         <div class="input-container">
           <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Appoint', this)">
           <input class="helper-box" type="text" value="Select from services.">
+        </div>
+        <div class="number-container">
+          <div class="number-box">
+            <input type="text" name="duration" value="Duration is 30 minutes.">
+          </div>
+          <div class="number-control">
+            <a href="#">
+              <i class="fas fa-plus"></i>
+            </a>
+          </div>
+          <div class="number-control">
+            <a href="#">
+              <i class="fas fa-minus"></i>
+            </a>
+          </div>
         </div>
         <div class="input-container">
           <input class="input-box" type="text" name="email" required>

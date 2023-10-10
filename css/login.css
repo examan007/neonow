@@ -7,7 +7,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: rgba(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.3);
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         text-align: center;
@@ -15,6 +15,7 @@
         background-image: url("https://illuminatinglaserandstyle.com/images/business-card-mdm.png");
         border-radius: 25px;
         z-index: 20;
+        opacity: 1;
       }
       .login-window h2 {
         margin-top: 0;
@@ -66,6 +67,24 @@
         float: right;
         color: white;
       }
+     .number-container {
+       display: flex;
+       justify-content: space-between;
+     }
+     .number-box {
+       flex-grow: 5;
+       height: 30px;
+     }
+     .number-control {
+       flex-grow: 2;
+       height: 30px;
+       color: white;
+       transform: translate(0.3em,0.2em);
+       transition: color 1s ease; /* CSS transition for color change */
+     }
+     .number-control a {
+       color: white;
+     }
      .input-container {
        position: relative;
        left: 0;
@@ -111,7 +130,7 @@
         padding: 0
       }
       .softener {
-        background-color: rgba(0,0,0, 0.5);
+        background-color: rgba(0,0,0, 0.1;
         width: 100%;
         height: 100%;
         position: absolute;
