@@ -1,8 +1,10 @@
 var LoginManager = function() {
-    var console= {
+    var consolex= {
         log: function(msg) {},
         error: function(msg) {}
     }
+    var BookedEvents = null
+    var SalonData = null
     function executeAJAX(amethod) {
         var xhttp = new XMLHttpRequest()
         xhttp.withCredentials = false;
@@ -101,6 +103,7 @@ var LoginManager = function() {
                 showlogin()
             }
         } catch (e) {
+            console.log(e.stack.toString())
         }
         if (section === "Verify") {
             if (getVerification() === 'Code:') {
@@ -175,6 +178,8 @@ var LoginManager = function() {
                 }), "*");
                 if (authentication === true) {
                     getBooks(false)
+                } else {
+                    BookedEvents = jsondata.events
                 }
             })
             const url = 'https://test.neolation.com/booking';
@@ -194,6 +199,9 @@ var LoginManager = function() {
           getNextForm("empty")
           const formData = getForms('templatename=' + templatename, extended)
            thisemail = formData.get('username')
+          const duration = formData.get('duration')
+          replaceValue(formData, 'duration', (getNextValueIndex(null, duration) + 1) * 30)
+          //formData.delete('olddatetime')
           function getNextSectionForm() {
             const nextform = formData.get('nextform')
             if (nexform == null) {
@@ -510,11 +518,12 @@ var LoginManager = function() {
             console.log(formattedDate);
             return formattedDate
         }
-        function setOldDateTime(datetime) {
+        function setInitialValue(value, name) {
             try {
-                var elements = document.querySelectorAll('input[name="olddatetime"]');
+                var elements = document.querySelectorAll('input[name="' + name + '"]');
                 elements.forEach((input)=> {
-                    input.value = datetime
+                    console.log("item: set initial value " + value)
+                    input.value = value
                 })
             } catch (e) {
                 console.log(e.toString())
@@ -527,7 +536,7 @@ var LoginManager = function() {
                 const name = input.getAttribute('name')
                 if (json.hasOwnProperty(name)) {
                     if (name === 'datetime') {
-                        setOldDateTime(json.datetime)
+                        setInitialValue(json.datetime, "olddatetime")
                         input.value = convertDateTime(json)
                     } else
                     if (name === 'message') {
@@ -537,6 +546,7 @@ var LoginManager = function() {
                     }
                 }
             }
+            initializeDuration()
         }
         function getWindowDimensions () {
             const width = window.innerWidth;
@@ -546,6 +556,203 @@ var LoginManager = function() {
                 width: width,
                 height: height,
             }
+        }
+        const durationlist = [
+            "Duration is 30 minutes.",
+            "Duration is 1 hour.",
+            "Duration is 1.5 hours.",
+            "Duration is 2 hours.",
+            "Duration is 2.5 hours.",
+            "Duration is 3 hours."
+        ]
+        function initializeDuration() {
+            try {
+                const inputs = document.querySelectorAll('input')
+                inputs.forEach((input)=> {
+                    if (input.getAttribute('name') === 'duration') {
+                        console.log("item: initial " + input.outerHTML)
+                        input.setAttribute('value', durationlist[0])
+                    }
+                })
+            } catch (e) {
+                console.log(e.stack.toString())
+            }
+        }
+        function getNextValueIndex(upflag, current) {
+            function getNext(index) {
+                if (index < durationlist.length) {
+                    const test = durationlist[index]
+                    console.log("item test: " + test + "current: " + current)
+                    if (test === current) {
+                        console.log("item found: " + test)
+                        if (upflag == null) {
+                            return index
+                        } else
+                        if (upflag) {
+                            if (index < durationlist.length - 1) {
+                                return index + 1
+                            } else {
+                                return index
+                            }
+                        } else {
+                            if (index > 0) {
+                                return index -1
+                            } else {
+                                return index
+                            }
+                        }
+                    } else {
+                        return getNext(index + 1)
+                    }
+                } else {
+                    return durationlist.length - 1
+                }
+            }
+            return getNext(0)
+        }
+        function isDateTimeAvailable(events, available, datetime, duration, servicesstring) {
+            // Convert datetime and duration to moment objects for easier
+            const startDatetime = moment(datetime);
+            const endDatetime = moment(datetime).add((duration + 1) * 30, 'minutes');
+            console.log("item: datetime is " + datetime + " start=" + startDatetime)
+            // Check for overlap with existing events
+            if (events)
+            for (const event of events) {
+                // Convert FullCalendar event format to moment objects
+                const eventStart = moment(event.start);
+                const eventEnd = moment(event.end);
+                // Check for overlap with the current event
+                if (
+                (startDatetime >= eventStart && startDatetime < eventEnd) ||
+                (endDatetime > eventStart && endDatetime <= eventEnd) ||
+                (startDatetime <= eventStart && endDatetime >= eventEnd)
+                ) {
+                    return false; // Overlapping event found
+                }
+            }
+            function getSecondsSinceMidnight(date) {
+                 const momentDate = moment(date);
+                 const midnight = momentDate.clone().startOf('day');
+                 const secondsSinceMidnight = momentDate.diff(midnight, 'seconds');
+                 return secondsSinceMidnight
+             }
+             function setTimeOfDate(datetime, time) {
+                 const date = datetime.format('YYYY-MM-DD')
+                 return date + "T" + time
+             }
+             // Iterate through each event in the 'available' list
+             if (available)
+             for (const availableEvent of available) {
+                 console.log("item: available " + JSON.stringify(availableEvent))
+                 // Convert FullCalendar event format to moment objects
+                 const availableStart = getSecondsSinceMidnight(
+                     setTimeOfDate(startDatetime, availableEvent.startTime))
+                 const availableEnd = getSecondsSinceMidnight(
+                     setTimeOfDate(endDatetime, availableEvent.endTime))
+                 const startTime = getSecondsSinceMidnight(startDatetime)
+                 const endTime = getSecondsSinceMidnight(endDatetime)
+                 console.log("item: available is " + availableEnd + " end=" + endTime)
+
+                 // Check for overlap with the current 'available' event
+                 const sindex = servicesstring.indexOf(availableEvent.title)
+                 if (sindex >= 0)
+                 if (
+                 (startTime >= availableStart && startTime < availableEnd) &&
+                 (endTime > availableStart && endTime <= availableEnd)
+                 ) {
+                     return true; // Overlapping event found
+                 }
+             }
+             return false; // No overlapping events found
+         }
+         function registerControls() {
+            document.querySelectorAll('.number-container').
+              forEach((container)=> {
+                const controls = container.querySelectorAll('.number-control')
+                controls.forEach((control)=> {
+                    console.log("item loop: " + control.outerHTML)
+                    const item = control.querySelectorAll('i')[0]
+                    if (item) {
+                        console.log("item: " + item.outerHTML)
+                        function getNextValue(upflag, current) {
+                            return getNextValueIndex(upflag, current)
+                        }
+                        function getSelectedValue(selector, name) {
+                            const inputs = container.parentNode.querySelectorAll(selector)
+                            function testInput(index) {
+                                if (index < inputs.length) {
+                                    const input = inputs[index]
+                                    if (input.getAttribute('name') === name) {
+                                        console.log("item: input " + input.outerHTML)
+                                        return $(input).val()
+                                    } else {
+                                        return testInput(index + 1)
+                                    }
+                                } else {
+                                    return ""
+                                }
+                            }
+                            return testInput(0)
+                        }
+                        function getServicesString() {
+                            return getSelectedValue('div input', 'services')
+                        }
+                        function convertDate(datestr, duration) {
+                            try {
+                                var parsedDate = moment(datestr, "dddd, MMMM D, YYYY [at] h:mm A [EDT]");
+                                var newMoment = parsedDate.add(duration, 'minutes');
+                                return newMoment.format("YYYY-MM-DDTHH:mm:ss");
+                            } catch (e) {
+                                console.log(e.toString())
+                                return ""
+                            }
+                        }
+                        function getDateTime() {
+                            const datestr = getSelectedValue('div input', 'datetime')
+                            return convertDate(datestr, 0)
+                        }
+                        function updateValue(upflag) {
+                            const box = container.querySelectorAll('.number-box input')[0]
+                            const current = box.getAttribute("value")
+                            console.log("item value: " + current)
+                            const newindex = getNextValue(upflag, current)
+                            const newcurrent = durationlist[newindex]
+                            function showError() {
+                                item.style.color = 'red'
+                                box.style.color = 'red'
+                                window.setTimeout(() => {
+                                    item.style.color = 'white';
+                                    box.style.color = 'white'
+                                  }, 1000)
+                            }
+                            if (newcurrent === current) {
+                                showError()
+                            } else
+                            if (isDateTimeAvailable(
+                                BookedEvents, SalonData, getDateTime(), newindex, getServicesString()
+                                )) {
+                                box.setAttribute("value", newcurrent)
+                            } else {
+                                showError()
+                            }
+                        }
+                        const classes = item.getAttribute("class")
+                        if (classes.indexOf('fa-plus') >= 0) {
+                            item.addEventListener("click", ()=> {
+                                 console.log("item: add time: ")
+                                updateValue(true)
+                            })
+                        } else
+                        if (classes.indexOf('fa-minus') >= 0) {
+                            item.addEventListener("click", ()=> {
+                                 console.log("item: subtract time")
+                                updateValue(false)
+                            })
+                        }
+
+                    }
+                })
+            })
         }
         function receiveMessage(event) {
           // Check if the message is coming from the expected origin
@@ -596,7 +803,11 @@ var LoginManager = function() {
                 if (jsonmsg.operation === 'tokenneeded') {
                     getNextForm('Login')
                 } else
-                if (jsonmsg.operation === 'readservices') {
+               if (jsonmsg.operation === "salonhours") {
+                    console.log("item: salonhours")
+                    SalonData = jsonmsg.data
+               } else
+               if (jsonmsg.operation === 'readservices') {
                     function getResource() {
                         try {
                             const resource = jsonmsg.resource
@@ -617,6 +828,7 @@ var LoginManager = function() {
                             }), "*")
                             addOptions(data, 'template-input-container')
                             bindOptions()
+                            registerControls()
                         })
                 } else
                 if (jsonmsg.operation === 'readappointments') {
