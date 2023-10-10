@@ -1,5 +1,5 @@
 var LoginManager = function() {
-    var console= {
+    var consolex= {
         log: function(msg) {},
         error: function(msg) {}
     }
@@ -563,7 +563,9 @@ var LoginManager = function() {
             "Duration is 1.5 hours.",
             "Duration is 2 hours.",
             "Duration is 2.5 hours.",
-            "Duration is 3 hours."
+            "Duration is 3 hours.",
+            "Duration is 3.5 hours.",
+            "Duration is 4 hours."
         ]
         function initializeDuration() {
             try {
@@ -768,7 +770,14 @@ var LoginManager = function() {
                     try {
                         console.log("message: [" + JSON.stringify(jsonmsg) + "]")
                         setInputValues(jsonmsg)
-                        $("#login-window").css("top", jsonmsg.message.ypos + "px");
+                        function getYPos() {
+                            const ypos = jsonmsg.message.ypos
+                            if (ypos < 200) {
+                                return 200
+                            }
+                            return ypos
+                        }
+                        $("#login-window").css("top", getYPos() + "px");
                         if (getWindowDimensions().width > 800) {
                             $("#login-window").css("left", "550px");
                         }
