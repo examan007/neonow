@@ -1358,7 +1358,7 @@ var LoginManager = function() {
         },
         doneServices: function () {
             console.log("doneServices(); ")
-            //getNextForm(LastPanel)
+            getNextForm(LastPanel)
         }
     }
 }
