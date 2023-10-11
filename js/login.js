@@ -1117,9 +1117,11 @@ var LoginManager = function() {
             cloneOptions(data, templateclass, (option, template)=> {
                 console.log("Tab: Service option: " + JSON.stringify(option))
                 const cloneSection = template.cloneNode(true)
+                cloneSection.setAttribute("style", "display: block;")
                 cloneSection.classList.remove(templateclass)
                 cloneSection.innerHTML = eval('`' + cloneSection.innerHTML + '`')
                 template.parentNode.appendChild(cloneSection)
+                template.setAttribute("style", "display: none;")
             })
         }
         function getData(resource, callback) {
