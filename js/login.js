@@ -643,6 +643,7 @@ var LoginManager = function() {
                  return date + "T" + time
              }
              // Iterate through each event in the 'available' list
+             var adminflag = true
              if (available)
              for (const availableEvent of available) {
                  console.log("item: available " + JSON.stringify(availableEvent))
@@ -657,13 +658,18 @@ var LoginManager = function() {
 
                  // Check for overlap with the current 'available' event
                  const sindex = servicesstring.indexOf(availableEvent.title)
-                 if (sindex >= 0)
-                 if (
-                 (startTime >= availableStart && startTime < availableEnd) &&
-                 (endTime > availableStart && endTime <= availableEnd)
-                 ) {
-                     return true; // Overlapping event found
+                 if (sindex >= 0) {
+                     adminflag = false
+                     if (
+                     (startTime >= availableStart && startTime < availableEnd) &&
+                     (endTime > availableStart && endTime <= availableEnd)
+                     ) {
+                         return true; // Overlapping event found
+                     }
                  }
+             }
+             if (adminflag && available) {
+                return true
              }
              return false; // No overlapping events found
          }
