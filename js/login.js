@@ -633,14 +633,25 @@ var LoginManager = function() {
                 }
             }
             function getSecondsSinceMidnight(date) {
-                 const momentDate = moment(date);
+                 const momentDate = moment(date, "YYYY-MM-DDTHH:MM:SS");
                  const midnight = momentDate.clone().startOf('day');
                  const secondsSinceMidnight = momentDate.diff(midnight, 'seconds');
+                 console.log("moment: " + momentDate + " midnight: " + midnight + " ssm: " + secondsSinceMidnight)
+                 if (Number.isNaN(secondsSinceMidnight)) {
+                    try {
+                        undefined()
+                    } catch (e) {
+                        console.log("moment: " + e.stack.toString())
+                    }
+                 }
                  return secondsSinceMidnight
              }
              function setTimeOfDate(datetime, time) {
                  const date = datetime.format('YYYY-MM-DD')
-                 return date + "T" + time
+                 console.log("moment: time [" + time + "]")
+                 const ret = date + "T" + time
+                 console.log("moment: [" + ret + "]")
+                 return ret
              }
              // Iterate through each event in the 'available' list
              if (available)
@@ -657,12 +668,15 @@ var LoginManager = function() {
 
                  // Check for overlap with the current 'available' event
                  const sindex = servicesstring.indexOf(availableEvent.title)
+                 console.log("input: [" + servicesstring + "] title: [" + availableEvent.title + "] " + sindex)
                  if (sindex >= 0)
                  if (
                  (startTime >= availableStart && startTime < availableEnd) &&
                  (endTime > availableStart && endTime <= availableEnd)
                  ) {
                      return true; // Overlapping event found
+                 } else {
+                    console.log("input: " + startTime + "" + availableStart)
                  }
              }
              return false; // No overlapping events found
