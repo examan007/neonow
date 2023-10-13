@@ -530,23 +530,40 @@ var LoginManager = function() {
             }
         }
         function setInputValues(json) {
+            console.log("input: " + JSON.stringify(json))
+            try {
+                json.duration = json.message.event.extendedProps.customdata.duration
+            } catch (e) {
+                json.duration = 30
+                console.log(e.toString())
+            }
             var inputs = document.getElementsByTagName('input');
             for (var i = 0; i < inputs.length; i++) {
-                const input = inputs[i];
-                const name = input.getAttribute('name')
-                if (json.hasOwnProperty(name)) {
-                    if (name === 'datetime') {
-                        setInitialValue(json.datetime, "olddatetime")
-                        input.value = convertDateTime(json)
-                    } else
-                    if (name === 'message') {
-                        console.log("skipping [" + name + "]")
-                    } else {
-                      input.value = json[name];
+                try {
+                    const input = inputs[i];
+                    const name = input.getAttribute('name')
+                    if (json.hasOwnProperty(name)) {
+                        if (name === 'datetime') {
+                            setInitialValue(json.datetime, "olddatetime")
+                            input.value = convertDateTime(json)
+                        } else
+                        if (name === 'message') {
+                          input.value =
+                           json.message.event.extendedProps.customdata.name
+                        } else
+                        if (name === 'duration') {
+                           const dindex = (Number(json[name]) / 30) - 1
+                           if (dindex >= 0 && dindex < durationlist.length) {
+                               input.value = durationlist[dindex]
+                           }
+                        } else {
+                           input.value = json[name];
+                        }
                     }
+                } catch (e) {
+                    console.log(e.stack.toString())
                 }
             }
-            initializeDuration()
         }
         function getWindowDimensions () {
             const width = window.innerWidth;
