@@ -552,10 +552,7 @@ var LoginManager = function() {
                            json.message.event.extendedProps.customdata.name
                         } else
                         if (name === 'duration') {
-                           const dindex = (Number(json[name]) / 30) - 1
-                           if (dindex >= 0 && dindex < durationlist.length) {
-                               input.value = durationlist[dindex]
-                           }
+                            //input.value = getDurationString(json[name])
                         } else {
                            input.value = json[name];
                         }
@@ -564,6 +561,7 @@ var LoginManager = function() {
                     console.log(e.stack.toString())
                 }
             }
+            initializeDuration(json.duration)
         }
         function getWindowDimensions () {
             const width = window.innerWidth;
@@ -584,13 +582,22 @@ var LoginManager = function() {
             "Duration is 3.5 hours.",
             "Duration is 4 hours."
         ]
-        function initializeDuration() {
+        function getDurationString(duration) {
+           const dindex = (Number(duration) / 30) - 1
+           if (dindex >= 0 && dindex < durationlist.length) {
+               return durationlist[dindex]
+           } else {
+               return durationlist[0]
+           }
+        }
+        function initializeDuration(duration) {
             try {
+                const durationstr = getDurationString(duration)
                 const inputs = document.querySelectorAll('input')
                 inputs.forEach((input)=> {
                     if (input.getAttribute('name') === 'duration') {
                         console.log("item: initial " + input.outerHTML)
-                        input.setAttribute('value', durationlist[0])
+                        input.setAttribute('value', durationstr)
                     }
                 })
             } catch (e) {
