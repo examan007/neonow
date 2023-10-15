@@ -363,6 +363,12 @@ var LoginManager = function() {
                         } else {
                             $("#serverurl").val(serverurl)
                         }
+                        try {
+                            const testserverurl = getServerURL()
+                            console.log("test: [" + testserverurl + " value: [" + serverurl + "]")
+                        } catch (e) {
+                            console.log("test: " + e.toString())
+                        }
                         response = JSON.parse(xhr.response)
                         const email = response.email
                         const token = response.token
@@ -1264,8 +1270,9 @@ var LoginManager = function() {
                  if (url.indexOf("#Booking") >= 0) {
                     return url
                  } else {
-                    const newurl = url.replace(/#Services?/g, "#Booking?")
-                    const returl = newurl.replace(/html?/g, "html#Booking?")
+                    const newurl = url.replace(/#Services\?/g, "#Booking?")
+                    const returl0 = newurl.replace(/html\?/g, "html#Booking?")
+                    const returl = returl0.replace(/html#Booking\?#/g, "html#")
                     console.log("returned url: " + returl)
                     return returl
                  }
