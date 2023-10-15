@@ -842,6 +842,10 @@ var LoginManager = function() {
                         getNextForm(sectionname)
                     }
                 } else
+                if (jsonmsg.operation === 'signoff') {
+                    console.log("signoff: neotoken=[" + $('#neotoken').val())
+                    setCookieInParent('expired' + $('#neotoken').val())
+                } else
                 if (jsonmsg.operation === 'showstatus') {
                     getNextForm('Status')
                 } else
