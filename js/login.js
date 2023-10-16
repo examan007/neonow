@@ -653,7 +653,36 @@ var LoginManager = function() {
                 // Convert FullCalendar event format to moment objects
                 const eventStart = moment(event.start);
                 const eventEnd = moment(event.end);
-                // Check for overlap with the current event
+                const eventtypes = [
+                    "Phone Consult",
+                    "Hair Care Option"
+                ]
+                function includeEventType(index) {
+                    if (index <= eventtypes.length) {
+                        const eventtype = eventtypes[index]
+                        if (event.title.indexOf(eventtype) >= 0) {
+                            return true
+                        } else {
+                            return includeEventType(index + 1)
+                        }
+                    }
+                    return false
+                }
+                function includeEventRequest(index) {
+                    if (index <= eventtypes.length) {
+                        const eventtype = eventtypes[index]
+                        if (servicesstring.indexOf(eventtype) >= 0) {
+                            return true
+                        } else {
+                            return includeEventRequest(index + 1)
+                        }
+                    }
+                    return false
+                }
+                const includeRequest = includeEventRequest(0)
+                const includeType = includeEventType(0)
+                if ((includeType && includeRequest) ||
+                    ! includeType )
                 if (
                 (startDatetime >= eventStart && startDatetime < eventEnd) ||
                 (endDatetime > eventStart && endDatetime <= eventEnd) ||
