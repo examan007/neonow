@@ -802,6 +802,18 @@ var LoginManager = function() {
               console.log("Received messageL:", message);
               try {
                 const jsonmsg = JSON.parse(message)
+                function isAdmin() {
+                    try {
+                        if (typeof(jsonmsg.message.adminflag) === 'undefined') {
+                            return false
+                        } else {
+                            return jsonmsg.message.adminflag
+                        }
+                    } catch (e) {
+                        console.log("isAdmin: " + e.toString())
+                    }
+                    return false
+                }
                 if (jsonmsg.operation === 'showsection') {
                     try {
                         console.log("message: [" + JSON.stringify(jsonmsg) + "]")
@@ -836,8 +848,13 @@ var LoginManager = function() {
                     }
                     const sectionname = getSectionName()
                     if (sectionname === "Appoint" || sectionname === "Request") {
-                        LastPanel = sectionname
-                        getNextForm(sectionname) //"Select")
+                        if (isAdmin()) {
+                            LastPanel = "Appoint"
+                            getNextForm(LastPanel) //"Select")
+                        } else {
+                            LastPanel = sectionname
+                            getNextForm(sectionname)
+                        }
                     } else {
                         getNextForm(sectionname)
                     }
@@ -1350,6 +1367,8 @@ var LoginManager = function() {
             } catch (e) {
                 console.log(e.stack.toString())
             }
+            $('#admintoken').val($('#neotoken').val())
+            $('#neotoken').val("")
             getAuthenticationCookie('#Appoint-form')
         },
         requestAppointment: function () {
