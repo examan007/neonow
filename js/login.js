@@ -5,6 +5,13 @@ var LoginManager = function() {
     }
     var BookedEvents = null
     var SalonData = null
+    var AdminFlag = false
+    function getAdminFlag() {
+        return AdminFlag
+    }
+    function setAdminFlag(flag) {
+        AdminFlag = flag
+    }
     function executeAJAX(amethod) {
         var xhttp = new XMLHttpRequest()
         xhttp.withCredentials = false;
@@ -92,6 +99,13 @@ var LoginManager = function() {
             function testSectionName(section) {
                 if (typeof(section) === 'undefined') {
                     return 'empty'
+                } else
+                if (section === "Pended") {
+                    if (getAdminFlag()) {
+                        return 'empty'
+                    } else {
+                        return section
+                    }
                 } else {
                     return section
                 }
@@ -103,7 +117,7 @@ var LoginManager = function() {
                 showlogin()
             }
         } catch (e) {
-            console.log(e.stack.toString())
+            console.log("next: " + e.stack.toString())
         }
         if (section === "Verify") {
             if (getVerification() === 'Code:') {
@@ -166,6 +180,18 @@ var LoginManager = function() {
         }
         function getBooks(authentication) {
             console.log("getBooks() ...")
+            if (getAdminFlag()) {
+                const admintoken = $("#admintoken").val()
+                if (typeof(admintoken) !== 'undefined') {
+                    if (admintoken) {
+                        $("#neotoken").val(admintoken)
+                        $("#admintoken").val("")
+                        window.setTimeout(()=> {
+                            exitlogin()
+                        }, 1000)
+                    }
+                }
+            }
             const formData = getForms("")
             if (authentication === false) {
                 replaceValue(formData, "username", "*")
@@ -848,13 +874,15 @@ var LoginManager = function() {
                     }
                     const sectionname = getSectionName()
                     if (sectionname === "Appoint" || sectionname === "Request") {
-                        if (isAdmin()) {
+                        setAdminFlag(isAdmin())
+                        if (getAdminFlag()) {
                             LastPanel = "Appoint"
                             getNextForm(LastPanel) //"Select")
                         } else {
                             LastPanel = sectionname
                             getNextForm(sectionname)
                         }
+
                     } else {
                         getNextForm(sectionname)
                     }
