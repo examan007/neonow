@@ -180,18 +180,6 @@ var LoginManager = function() {
         }
         function getBooks(authentication) {
             console.log("getBooks() ...")
-            if (getAdminFlag()) {
-                const admintoken = $("#admintoken").val()
-                if (typeof(admintoken) !== 'undefined') {
-                    if (admintoken) {
-                        $("#neotoken").val(admintoken)
-                        $("#admintoken").val("")
-                        window.setTimeout(()=> {
-                            exitlogin()
-                        }, 1000)
-                    }
-                }
-            }
             const formData = getForms("")
             if (authentication === false) {
                 replaceValue(formData, "username", "*")
@@ -346,6 +334,13 @@ var LoginManager = function() {
 
       function getAuthenticationCookie(extended) {
           const formData = getForms("", extended)
+            const admintoken = $("#admintoken").val()
+            if (typeof(admintoken) !== 'undefined') {
+                if (admintoken) {
+                    $("#neotoken").val(admintoken)
+                    $("#admintoken").val("")
+                }
+          }
           console.log("formData=[" + formData.toString() + "]")
           const xhr = new XMLHttpRequest();
           xhr.timeout = 5000;
