@@ -1,5 +1,5 @@
 var LoginManager = function() {
-    var console= {
+    var console = {
         log: function(msg) {},
         error: function(msg) {}
     }
@@ -1106,8 +1106,8 @@ var LoginManager = function() {
             optionlist.forEach((element)=> {
                 console.log("Clearing :" + element.outerHTML)
                 if (element.name === CurrentSelectedName) {
-                    console.log("Clearing: " + element.name)
                     if (flag) {
+                        console.log("Clearing: " + element.name)
                         element.value = ""
                     }
                     processCheckInputValue(element)
@@ -1137,13 +1137,31 @@ var LoginManager = function() {
             const formElement = getFormElement(button)
             const inputElement = formElement.querySelector('input[name="nextform"]')
             console.log("Clearing: " + inputElement.outerHTML)
-            if (classname !== "input-find" || !flag) {
+            const filter = document.getElementById("input-find")
+            if (!flag) {
+                if (classname === "input-find") {
+                    var elements = document.querySelectorAll('input[name=\"email\"]');
+                    function setElement(index) {
+                        if (index < elements.length) {
+                            try {
+                                    const element = elements[index]
+                                    element.value = filter.value
+                                    console.log("input find: " + element.value)
+
+                            } catch (e) {
+                                console.log("input find: " + toString())
+                            }
+                            setElement(index + 1)
+                        }
+                    }
+                    setElement(0)
+                }
                 getNextForm(inputElement.value)
             } else {
                 try {
-                    const filter = document.getElementById("input-find")
                     filter.value = ""
                     filter.checkValue()
+                    changedFilterValue(filter)
                 } catch (e) {
                     console.log("clear input find: " + e.toString())
                 }
@@ -1375,9 +1393,16 @@ var LoginManager = function() {
                 input.addEventListener("click", input.checkValue)
             }, "input-find", clickForFind)
         }
+        var TimerObj = null
         function changedFilterValue(filter) {
           const newValue = filter.value
           console.log("Text value changed to: " + newValue)
+          if (TimerObj != null) {
+            window.clearTimeout(TimerObj)
+          }
+          TimerObj = window.setTimeout(()=> {
+              buildEmailList(newValue)
+          }, 1000)
         }
         function bindToFoundElements() {
             const items = document.querySelectorAll('.list-item')
@@ -1399,7 +1424,7 @@ var LoginManager = function() {
             }
             processItem(0)
         }
-        function buildEmailList() {
+        function buildEmailList(filter) {
             const data = {
                 tabs: [{
                     services: []
@@ -1407,7 +1432,19 @@ var LoginManager = function() {
             }
             emailStore.forEach((key, value)=> {
                 console.log("key: " + key + " value: " + value)
-                data.tabs[0].services.push({ name: key })
+                function testFilter() {
+                    if (typeof(filter) === 'undefined') {
+                        return true
+                    } else
+                    if (key.indexOf(filter) >= 0) {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                if (testFilter()) {
+                    data.tabs[0].services.push({ name: key })
+                }
             })
             const templateclass = "template-list-item"
             removeAllSiblings(templateclass)
@@ -1603,9 +1640,9 @@ var LoginManager = function() {
             console.log("setEmailInput: [" + obj.value + "] nextpanel=[" + nextpanel + "]")
             if (getAdminFlag()) {
                 getNextForm("Find")
-                buildEmailList()
-                const inputElement = document.getElementById("input-find")
-                inputElement.focus()
+                const filter = document.getElementById("input-find")
+                buildEmailList(filter.value)
+                filter.focus()
             }
         },
         doneServices: function () {
