@@ -12,6 +12,13 @@ var LoginManager = function() {
     function setAdminFlag(flag) {
         AdminFlag = flag
     }
+    var SignedOnUser = ""
+    function getSignedOnUser() {
+        return SignedOnUser
+    }
+    function setSignedOnUser(username) {
+        SignedOnUser = username
+    }
     function executeAJAX(amethod) {
         var xhttp = new XMLHttpRequest()
         xhttp.withCredentials = false;
@@ -178,6 +185,36 @@ var LoginManager = function() {
               searchParams.append(parameterName, newValue);
             }
         }
+        class EmailJSONStore {
+            constructor() {
+                this.data = {} // Initialize an empty object to store the JSON data.
+            }
+            // Method to set a JSON object with a specified email as the key.
+            set(email, jsonData) {
+                this.data[email] = jsonData;
+            }
+            // Method to get a JSON object by email.
+            get(email) {
+                if (this.data.hasOwnProperty(email)) {
+                    return this.data[email];
+                } else {
+                    return null; // Return null if the email is not found in the store.
+                }
+            }
+            length() {
+                return Object.keys(this.data).length
+            }
+            forEach(callback) {
+                for (let key in this.data) {
+                    if (this.data.hasOwnProperty(key)) {
+                        const value = this.data[key]
+                        console.log(`Attribute: ${key}, Value: ${value}`);
+                        callback(key, value)
+                    }
+                }
+            }
+        }
+        const emailStore = new EmailJSONStore()
         function getBooks(authentication) {
             console.log("getBooks() ...")
             const formData = getForms("")
@@ -186,6 +223,35 @@ var LoginManager = function() {
             }
             const xhr = executeAJAX((jsondata)=> {
                 jsondata.authentication = authentication
+                try {
+                    const username = jsondata.token.email
+                    if (typeof(username) === 'undefined') {
+                    } else
+                    if (username.length <= 0) {
+                    } else
+                    if (username === "*") {
+                    } else {
+                        setSignedOnUser(username)
+                    }
+                    console.log("setSigned: [" + getSignedOnUser() + "]")
+                } catch (e) {
+                    console.log("setSigned: " + e.toString())
+                }
+                function processEvents(index) {
+                   if (index < jsondata.events.length) {
+                       try {
+                            const newevent = jsondata.events[index]
+                            if (newevent.customdata.email.length > 0) {
+                                console.log("key: " + newevent.customdata.email)
+                                emailStore.set(newevent.customdata.email, newevent.customdata)
+                            }
+                        } catch (e) {
+                            console.log("get books: reader" + e.toString())
+                        }
+                        processEvents(index + 1)
+                   }
+                }
+                processEvents(0)
                 window.parent.postMessage(JSON.stringify({
                     operation: 'readappointments',
                     data: jsondata
@@ -1071,7 +1137,17 @@ var LoginManager = function() {
             const formElement = getFormElement(button)
             const inputElement = formElement.querySelector('input[name="nextform"]')
             console.log("Clearing: " + inputElement.outerHTML)
-            getNextForm(inputElement.value)
+            if (classname !== "input-find" || !flag) {
+                getNextForm(inputElement.value)
+            } else {
+                try {
+                    const filter = document.getElementById("input-find")
+                    filter.value = ""
+                    filter.checkValue()
+                } catch (e) {
+                    console.log("clear input find: " + e.toString())
+                }
+            }
         }
         var CurrentSelectedName = ""
         function processClickOptionValue(thisnode) {
@@ -1115,6 +1191,11 @@ var LoginManager = function() {
             console.log("Current=[" + CurrentSelectedName + "]")
             getNextForm("Other")
             //clickInputValue()
+        }
+        function clickForFind() {
+            console.log("clickForFind ...")
+            console.log(this)
+            getNextForm("Appoint")
         }
         function clickForTreatment() {
             console.log("clickForTreatment ...")
@@ -1187,15 +1268,45 @@ var LoginManager = function() {
             }
             processTemplate(0)
         }
+        function removeAllSiblings(templateclass) {
+            const templates = document.querySelectorAll('.' + templateclass)
+            function processTemplate(index) {
+                if (index < templates.length) {
+                   const element = templates[index]
+                  try {
+                      const parent = element.parentNode;
+                      function removeChild(index) {
+                        const children = parent.childNodes
+                        if (index < children.length) {
+                            const sibling = children[index]
+                            if (sibling !== element && sibling.nodeType === 1) {
+                                parent.removeChild(sibling)
+                                removeChild(0)
+                            } else {
+                                removeChild(index + 1)
+                            }
+                        }
+                      }
+                      removeChild(0)
+                  } catch (e) {
+                    console.log("remove: " + e.toString())
+                  }
+                  processTemplate(index + 1)
+                }
+            }
+            processTemplate(0)
+        }
         function addOptions(data, templateclass) {
+            const prefix = "-template"
+            const newclass = templateclass.substring(prefix.length)
             cloneOptions(data, templateclass, (option, template)=> {
                 console.log("Tab: Service option: " + JSON.stringify(option))
                 const cloneSection = template.cloneNode(true)
-                cloneSection.setAttribute("style", "display: block;")
                 cloneSection.classList.remove(templateclass)
+                cloneSection.setAttribute("style", "")
+                cloneSection.classList.add(newclass)
                 cloneSection.innerHTML = eval('`' + cloneSection.innerHTML + '`')
                 template.parentNode.appendChild(cloneSection)
-                template.setAttribute("style", "display: none;")
             })
         }
         function getData(resource, callback) {
@@ -1259,6 +1370,49 @@ var LoginManager = function() {
                 console.log("Registering for select-other")
                 input.addEventListener("click", input.checkValue)
             }, "input-other", clickForOther)
+            initInputContainerHelper(null, (input)=> {
+                console.log("Registering for input-find")
+                input.addEventListener("click", input.checkValue)
+            }, "input-find", clickForFind)
+        }
+        function changedFilterValue(filter) {
+          const newValue = filter.value
+          console.log("Text value changed to: " + newValue)
+        }
+        function bindToFoundElements() {
+            const items = document.querySelectorAll('.list-item')
+            function processItem(index) {
+                if (index < items.length) {
+                   const item = items[index]
+                   const filter = document.getElementById("input-find")
+                   item.addEventListener("click", ()=> {
+                        console.log("Found: " + item.outerHTML)
+                        filter.value = item.textContent
+                        filter.checkValue()
+                        changedFilterValue(filter)
+                   })
+                    filter.addEventListener("input", function() {
+                      changedFilterValue(filter)
+                    });
+                   processItem(index + 1)
+                }
+            }
+            processItem(0)
+        }
+        function buildEmailList() {
+            const data = {
+                tabs: [{
+                    services: []
+                }]
+            }
+            emailStore.forEach((key, value)=> {
+                console.log("key: " + key + " value: " + value)
+                data.tabs[0].services.push({ name: key })
+            })
+            const templateclass = "template-list-item"
+            removeAllSiblings(templateclass)
+            addOptions(data, templateclass)
+            bindToFoundElements()
         }
     return {
         clearOption: function (flag, classname) {
@@ -1277,6 +1431,8 @@ var LoginManager = function() {
                 "clear-input-option",
                 "done-input-other",
                 "clear-input-other",
+                "done-input-find",
+                "clear-input-find"
             ]
             function registerButton(index) {
                 if (index < dialoguebuttonids.length) {
@@ -1293,7 +1449,7 @@ var LoginManager = function() {
                         const button = document.getElementById(buttonid);
                         button.addEventListener('click', function (event) {
                           event.stopPropagation();
-                          console.log('Button clicked!');
+                          console.log('Button clicked! id=[' + buttonid + "]");
                           clearOptionValue(getflag(), idarray[1] + '-' + idarray[2], button)
                         })
                     }
@@ -1385,8 +1541,12 @@ var LoginManager = function() {
                 var sourceElement = parent.querySelectorAll('input[name="email"]')[0]
                 var targetElement = document.getElementById("username")
                 var sourceValue = sourceElement.value
-                targetElement.value = sourceValue
-                console.log('Appointment: email=[' + sourceValue + ']')
+                if (sourceValue.length > 0) {
+                    targetElement.value = sourceValue
+                } else {
+                    targetElement.value = getSignedOnUser()
+                }
+                console.log('Appointment: email=[' + targetElement.value + ']')
             } catch (e) {
                 console.log(e.stack.toString())
             }
@@ -1433,6 +1593,19 @@ var LoginManager = function() {
                 getNextForm("Select")
             } else {
                 getNextForm("Select")
+            }
+        },
+        setEmailInput: function (event, nextpanel, obj) {
+            console.log("setEmailInput(); ")
+            LastPanel = nextpanel
+            const parent = obj.parentNode
+            console.log("setEmailInput: " + parent.outerHTML)
+            console.log("setEmailInput: [" + obj.value + "] nextpanel=[" + nextpanel + "]")
+            if (getAdminFlag()) {
+                getNextForm("Find")
+                buildEmailList()
+                const inputElement = document.getElementById("input-find")
+                inputElement.focus()
             }
         },
         doneServices: function () {

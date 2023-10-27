@@ -56,7 +56,7 @@
         </div>
         <div class="number-container">
           <div class="number-box">
-            <input type="text" name="duration" value="Duration is 30 minutes.">
+            <input type="text" name="duration" value="Duration is 30 minutes." readonly>
           </div>
           <div class="number-control">
             <a href="#">
@@ -85,12 +85,17 @@
   </section>
   <section class="Dialogue" id="Appoint" style="display: none;">
     <form id="Appoint-form" action="#Appoint" method="post">
-      <span class="exitx" onclick="LogMgr.exitlogin()">
-        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
-      </span>
+      <div class="dialogue-header">
+        <div class="dialogue-title">
+          <h4>Please complete the information form then click request appointment.</h4>
+        </div>
+        <div class="exitx" onclick="LogMgr.exitlogin()">
+          <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+        </div>
+      </div>
       <span class="form-input">
-        <h4>Please complete the information form then click request appointment.</h4>
-        <div class="input-container-nohelper input-bg">
+        <div class="input-container">
+          <input class="input-box" type="text" name="datetime" onclick="LogMgr.exitlogin()">
           <input type="text" name="datetime" required>
         </div>
         <div class="input-container">
@@ -99,7 +104,7 @@
         </div>
         <div class="number-container">
           <div class="number-box">
-            <input type="text" name="duration" value="Duration is 30 minutes.">
+            <input type="text" name="duration" value="Duration is 30 minutes." readonly>
           </div>
           <div class="number-control">
             <a href="#">
@@ -113,7 +118,7 @@
           </div>
         </div>
         <div class="input-container">
-          <input class="input-box" type="text" name="email" required>
+          <input class="input-box" type="text" name="email" onclick="LogMgr.setEmailInput(event, 'Appoint', this)">
           <input class="helper-box" type="text" value="Email address.">
         </div>
         <div class="input-container">
@@ -147,11 +152,15 @@
   </section>
   <section class="Dialogue" id="Change" style="display: none;">
     <form id="Change-form" action="#Change" method="post">
-      <span class="exitx" onclick="LogMgr.exitlogin()">
-        <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
-      </span>
+      <div class="dialogue-header">
+        <div class="dialogue-title">
+          <h4>Please confirm appointment information that is being changed.</h4>
+        </div>
+        <div class="exitx" onclick="LogMgr.exitlogin()">
+          <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+        </div>
+      </div>
       <span class="form-input">
-        <h4>Please confirm appointment information that is being changed.</h4>
         <div class="input-container">
           <input class="input-box" type="text" name="datetime"  required>
           <input class="helper-box" type="text" name="olddatetime">
@@ -162,7 +171,7 @@
         </div>
         <div class="number-container">
           <div class="number-box">
-            <input type="text" name="duration" value="Duration is 30 minutes.">
+            <input type="text" name="duration" value="Duration is 30 minutes." readonly>
           </div>
           <div class="number-control">
             <a href="#">
@@ -268,12 +277,43 @@
       <br>
       <br>
     </form>
-  </section>  <section class="Dialogue" id="Other" style="display: none;">
-    <form id="Other-form" action="#Other" method="post">
+  </section>
+  <section class="Dialogue" id="Find" style="display: none;">
+    <form id="Details-form" action="#Find" method="post">
+      <div class="dialogue-header">
+        <div class="dialogue-title">
+          <h4>Please enter or find and select email address.</h4>
+        </div>
+        <div class="exitx" onclick="LogMgr.exitlogin()">
+          <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
+        </div>
+      </div>
+      <span class="form-input">
+        <div class="input-container">
+          <input id="input-find" class="input-box" type="text" name="email">
+          <input class="helper-box" type="text" value="Email address.">
+        </div>
+        <div class="email-list">
+              <div class="template-list-item" style="display:none;">${option.name}</div>
+        </div>
+        <input type="hidden" name="version" value="1.0">
+        <input type="hidden" name="nextform" value="Appoint">
+        <input type="hidden" name="title" value="User details.">
+     </span>
+      <br>
+      <br>
+      <a id="clear-input-find" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Clear</a>
+      <a id="done-input-find" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Done</a>
+      <br>
+      <br>
+    </form>
+  </section>
+  <section class="Dialogue" id="Other" style="display: none;">
+  <form id="Other-form" action="#Other" method="post">
       <span class="exitx" onclick="LogMgr.exitlogin()">
         <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
       </span>
-      <span class="form-input">
+    <span class="form-input">
         <h4>Please select other service.</h4>
         <div class="template-input-container input-container">
           <input class="select-option" type="text" readonly name="${option.name}">
@@ -283,13 +323,14 @@
         <input type="hidden" name="nextform" value="Select">
         <input type="hidden" name="title" value="Your service options.">
      </span>
-      <br>
-      <br>
-      <a id="clear-input-other" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Clear</a>
-      <a id="done-input-other" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Done</a>
-      <br>
-      <br>
-    </form>
+    <br>
+    <br>
+    <a id="clear-input-other" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Clear</a>
+    <a id="done-input-other" class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">Done</a>
+    <br>
+    <br>
+  </form>
+</section>
   </section>
   <section class="Dialogue" id="Verify" style="display: none;">
     <form id="Verfiy-form" action="#Booking" method="post">
