@@ -7,7 +7,6 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: rgba(0, 0, 0, 0.3);
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         text-align: center;
@@ -15,7 +14,6 @@
         background-image: url("https://illuminatinglaserandstyle.com/images/business-card-mdm.png");
         border-radius: 25px;
         z-index: 20;
-        opacity: 1;
       }
       .login-window h2 {
         margin-top: 0;
@@ -32,11 +30,11 @@
         display: block;
         width: 100%;
         margin-bottom: 10px;
-        background-color: rgba(0, 0, 0, 0.25);
         color: white;
+        background-color: rgba(0, 0, 0, 0.5);
      }
       .login-window input[type="submit"] {
-        background-color: #4CAF50;
+        background-color: rgba(45, 30, 100, 0.75);
         color: white;
         border: none;
         padding: 10px;
@@ -55,7 +53,7 @@
         z-index: 4;
         display: inline-block;
         padding: 0.5rem 1rem;
-        background-color: rgba(45, 30, 100, 1);
+        background-color: rgba(45, 30, 100, 0.75);
         color: #fff;
         text-decoration: none;
         border-radius: 0.25rem;
@@ -68,12 +66,12 @@
         color: white;
       }
       .input-container-nohelper {
-       background-color: rgba(0, 0, 0, 0.65);
+       background-color: rgba(0, 0, 0, 0);
       }
      .number-container {
        display: flex;
        justify-content: space-between;
-       background-color: rgba(0, 0, 0, 0.65);
+       background-color: rgba(0, 0, 0, 0);
      }
      .number-box {
        flex-grow: 5;
@@ -94,7 +92,7 @@
        left: 0;
        width: 100%;
        height: 30px;
-       background-color: rgba(0, 0, 0, 0.65);
+       background-color: rgba(0, 0, 0, 0);
      }
      .input-select, .input-option, .input-treatment, .input-other, .select-option {
         position: absolute;
@@ -103,7 +101,7 @@
         z-index: 10;
         width: 100%;
         color: yellow !important;
-        background-color: rgba(0, 0, 0, 0.25);
+        background-color: rgba(0, 0, 0, 0.65);
       }
      .input-box {
         position: absolute;
@@ -118,7 +116,8 @@
           left: 0;
           z-index: 5;
         transition: opacity 0.5s ease-in-out;
-        opacity: 0.75;
+        background-color: rgba(0,0,0,0);
+        opacity: 0.65;
         width: 100%;
       }
       .helper-box.faded {
@@ -155,7 +154,7 @@
       }
       .dialogue-title {
         color: white;
-        background-color: rgba(0,0,0, 0);
+        background-color: rgba(0,0,0,0);
      }
       .email-list {
         display: flex;
