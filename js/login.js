@@ -185,20 +185,18 @@ var LoginManager = function() {
               searchParams.append(parameterName, newValue);
             }
         }
-        class EmailJSONStore {
+        class DataJSONStore {
             constructor() {
-                this.data = {} // Initialize an empty object to store the JSON data.
+                this.data = {}
             }
-            // Method to set a JSON object with a specified email as the key.
-            set(email, jsonData) {
-                this.data[email] = jsonData;
+            set(key, jsonData) {
+                this.data[key] = jsonData;
             }
-            // Method to get a JSON object by email.
-            get(email) {
-                if (this.data.hasOwnProperty(email)) {
-                    return this.data[email];
+            get(key) {
+                if (this.data.hasOwnProperty(key)) {
+                    return this.data[key];
                 } else {
-                    return null; // Return null if the email is not found in the store.
+                    return null;
                 }
             }
             length() {
@@ -214,7 +212,9 @@ var LoginManager = function() {
                 }
             }
         }
-        const emailStore = new EmailJSONStore()
+        const emailStore = new DataJSONStore()
+        const phoneNumbers = new DataJSONStore()
+        const nameStore = new DataJSONStore()
         function getBooks(authentication) {
             console.log("getBooks() ...")
             const formData = getForms("")
@@ -237,21 +237,26 @@ var LoginManager = function() {
                 } catch (e) {
                     console.log("setSigned: " + e.toString())
                 }
-                function processEvents(index) {
-                   if (index < jsondata.events.length) {
-                       try {
-                            const newevent = jsondata.events[index]
-                            if (newevent.customdata.email.length > 0) {
-                                console.log("key: " + newevent.customdata.email)
-                                emailStore.set(newevent.customdata.email, newevent.customdata)
+                function processEventClass(key, store) {
+                    function processEvents(index) {
+                       if (index < jsondata.events.length) {
+                           try {
+                                const newevent = jsondata.events[index]
+                                if (newevent.customdata[key].length > 0) {
+                                    console.log("key: " + newevent.customdata[key])
+                                    store.set(newevent.customdata[key], newevent.customdata)
+                                }
+                            } catch (e) {
+                                console.log("get books: reader" + e.toString())
                             }
-                        } catch (e) {
-                            console.log("get books: reader" + e.toString())
-                        }
-                        processEvents(index + 1)
-                   }
+                            processEvents(index + 1)
+                       }
+                    }
+                    processEvents(0)
                 }
-                processEvents(0)
+                processEventClass('email', emailStore)
+                processEventClass('phone', phoneNumbers)
+                processEventClass('name', nameStore)
                 window.parent.postMessage(JSON.stringify({
                     operation: 'readappointments',
                     data: jsondata
@@ -1140,7 +1145,17 @@ var LoginManager = function() {
             const filter = document.getElementById("input-find")
             if (!flag) {
                 if (classname === "input-find") {
-                    var elements = document.querySelectorAll('input[name=\"email\"]');
+                    function getSelector() {
+                        try {
+                            const findfilter = document.getElementById('input-find')
+                            const name = findfilter.getAttribute('name')
+                            return 'input[name=\"' + name + '\"]'
+                        } catch (e) {
+                            console.log(e.toString())
+                        }
+                        return 'input[name=\"email\"]'
+                    }
+                    var elements = document.querySelectorAll(getSelector());
                     function setElement(index) {
                         if (index < elements.length) {
                             try {
@@ -1430,7 +1445,25 @@ var LoginManager = function() {
                     services: []
                 }]
             }
-            emailStore.forEach((key, value)=> {
+            function getStore() {
+                try {
+                    const findfilter = document.getElementById('input-find')
+                    const name = findfilter.getAttribute('name')
+                    if (name === 'email') {
+                        return emailStore
+                    } else
+                    if (name === 'phone') {
+                        return phoneNumbers
+                    } else
+                    if (name === 'name') {
+                        return nameStore
+                    }
+                } catch (e) {
+                    console.log("get store: " + e.toString())
+                }
+                return emailStore
+            }
+            getStore().forEach((key, value)=> {
                 console.log("key: " + key + " value: " + value)
                 function testFilter() {
                     if (typeof(filter) === 'undefined') {
@@ -1632,13 +1665,43 @@ var LoginManager = function() {
                 getNextForm("Select")
             }
         },
-        setEmailInput: function (event, nextpanel, obj) {
+        setEmailInput: function (event, obj) {
             console.log("setEmailInput(); ")
+            function getSection(node) {
+                if (node)
+                if (node.tagName === 'section') {
+                    return node.getAttribute('id')
+                } else {
+                    return getSection(node.parentNode)
+                }
+                return 'Appoint'
+            }
+            const nextpanel = getSection(obj)
             LastPanel = nextpanel
             const parent = obj.parentNode
+            const attrname = obj.getAttribute('name')
+            function getDescription(node) {
+                try {
+                    return node.parentNode.querySelectorAll('.helper-box')[0].value
+                } catch (e) {
+                    console.log("setEmailInput: " + e.toString())
+                }
+                return "unknown"
+            }
+            function setDescription(node, value) {
+                try {
+                    node.parentNode.querySelectorAll('.helper-box')[0].value = value
+                } catch (e) {
+                    console.log("setEmailInput: " + e.toString())
+                }
+            }
+            const description = getDescription(obj)
             console.log("setEmailInput: " + parent.outerHTML)
-            console.log("setEmailInput: [" + obj.value + "] nextpanel=[" + nextpanel + "]")
+            console.log("setEmailInput: [" + attrname + "] nextpanel=[" + nextpanel + "] : [" + description + "]")
             if (getAdminFlag()) {
+                const findfilter = document.getElementById('input-find')
+                setDescription(findfilter, description)
+                findfilter.setAttribute('name', attrname)
                 getNextForm("Find")
                 const filter = document.getElementById("input-find")
                 buildEmailList(filter.value)

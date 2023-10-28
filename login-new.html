@@ -118,15 +118,15 @@
           </div>
         </div>
         <div class="input-container">
-          <input class="input-box" type="text" name="email" onclick="LogMgr.setEmailInput(event, 'Appoint', this)">
+          <input class="input-box" type="text" name="email" onclick="LogMgr.setEmailInput(event, this)">
           <input class="helper-box" type="text" value="Email address.">
         </div>
         <div class="input-container">
-          <input class="input-box" type="text" name="phone" required>
+          <input class="input-box" type="text" name="phone" onclick="LogMgr.setEmailInput(event, this)">
           <input class="helper-box" type="text" value="Telephone number.">
         </div>
         <div class="input-container">
-          <input class="input-box" type="text" name="name">
+          <input class="input-box" type="text" name="name" onclick="LogMgr.setEmailInput(event, this)">
           <input class="helper-box" type="text" value="Client name.">
         </div>
         <div class="input-container">
@@ -282,7 +282,7 @@
     <form id="Details-form" action="#Find" method="post">
       <div class="dialogue-header">
         <div class="dialogue-title">
-          <h4>Please enter or find and select email address.</h4>
+          <h4>Please enter or find and select.</h4>
         </div>
         <div class="exitx" onclick="LogMgr.exitlogin()">
           <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#">X</a>
@@ -320,6 +320,7 @@
           <input class="helper-box" type="text" value="${option.name}">
         </div>
         <input type="hidden" name="version" value="1.0">
+
         <input type="hidden" name="nextform" value="Select">
         <input type="hidden" name="title" value="Your service options.">
      </span>
