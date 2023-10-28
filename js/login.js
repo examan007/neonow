@@ -1161,7 +1161,7 @@ var LoginManager = function() {
                 try {
                     filter.value = ""
                     filter.checkValue()
-                    changedFilterValue(filter)
+                    changedFilterValue(filter, 500)
                 } catch (e) {
                     console.log("clear input find: " + e.toString())
                 }
@@ -1394,7 +1394,7 @@ var LoginManager = function() {
             }, "input-find", clickForFind)
         }
         var TimerObj = null
-        function changedFilterValue(filter) {
+        function changedFilterValue(filter, delay) {
           const newValue = filter.value
           console.log("Text value changed to: " + newValue)
           if (TimerObj != null) {
@@ -1402,7 +1402,7 @@ var LoginManager = function() {
           }
           TimerObj = window.setTimeout(()=> {
               buildEmailList(newValue)
-          }, 1000)
+          }, delay)
         }
         function bindToFoundElements() {
             const items = document.querySelectorAll('.list-item')
@@ -1414,10 +1414,10 @@ var LoginManager = function() {
                         console.log("Found: " + item.outerHTML)
                         filter.value = item.textContent
                         filter.checkValue()
-                        changedFilterValue(filter)
+                        changedFilterValue(filter, 0)
                    })
                     filter.addEventListener("input", function() {
-                      changedFilterValue(filter)
+                      changedFilterValue(filter, 1000)
                     });
                    processItem(index + 1)
                 }
