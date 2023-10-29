@@ -215,6 +215,39 @@ var LoginManager = function() {
         const emailStore = new DataJSONStore()
         const phoneNumbers = new DataJSONStore()
         const nameStore = new DataJSONStore()
+        function getSelectorName() {
+            try {
+                const findfilter = document.getElementById('input-find')
+                return findfilter.getAttribute('name')
+            } catch (e) {
+                console.log("get selector name: " + e.toString())
+            }
+            return "email"
+        }
+        function getStore(inname) {
+            try {
+                function getName() {
+                    if (typeof(inname) === 'undefined') {
+                        return getSelectorName()
+                    } else {
+                        return inname
+                    }
+                }
+                const name = getName()
+                if (name === 'email') {
+                    return emailStore
+                } else
+                if (name === 'phone') {
+                    return phoneNumbers
+                } else
+                if (name === 'name') {
+                    return nameStore
+                }
+            } catch (e) {
+                console.log("get store: " + e.toString())
+            }
+            return emailStore
+        }
         function getBooks(authentication) {
             console.log("getBooks() ...")
             const formData = getForms("")
@@ -1145,31 +1178,53 @@ var LoginManager = function() {
             const filter = document.getElementById("input-find")
             if (!flag) {
                 if (classname === "input-find") {
-                    function getSelector() {
+                    function getSelectorString(name) {
+                        return 'input[name=\"' + name + '\"]'
+                    }
+                    function getSelector(name) {
                         try {
-                            const findfilter = document.getElementById('input-find')
-                            const name = findfilter.getAttribute('name')
-                            return 'input[name=\"' + name + '\"]'
+                            return getSelectorString(name)
                         } catch (e) {
                             console.log(e.toString())
                         }
                         return 'input[name=\"email\"]'
                     }
-                    var elements = document.querySelectorAll(getSelector());
-                    function setElement(index) {
-                        if (index < elements.length) {
-                            try {
-                                    const element = elements[index]
-                                    element.value = filter.value
-                                    console.log("input find: " + element.value)
+                    function setValue(selector, value) {
+                        var elements = document.querySelectorAll(selector);
+                        function setElement(index) {
+                            if (index < elements.length) {
+                                try {
+                                        const element = elements[index]
+                                        element.value = value
+                                        console.log("input find: " + element.value)
 
-                            } catch (e) {
-                                console.log("input find: " + toString())
+                                } catch (e) {
+                                    console.log("input find: " + e.toString())
+                                }
+                                setElement(index + 1)
                             }
-                            setElement(index + 1)
                         }
+                        setElement(0)
                     }
-                    setElement(0)
+                    try {
+                        const name = getSelectorName()
+                        setValue(getSelector(name), filter.value)
+                        const thisstore = getStore(name)
+                        const customdata = thisstore.get(filter.value)
+                        console.log("input find: " + JSON.stringify(customdata))
+                        const inputs = ['email', 'phone', 'name']
+                        function processSetInput(index) {
+                            if (index < inputs.length) {
+                                const option = inputs[index]
+                                setValue(getSelector(option),customdata[option])
+                                processSetInput(index + 1)
+                            }
+                        }
+                        processSetInput(0)
+                    } catch (e) {
+                        console.log("input find: " + e.toString())
+                    }
+
                 }
                 getNextForm(inputElement.value)
             } else {
@@ -1329,6 +1384,15 @@ var LoginManager = function() {
             }
             processTemplate(0)
         }
+        function initializeInputFind(name, findfilter) {
+            try {
+                const nodes = document.querySelectorAll('input[name=\"' + name + '\"]')
+                findfilter.value = nodes[0].value
+                findfilter.checkValue()
+            } catch (e) {
+                console.log("initialize: " + e.toString())
+            }
+        }
         function addOptions(data, templateclass) {
             const prefix = "-template"
             const newclass = templateclass.substring(prefix.length)
@@ -1429,7 +1493,8 @@ var LoginManager = function() {
                         console.log("Found: " + item.outerHTML)
                         filter.value = item.textContent
                         filter.checkValue()
-                        changedFilterValue(filter, 0)
+                        //changedFilterValue(filter, 0)
+                        clearOptionValue(false, 'input-find', document.getElementById('done-input-find'))
                    })
                     filter.addEventListener("input", function() {
                       changedFilterValue(filter, 1000)
@@ -1439,31 +1504,13 @@ var LoginManager = function() {
             }
             processItem(0)
         }
-        function buildEmailList(filter) {
+        function buildEmailList(filter, name) {
             const data = {
                 tabs: [{
                     services: []
                 }]
             }
-            function getStore() {
-                try {
-                    const findfilter = document.getElementById('input-find')
-                    const name = findfilter.getAttribute('name')
-                    if (name === 'email') {
-                        return emailStore
-                    } else
-                    if (name === 'phone') {
-                        return phoneNumbers
-                    } else
-                    if (name === 'name') {
-                        return nameStore
-                    }
-                } catch (e) {
-                    console.log("get store: " + e.toString())
-                }
-                return emailStore
-            }
-            getStore().forEach((key, value)=> {
+            getStore(name).forEach((key, value)=> {
                 console.log("key: " + key + " value: " + value)
                 function testFilter() {
                     if (typeof(filter) === 'undefined') {
@@ -1704,7 +1751,8 @@ var LoginManager = function() {
                 findfilter.setAttribute('name', attrname)
                 getNextForm("Find")
                 const filter = document.getElementById("input-find")
-                buildEmailList(filter.value)
+                initializeInputFind(attrname, findfilter)
+                buildEmailList(filter.value, attrname)
                 filter.focus()
             }
         },
