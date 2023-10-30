@@ -1225,7 +1225,7 @@ var LoginManager = function() {
                         const thisstore = getStore(name)
                         const customdata = thisstore.get(filter.value)
                         console.log("input find: " + JSON.stringify(customdata))
-                        const inputs = ['email', 'phone', 'name']
+                        const inputs = ['email', 'phone', 'name', 'birthday']
                         function processSetInput(index) {
                             if (index < inputs.length) {
                                 const option = inputs[index]
