@@ -276,8 +276,21 @@ var LoginManager = function() {
                            try {
                                 const newevent = jsondata.events[index]
                                 if (newevent.customdata[key].length > 0) {
-                                    console.log("key: " + newevent.customdata[key])
-                                    store.set(newevent.customdata[key], newevent.customdata)
+                                    const keyname = newevent.customdata[key]
+                                    console.log("key: " + keyname)
+                                    const customdata = store.get(keyname)
+                                    if (customdata)
+                                    for (let key in newevent.customdata) {
+                                        if (newevent.customdata.hasOwnProperty(key)) {
+                                            const attribute = newevent.customdata[key]
+                                            if (attribute.length > 0) {
+                                            } else
+                                            if (customdata.hasOwnProperty(key)) {
+                                                newevent.customdata[key] = customdata[key]
+                                            }
+                                        }
+                                    }
+                                    store.set(keyname, newevent.customdata)
                                 }
                             } catch (e) {
                                 console.log("get books: reader" + e.toString())
