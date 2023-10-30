@@ -47,8 +47,8 @@
       </span>
       <span class="form-input">
         <h4>Please confirm date and time for appointment.</h4>
-        <div class="input-container-nohelper">
-          <input type="text" name="datetime"  required>
+        <div class="input-container">
+          <input class="input-box" type="text" name="datetime" onclick="LogMgr.exitlogin()" readonly>
         </div>
         <div class="input-container">
           <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Request', this)">
@@ -95,8 +95,7 @@
       </div>
       <span class="form-input">
         <div class="input-container">
-          <input class="input-box" type="text" name="datetime" onclick="LogMgr.exitlogin()">
-          <input type="text" name="datetime" required>
+          <input class="input-box" type="text" name="datetime" onclick="LogMgr.exitlogin()" readonly>
         </div>
         <div class="input-container">
           <input class="input-box" type="text" name="services" onclick="LogMgr.setServices('Appoint', this)">
