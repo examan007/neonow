@@ -270,23 +270,34 @@ var LoginManager = function() {
                 } catch (e) {
                     console.log("setSigned: " + e.toString())
                 }
-                function processEventClass(key, store) {
+                function normalizeEmail(key, email) {
+                    if (key != 'email') {
+                        return email
+                    }
+                    try {
+                        return email.toLowerCase()
+                    } catch (e) {
+                        console.log(e.stack.toString())
+                    }
+                    return "error"
+                }
+                function processEventClass(inkey, store) {
                     function processEvents(index) {
                        if (index < jsondata.events.length) {
                            try {
                                 const newevent = jsondata.events[index]
-                                if (newevent.customdata[key].length > 0) {
-                                    const keyname = newevent.customdata[key]
+                                if (newevent.customdata[inkey].length > 0) {
+                                    const keyname = normalizeEmail(inkey, newevent.customdata[inkey])
                                     console.log("key: " + keyname)
                                     const customdata = store.get(keyname)
                                     if (customdata)
                                     for (let key in newevent.customdata) {
                                         if (newevent.customdata.hasOwnProperty(key)) {
-                                            const attribute = newevent.customdata[key]
+                                            const attribute = normalizeEmail(key, newevent.customdata[key])
                                             if (attribute.length > 0) {
                                             } else
                                             if (customdata.hasOwnProperty(key)) {
-                                                newevent.customdata[key] = customdata[key]
+                                                newevent.customdata[key] = normalizeEmail(key, customdata[key])
                                             }
                                         }
                                     }
