@@ -687,7 +687,13 @@ var LoginManager = function() {
         function setInputValues(json) {
             console.log("input: " + JSON.stringify(json))
             try {
-                json.duration = json.message.event.extendedProps.customdata.duration
+                const customdata = json.message.event.extendedProps.customdata
+                for (var key in customdata) {
+                  if (customdata.hasOwnProperty(key)) {
+                    json[key] = customdata[key]
+                    console.log("Key: " + key + ", Value: " + json[key]);
+                  }
+                }
             } catch (e) {
                 json.duration = 30
                 console.log(e.toString())
@@ -697,7 +703,9 @@ var LoginManager = function() {
                 try {
                     const input = inputs[i];
                     const name = input.getAttribute('name')
+                    console.log('input: ' + name)
                     if (json.hasOwnProperty(name)) {
+                        console.log('input: ' + name)
                         if (name === 'datetime') {
                             setInitialValue(json.datetime, "olddatetime")
                             input.value = convertDateTime(json)
@@ -989,7 +997,7 @@ var LoginManager = function() {
                         } catch (e) {
                             console.log(e.stack.toString())
                         }
-                        if (false) { //section === 'Request') {
+                        if (isAdmin() && section === 'Change') {
                             return 'Appoint'
                         } else {
                             return section
@@ -1699,7 +1707,11 @@ var LoginManager = function() {
             setEmail('confirmation.html', '#Request-form')
         },
         changeAppointment: function () {
-            setEmail('cancellation.html', '#Change-form')
+            if (getAdminFlag()) {
+                setEmail('confirmation.html', '#Appoint-form')
+            } else {
+                setEmail('cancellation.html', '#Change-form')
+            }
         },
         showForm: function (sectionname) {
             getNextForm(sectionname)
