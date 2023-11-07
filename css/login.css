@@ -173,3 +173,9 @@
         background-color: rgba(0,0,0,0);
         height: 25px;
       }
+      .usercontrol {
+        display: block;
+      }
+      .admincontrol {
+        display: none;
+      }

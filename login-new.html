@@ -143,7 +143,11 @@
      </span>
       <br>
       <br>
-      <a class="button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.verifyAppointment()">Request Appointment</a>
+      <div style="display: flex; justify-content: space-evenly;">
+        <a class="usercontrol button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.verifyAppointment()">Request Appointment</a>
+        <a class="admincontrol button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.verifyAppointment()">Save</a>
+        <a class="admincontrol button-login btn btn-xs fs-10 btn-bold btn-info" href="#" onclick="LogMgr.cancelAppointment()">Cancel</a>
+      </div>
       <br>
       <br>
     </form>

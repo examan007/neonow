@@ -999,6 +999,9 @@ var LoginManager = function() {
                         }
                         if (isAdmin() && section === 'Change') {
                             return 'Appoint'
+                        } else
+                        if (section === 'AdminChange') {
+                            return 'Change'
                         } else {
                             return section
                         }
@@ -1006,14 +1009,28 @@ var LoginManager = function() {
                     const sectionname = getSectionName()
                     if (sectionname === "Appoint" || sectionname === "Request") {
                         setAdminFlag(isAdmin())
+                        function setButtons(classname, display) {
+                            const buttons = document.querySelectorAll('.' + classname)
+                            function setButton(index) {
+                                if (index < buttons.length) {
+                                    const button = buttons[index]
+                                    button.setAttribute("style", "display: " + display + ";")
+                                    setButton(index + 1)
+                                }
+                            }
+                            setButton(0)
+                        }
                         if (getAdminFlag()) {
+                            setButtons("admincontrol", "block")
+                            setButtons("usercontrol", "none")
                             LastPanel = "Appoint"
                             getNextForm(LastPanel) //"Select")
                         } else {
+                            setButtons("admincontrol", "none")
+                            setButtons("usercontrol", "block")
                             LastPanel = sectionname
                             getNextForm(sectionname)
                         }
-
                     } else {
                         getNextForm(sectionname)
                     }
@@ -1712,6 +1729,12 @@ var LoginManager = function() {
             } else {
                 setEmail('cancellation.html', '#Change-form')
             }
+        },
+        cancelAppointment: function () {
+            console.log("Change clicked.")
+            window.setTimeout(()=> {
+                getNextForm('Change')
+            }, 1000)
         },
         showForm: function (sectionname) {
             getNextForm(sectionname)
