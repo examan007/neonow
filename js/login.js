@@ -1006,6 +1006,7 @@ var LoginManager = function() {
                             return section
                         }
                     }
+                    const originname = jsonmsg.sectionname
                     const sectionname = getSectionName()
                     if (sectionname === "Appoint" || sectionname === "Request") {
                         setAdminFlag(isAdmin())
@@ -1020,14 +1021,21 @@ var LoginManager = function() {
                             }
                             setButton(0)
                         }
+                        function setAdminButtons(flag) {
+                            if (flag && originname === 'Change') {
+                                setButtons("admincontrol", "block")
+                                setButtons("usercontrol", "none")
+                            } else {
+                                setButtons("admincontrol", "none")
+                                setButtons("usercontrol", "block")
+                            }
+                        }
                         if (getAdminFlag()) {
-                            setButtons("admincontrol", "block")
-                            setButtons("usercontrol", "none")
+                            setAdminButtons(true)
                             LastPanel = "Appoint"
                             getNextForm(LastPanel) //"Select")
                         } else {
-                            setButtons("admincontrol", "none")
-                            setButtons("usercontrol", "block")
+                            setAdminButtons(true)
                             LastPanel = sectionname
                             getNextForm(sectionname)
                         }
