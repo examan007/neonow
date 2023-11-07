@@ -1732,11 +1732,7 @@ var LoginManager = function() {
             setEmail('confirmation.html', '#Request-form')
         },
         changeAppointment: function () {
-            if (getAdminFlag()) {
-                setEmail('confirmation.html', '#Appoint-form')
-            } else {
-                setEmail('cancellation.html', '#Change-form')
-            }
+            setEmail('cancellation.html', '#Change-form')
         },
         cancelAppointment: function () {
             console.log("Change clicked.")
