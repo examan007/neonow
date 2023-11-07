@@ -1742,7 +1742,7 @@ var LoginManager = function() {
             console.log("Change clicked.")
             window.setTimeout(()=> {
                 getNextForm('Change')
-            }, 1000)
+            }, 500)
         },
         showForm: function (sectionname) {
             getNextForm(sectionname)
