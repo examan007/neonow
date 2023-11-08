@@ -433,6 +433,21 @@ var LoginManager = function() {
             }
               return searchParams
           }
+          try {
+            if (formData.has('name') == false) {
+                const customdata = emailStore.get(thisemail)
+                if (customdata) {
+                    formData.set('name', customdata.name)
+                    console.log("set email: " + JSON.stringify(customdata))
+                } else {
+                    console.log("set email: " + "no customdata")
+                }
+            } else {
+                console.log("set email: " + formData.get('name'))
+            }
+          } catch (e) {
+            console.log("set email: " + e.toString())
+          }
           const data = filterForm(formData, "serverurl").toString();
           const credential = formData.get('username') + ":" + formData.get('password')
           console.log("credential=[" + credential + "]")
