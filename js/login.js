@@ -1721,8 +1721,8 @@ var LoginManager = function() {
             exitlogin()
         },
 
-        getAuthenticationCookie: function () {
-            getAuthenticationCookie()
+        getAuthenticationCookie: function (extended) {
+            getAuthenticationCookie(extended)
         },
         verifyAppointment: function () {
             try {
@@ -1742,6 +1742,9 @@ var LoginManager = function() {
             $('#admintoken').val($('#neotoken').val())
             $('#neotoken').val("")
             getAuthenticationCookie('#Appoint-form')
+        },
+        sendEmail: function (extended) {
+            setEmail('sendmessage.html', extended)
         },
         requestAppointment: function () {
             setEmail('confirmation.html', '#Request-form')
