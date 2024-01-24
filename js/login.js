@@ -1,4 +1,12 @@
-var LoginManager = function() {
+var LoginManager = function(inremoteurl) {
+    function getRemoteURL() {
+        if (typeof(inremoteurl) === 'undefined') {
+            return 'https://test.neolation.com'
+        } else {
+            return inremoteurl
+        }
+    }
+    const remoteurl = getRemoteURL()
     var console = {
         log: function(msg) {},
         error: function(msg) {}
@@ -57,7 +65,7 @@ var LoginManager = function() {
       }
       var thisemail = ""
       function postAPI(formData) {
-          fetch('https://test.neolation.com/api', {
+          fetch(remoteurl + '/api', {
             method: 'POST',
             body: formData
           })
@@ -324,7 +332,7 @@ var LoginManager = function() {
                     BookedEvents = jsondata.events
                 }
             })
-            const url = 'https://test.neolation.com/booking';
+            const url = remoteurl + '/booking';
             xhr.open('POST', url);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             const data = formData.toString();
@@ -355,7 +363,7 @@ var LoginManager = function() {
           console.log("thisemail=[" + thisemail + "] template=[" + templatename + "]")
           const xhr = new XMLHttpRequest();
           xhr.timeout = 5000;
-          const url = 'https://test.neolation.com/notify';
+          const url = remoteurl + '/notify';
           xhr.open('POST', url);
           xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
           xhr.onload = function() {
@@ -487,7 +495,7 @@ var LoginManager = function() {
           console.log("formData=[" + formData.toString() + "]")
           const xhr = new XMLHttpRequest();
           xhr.timeout = 5000;
-          const url = 'https://test.neolation.com/auth';
+          const url = remoteurl + '/auth';
           xhr.open('POST', url);
           xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 //          xhr.setRequestHeader('Content-Type', 'application/json');
