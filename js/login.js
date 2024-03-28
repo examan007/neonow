@@ -1,7 +1,7 @@
 var LoginManager = function(inremoteurl) {
     function getRemoteURL() {
         if (typeof(inremoteurl) === 'undefined') {
-            return 'https://test.neolation.com'
+            return 'https://test.neolation.net'
         } else {
             return inremoteurl
         }
@@ -625,6 +625,7 @@ var LoginManager = function(inremoteurl) {
           console.log("getAuthenticationCookie() with [" + thisemail + "]")
           const credential = thisemail + ":" + 'blockade'
           xhr.setRequestHeader("Authorization", "Basic " + btoa(credential))
+
           xhr.send(formData.toString())
       }
         function exitlogin() {

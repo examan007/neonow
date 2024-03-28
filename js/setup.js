@@ -312,7 +312,7 @@ var makeSequence = function(thissequence) {
           setRunningStatus(node)
           findNode(node, 'element_details', function (element) { element.innerHTML = "" })
           xhttp.withCredentials = false;
-          xhttp.open("GET", "https://test.neolation.com/home",
+          xhttp.open("GET", "https://test.neolation.net/home",
            true, { rejectUnauthorized: false });
           xhttp.send();
         },
@@ -342,7 +342,7 @@ var makeSequence = function(thissequence) {
           var xhttp = executeAJAX(processAJAX)
           setRunningStatus(node)
           //findNode(node, 'element_details', function (element) { element.innerHTML = "" })
-          xhttp.open("POST", "https://test.neolation.com/api",
+          xhttp.open("POST", "https://test.neolation.net/api",
            true, { rejectUnauthorized: false });
           xhttp.setRequestHeader("Authorization", "Basic " + btoa(element.username + ":" + element.password))
           xhttp.send()
