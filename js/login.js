@@ -101,11 +101,15 @@ var LoginManager = function(inremoteurl) {
       }
       function getNextForm(section, flag) {
         console.log("$$$%%%$$$ getNextForm $$$ section=[" + section + "]")
-        $('#login-window').css("display", "none")
-        $('.Dialogue').each( function () {
-            $(this).css("display", "none")
-            //console.log("section=[" + $(this).attr('id') + "]");
-        })
+        try {
+            $('#login-window').css("display", "none")
+            $('.Dialogue').each( function () {
+                $(this).css("display", "none")
+                //console.log("section=[" + $(this).attr('id') + "]");
+            })
+        } catch (e) {
+            console.log("Login dialogue: " + e.toString())
+        }
         if (section === "X-Login") {
             $('#neotoken').val("")
             setCookieInParent("", flag)
@@ -163,9 +167,17 @@ var LoginManager = function(inremoteurl) {
                     console.log(e.toString())
                 }
             }
-
-            const formData = new URLSearchParams(getParameters('#Login-form', "?"))
-            getExtraParams(formData, extraparams)
+            function getLoginForm() {
+                try {
+                    const formData = new URLSearchParams(getParameters('#Login-form', "?"))
+                    getExtraParams(formData, extraparams)
+                    return formData
+                } catch (e) {
+                    console.log("Login form: " + e.toString())
+                }
+                return new URLSearchParams()
+            }
+            const formData = getLoginForm()
             try {
                 const extData = new URLSearchParams(getParameters(extended, "?"))
                 extData.forEach((value, key) => {
@@ -483,15 +495,27 @@ var LoginManager = function(inremoteurl) {
         console.log("message posted [" + JSON.stringify(message) + "]")
       }
 
-      function getAuthenticationCookie(extended) {
-          const formData = getForms("", extended)
-            const admintoken = $("#admintoken").val()
-            if (typeof(admintoken) !== 'undefined') {
-                if (admintoken) {
-                    $("#neotoken").val(admintoken)
-                    $("#admintoken").val("")
+      function getAuthenticationCookie(extended, formdatain, callback) {
+        function getFormIn() {
+            if (typeof(formdatain) === 'undefined') {
+                return getForms("", extended)
+            } else {
+                return formdatain
+            }
+        }
+          const formData = getFormIn()
+            try {
+                const admintoken = $("#admintoken").val()
+                if (typeof(admintoken) !== 'undefined') {
+                    if (admintoken) {
+                        $("#neotoken").val(admintoken)
+                        $("#admintoken").val("")
+                    }
                 }
-          }
+            } catch (e) {
+                console.log("admintoken: " + e.toString())
+            }
+
           console.log("formData=[" + formData.toString() + "]")
           const xhr = new XMLHttpRequest();
           xhr.timeout = 5000;
@@ -511,7 +535,9 @@ var LoginManager = function(inremoteurl) {
                 thisemail: formData.get('username'),
                 onLoad: function () {
                     if (xhr.status === 200) {
-                      console.log("new response=[" + xhr.response + "] status=[" + xhr.status + "]")
+                      if (typeof(callback) !== 'undefined') {
+                          callback(xhr.response)
+                      }
                       try {
                         const serverurl = formData.get('serverurl')
                         function testForNeoToken() {
@@ -541,7 +567,7 @@ var LoginManager = function(inremoteurl) {
                         } catch (e) {
                             console.log("test: " + e.toString())
                         }
-                        response = JSON.parse(xhr.response)
+                        const response = JSON.parse(xhr.response)
                         const email = response.email
                         const token = response.token
                         const templatename = getTemplateName()
@@ -1730,8 +1756,8 @@ var LoginManager = function(inremoteurl) {
             exitlogin()
         },
 
-        getAuthenticationCookie: function (extended) {
-            getAuthenticationCookie(extended)
+        getAuthenticationCookie: function (extended, formdatain, callback) {
+            getAuthenticationCookie(extended, formdatain, callback)
         },
         verifyAppointment: function () {
             try {
